@@ -10,6 +10,7 @@ interface TopBarProps {
   onToggleSound: () => void;
   onToggleDarkMode: () => void;
   onOpenRankModal?: () => void;
+  onOpenMascotLab?: () => void;
 }
 
 export const TopBar: React.FC<TopBarProps> = ({
@@ -18,6 +19,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   onToggleSound,
   onToggleDarkMode,
   onOpenRankModal,
+  onOpenMascotLab,
 }) => {
   const currentRank = getRankForXp(progress.xp);
 
@@ -98,6 +100,19 @@ export const TopBar: React.FC<TopBarProps> = ({
                 <span className="hidden sm:inline">{currentRank.title}</span>
               </div>
             </div>
+          </button>
+
+          {/* Mascot Studio (White & Red Mushroom) */}
+          <button
+            onClick={() => {
+              if (onOpenMascotLab) onOpenMascotLab();
+              sound.playClick();
+            }}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/50 border border-rose-200/80 dark:border-rose-900/60 text-rose-700 dark:text-rose-300 font-black text-xs transition-all shadow-xs cursor-pointer group"
+            title="Mascot Studio: Duolingo White and Red Mushroom & Rive State Machine Lab"
+          >
+            <span className="text-base group-hover:scale-125 transition-transform">🍄</span>
+            <span className="hidden sm:inline">Mascot Lab</span>
           </button>
 
           {/* Dark Theme toggle */}

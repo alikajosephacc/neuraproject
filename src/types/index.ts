@@ -87,6 +87,7 @@ export interface Progress {
   rank: number; // index into rank ladder
   soundEnabled: boolean;
   darkMode: boolean;
+  mascotType?: MascotType;
 }
 
 export interface RankInfo {
@@ -99,3 +100,4 @@ export interface RankInfo {
 }
 
 export type MascotMood = 'thriving' | 'neutral' | 'wilting';
+export type MascotType = 'ficus' | 'mushroom';

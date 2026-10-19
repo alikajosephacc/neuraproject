@@ -2,6 +2,7 @@ import React from 'react';
 import { Check, Lock, Play, Zap, Skull, ChevronRight, Sparkles } from 'lucide-react';
 import { Unit, Progress } from '../types';
 import { MascotGerald } from '../components/MascotGerald';
+import { MascotMushroom } from '../components/MascotMushroom';
 import { Leaderboard } from '../components/Leaderboard';
 import { SpotlightCard } from '../components/SpotlightCard';
 import { BorderBeam } from '../components/BorderBeam';
@@ -27,6 +28,7 @@ export const PathScreen: React.FC<PathScreenProps> = ({
   const currentRank = getRankForXp(progress.xp);
   const nextRank = getNextRank(currentRank.index);
   const mascotMood = store.getMascotMood();
+  const mascotType = store.getMascotType();
 
   // Calculate XP progress towards next rank
   let rankProgressPercent = 100;
@@ -200,14 +202,31 @@ export const PathScreen: React.FC<PathScreenProps> = ({
 
       {/* Right Column: Mascot, Rank Progress, Synergy League */}
       <aside className="lg:col-span-5 space-y-6 lg:sticky lg:top-20">
-        {/* Gerald Widget */}
+        {/* Mascot Widget (Pip the Agile Mushroom or Gerald the Ficus) */}
         <SpotlightCard
-          spotlightColor="rgba(16, 185, 129, 0.15)"
+          spotlightColor={mascotType === 'mushroom' ? 'rgba(239, 68, 68, 0.15)' : 'rgba(16, 185, 129, 0.15)'}
           className="p-6 shadow-xs flex flex-col items-center text-center"
         >
-          <MascotGerald mood={mascotMood} size="md" />
+          {mascotType === 'mushroom' ? (
+            <MascotMushroom mood={mascotMood} size="md" />
+          ) : (
+            <MascotGerald mood={mascotMood} size="md" />
+          )}
+
           <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 w-full flex items-center justify-between text-xs font-semibold text-slate-500 dark:text-slate-400">
-            <span>Mascot Status:</span>
+            <button
+              onClick={() => {
+                sound.playClick();
+                store.toggleMascot();
+              }}
+              className="text-[11px] font-black uppercase text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-200 flex items-center gap-1.5 transition-colors cursor-pointer"
+              title="Click to toggle between Gerald the Ficus and Pip the Agile Mushroom"
+            >
+              <span>Switch:</span>
+              <span className="text-rose-600 dark:text-rose-400 font-extrabold underline decoration-dotted">
+                {mascotType === 'mushroom' ? '🍄 Pip (Mushroom)' : '🪴 Gerald (Ficus)'}
+              </span>
+            </button>
             <span
               className={`font-black uppercase tracking-wider ${
                 mascotMood === 'thriving'

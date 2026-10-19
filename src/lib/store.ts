@@ -1,4 +1,4 @@
-import { Progress, MascotMood } from '../types';
+import { Progress, MascotMood, MascotType } from '../types';
 import { getRankForXp } from './ranks';
 import { sound } from './sound';
 
@@ -30,6 +30,7 @@ const DEFAULT_PROGRESS: Progress = {
   rank: 0,
   soundEnabled: true,
   darkMode: false,
+  mascotType: 'mushroom',
 };
 
 type Listener = () => void;
@@ -189,6 +190,18 @@ class GameStore {
       return 'thriving';
     }
     return 'neutral';
+  }
+
+  public getMascotType(): MascotType {
+    return this.progress.mascotType || 'mushroom';
+  }
+
+  public toggleMascot(): MascotType {
+    const nextType: MascotType = this.progress.mascotType === 'ficus' ? 'mushroom' : 'ficus';
+    this.progress.mascotType = nextType;
+    this.save();
+    this.notify();
+    return nextType;
   }
 
   public resetProgress() {

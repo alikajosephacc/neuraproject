@@ -1,0 +1,333 @@
+import fs from 'fs';
+import path from 'path';
+
+// Valid Bodymovin / Lottie specification for Duolingo Style White & Red Mushroom
+const lottieAnimation = {
+  v: "5.7.4",
+  fr: 60,
+  ip: 0,
+  op: 120, // 2-second seamless loop at 60fps
+  w: 500,
+  h: 500,
+  nm: "Duolingo White and Red Mushroom",
+  ddd: 0,
+  assets: [],
+  layers: [
+    // Layer 1: Eyes & Face (blinking and bobbing)
+    {
+      ddd: 0,
+      ind: 1,
+      ty: 4, // Shape layer
+      nm: "Eyes & Face",
+      sr: 1,
+      ks: {
+        o: { a: 0, k: 100 },
+        r: { a: 0, k: 0 },
+        p: {
+          a: 1,
+          k: [
+            { t: 0, s: [250, 310, 0], e: [250, 316, 0] },
+            { t: 60, s: [250, 316, 0], e: [250, 310, 0] },
+            { t: 120, s: [250, 310, 0] }
+          ]
+        },
+        a: { a: 0, k: [0, 0, 0] },
+        s: {
+          a: 1,
+          k: [
+            // Blink at frame 40-48
+            { t: 0, s: [100, 100, 100], e: [100, 100, 100] },
+            { t: 40, s: [100, 100, 100], e: [100, 10, 100] },
+            { t: 44, s: [100, 10, 100], e: [100, 100, 100] },
+            { t: 48, s: [100, 100, 100], e: [100, 100, 100] },
+            { t: 120, s: [100, 100, 100] }
+          ]
+        }
+      },
+      shapes: [
+        // Left Eye
+        {
+          ty: "gr",
+          nm: "Left Eye",
+          it: [
+            { ty: "el", nm: "Sclera", p: { a: 0, k: [-38, 0] }, s: { a: 0, k: [22, 32] } },
+            { ty: "fl", nm: "Fill", c: { a: 0, k: [0.06, 0.09, 0.16, 1] }, o: { a: 0, k: 100 } },
+            { ty: "tr", p: { a: 0, k: [0, 0] }, a: { a: 0, k: [0, 0] }, s: { a: 0, k: [100, 100] }, r: { a: 0, k: 0 }, o: { a: 0, k: 100 } }
+          ]
+        },
+        // Left Eye Catchlight
+        {
+          ty: "gr",
+          nm: "Left Eye Catchlight",
+          it: [
+            { ty: "el", nm: "Pupil Shine", p: { a: 0, k: [-35, -5] }, s: { a: 0, k: [8, 8] } },
+            { ty: "fl", nm: "Fill", c: { a: 0, k: [1, 1, 1, 1] }, o: { a: 0, k: 100 } },
+            { ty: "tr", p: { a: 0, k: [0, 0] }, a: { a: 0, k: [0, 0] }, s: { a: 0, k: [100, 100] }, r: { a: 0, k: 0 }, o: { a: 0, k: 100 } }
+          ]
+        },
+        // Right Eye
+        {
+          ty: "gr",
+          nm: "Right Eye",
+          it: [
+            { ty: "el", nm: "Sclera", p: { a: 0, k: [38, 0] }, s: { a: 0, k: [22, 32] } },
+            { ty: "fl", nm: "Fill", c: { a: 0, k: [0.06, 0.09, 0.16, 1] }, o: { a: 0, k: 100 } },
+            { ty: "tr", p: { a: 0, k: [0, 0] }, a: { a: 0, k: [0, 0] }, s: { a: 0, k: [100, 100] }, r: { a: 0, k: 0 }, o: { a: 0, k: 100 } }
+          ]
+        },
+        // Right Eye Catchlight
+        {
+          ty: "gr",
+          nm: "Right Eye Catchlight",
+          it: [
+            { ty: "el", nm: "Pupil Shine", p: { a: 0, k: [41, -5] }, s: { a: 0, k: [8, 8] } },
+            { ty: "fl", nm: "Fill", c: { a: 0, k: [1, 1, 1, 1] }, o: { a: 0, k: 100 } },
+            { ty: "tr", p: { a: 0, k: [0, 0] }, a: { a: 0, k: [0, 0] }, s: { a: 0, k: [100, 100] }, r: { a: 0, k: 0 }, o: { a: 0, k: 100 } }
+          ]
+        },
+        // Cheeks
+        {
+          ty: "gr",
+          nm: "Cheek Left",
+          it: [
+            { ty: "el", nm: "Blush", p: { a: 0, k: [-56, 18] }, s: { a: 0, k: [22, 14] } },
+            { ty: "fl", nm: "Fill", c: { a: 0, k: [0.98, 0.44, 0.52, 0.7] }, o: { a: 0, k: 70 } },
+            { ty: "tr", p: { a: 0, k: [0, 0] }, a: { a: 0, k: [0, 0] }, s: { a: 0, k: [100, 100] }, r: { a: 0, k: 0 }, o: { a: 0, k: 100 } }
+          ]
+        },
+        {
+          ty: "gr",
+          nm: "Cheek Right",
+          it: [
+            { ty: "el", nm: "Blush", p: { a: 0, k: [56, 18] }, s: { a: 0, k: [22, 14] } },
+            { ty: "fl", nm: "Fill", c: { a: 0, k: [0.98, 0.44, 0.52, 0.7] }, o: { a: 0, k: 70 } },
+            { ty: "tr", p: { a: 0, k: [0, 0] }, a: { a: 0, k: [0, 0] }, s: { a: 0, k: [100, 100] }, r: { a: 0, k: 0 }, o: { a: 0, k: 100 } }
+          ]
+        }
+      ]
+    },
+    // Layer 2: White Polka Dots on Cap
+    {
+      ddd: 0,
+      ind: 2,
+      ty: 4,
+      nm: "White Polka Dots",
+      sr: 1,
+      ks: {
+        o: { a: 0, k: 100 },
+        r: { a: 0, k: 0 },
+        p: {
+          a: 1,
+          k: [
+            { t: 0, s: [250, 190, 0], e: [250, 196, 0] },
+            { t: 60, s: [250, 196, 0], e: [250, 190, 0] },
+            { t: 120, s: [250, 190, 0] }
+          ]
+        },
+        a: { a: 0, k: [0, 0, 0] },
+        s: { a: 0, k: [100, 100, 100] }
+      },
+      shapes: [
+        // Center Dot
+        {
+          ty: "gr",
+          nm: "Dot Center",
+          it: [
+            { ty: "el", nm: "Dot", p: { a: 0, k: [20, -50] }, s: { a: 0, k: [60, 60] } },
+            { ty: "fl", nm: "Fill", c: { a: 0, k: [1, 1, 1, 1] }, o: { a: 0, k: 100 } },
+            { ty: "tr", p: { a: 0, k: [0, 0] }, a: { a: 0, k: [0, 0] }, s: { a: 0, k: [100, 100] }, r: { a: 0, k: 0 }, o: { a: 0, k: 100 } }
+          ]
+        },
+        // Left Front Dot
+        {
+          ty: "gr",
+          nm: "Dot Left Front",
+          it: [
+            { ty: "el", nm: "Dot", p: { a: 0, k: [-55, 10] }, s: { a: 0, k: [68, 68] } },
+            { ty: "fl", nm: "Fill", c: { a: 0, k: [1, 1, 1, 1] }, o: { a: 0, k: 100 } },
+            { ty: "tr", p: { a: 0, k: [0, 0] }, a: { a: 0, k: [0, 0] }, s: { a: 0, k: [100, 100] }, r: { a: 0, k: 0 }, o: { a: 0, k: 100 } }
+          ]
+        },
+        // Right Front Dot
+        {
+          ty: "gr",
+          nm: "Dot Right Front",
+          it: [
+            { ty: "el", nm: "Dot", p: { a: 0, k: [78, 15] }, s: { a: 0, k: [56, 56] } },
+            { ty: "fl", nm: "Fill", c: { a: 0, k: [1, 1, 1, 1] }, o: { a: 0, k: 100 } },
+            { ty: "tr", p: { a: 0, k: [0, 0] }, a: { a: 0, k: [0, 0] }, s: { a: 0, k: [100, 100] }, r: { a: 0, k: 0 }, o: { a: 0, k: 100 } }
+          ]
+        },
+        // Top Left Dot
+        {
+          ty: "gr",
+          nm: "Dot Top Left",
+          it: [
+            { ty: "el", nm: "Dot", p: { a: 0, k: [-90, -55] }, s: { a: 0, k: [46, 38] } },
+            { ty: "fl", nm: "Fill", c: { a: 0, k: [1, 1, 1, 1] }, o: { a: 0, k: 100 } },
+            { ty: "tr", p: { a: 0, k: [0, 0] }, a: { a: 0, k: [0, 0] }, s: { a: 0, k: [100, 100] }, r: { a: 0, k: 0 }, o: { a: 0, k: 100 } }
+          ]
+        }
+      ]
+    },
+    // Layer 3: Red Mushroom Cap
+    {
+      ddd: 0,
+      ind: 3,
+      ty: 4,
+      nm: "Red Cap Dome",
+      sr: 1,
+      ks: {
+        o: { a: 0, k: 100 },
+        r: { a: 0, k: 0 },
+        p: {
+          a: 1,
+          k: [
+            { t: 0, s: [250, 190, 0], e: [250, 196, 0] },
+            { t: 60, s: [250, 196, 0], e: [250, 190, 0] },
+            { t: 120, s: [250, 190, 0] }
+          ]
+        },
+        a: { a: 0, k: [0, 0, 0] },
+        s: {
+          a: 1,
+          k: [
+            // Subtle harmonic squash-and-stretch
+            { t: 0, s: [100, 100, 100], e: [103, 97, 100] },
+            { t: 60, s: [103, 97, 100], e: [100, 100, 100] },
+            { t: 120, s: [100, 100, 100] }
+          ]
+        }
+      },
+      shapes: [
+        {
+          ty: "gr",
+          nm: "Cap Shape",
+          it: [
+            {
+              ty: "sh",
+              nm: "Cap Path",
+              ks: {
+                a: 0,
+                k: {
+                  c: true,
+                  i: [[0, -80], [70, 0], [0, 30], [-70, 0]],
+                  o: [[0, 80], [-70, 0], [0, -30], [70, 0]],
+                  v: [[-160, 20], [0, -110], [160, 20], [0, 50]]
+                }
+              }
+            },
+            {
+              ty: "fl",
+              nm: "Cap Red Fill",
+              c: { a: 0, k: [0.93, 0.15, 0.16, 1] }, // Duolingo vibrant scarlet red
+              o: { a: 0, k: 100 }
+            },
+            {
+              ty: "st",
+              nm: "Cap Dark Stroke",
+              c: { a: 0, k: [0.42, 0.08, 0.09, 1] },
+              o: { a: 0, k: 100 },
+              w: { a: 0, k: 8 }
+            },
+            { ty: "tr", p: { a: 0, k: [0, 0] }, a: { a: 0, k: [0, 0] }, s: { a: 0, k: [100, 100] }, r: { a: 0, k: 0 }, o: { a: 0, k: 100 } }
+          ]
+        }
+      ]
+    },
+    // Layer 4: Cream Stalk Body & Feet
+    {
+      ddd: 0,
+      ind: 4,
+      ty: 4,
+      nm: "Cream Stalk Body",
+      sr: 1,
+      ks: {
+        o: { a: 0, k: 100 },
+        r: { a: 0, k: 0 },
+        p: { a: 0, k: [250, 340, 0] },
+        a: { a: 0, k: [0, 0, 0] },
+        s: {
+          a: 1,
+          k: [
+            { t: 0, s: [100, 100, 100], e: [102, 98, 100] },
+            { t: 60, s: [102, 98, 100], e: [100, 100, 100] },
+            { t: 120, s: [100, 100, 100] }
+          ]
+        }
+      },
+      shapes: [
+        {
+          ty: "gr",
+          nm: "Stalk",
+          it: [
+            {
+              ty: "sh",
+              nm: "Stalk Path",
+              ks: {
+                a: 0,
+                k: {
+                  c: true,
+                  i: [[-10, -30], [25, 0], [10, 30], [-25, 0]],
+                  o: [[10, 30], [-25, 0], [-10, -30], [25, 0]],
+                  v: [[-75, -90], [0, 80], [75, -90], [0, -100]]
+                }
+              }
+            },
+            {
+              ty: "fl",
+              nm: "Stalk Cream Fill",
+              c: { a: 0, k: [0.99, 0.96, 0.89, 1] },
+              o: { a: 0, k: 100 }
+            },
+            {
+              ty: "st",
+              nm: "Stalk Stroke",
+              c: { a: 0, k: [0.42, 0.08, 0.09, 1] },
+              o: { a: 0, k: 100 },
+              w: { a: 0, k: 7 }
+            },
+            { ty: "tr", p: { a: 0, k: [0, 0] }, a: { a: 0, k: [0, 0] }, s: { a: 0, k: [100, 100] }, r: { a: 0, k: 0 }, o: { a: 0, k: 100 } }
+          ]
+        }
+      ]
+    },
+    // Layer 5: Ground Shadow
+    {
+      ddd: 0,
+      ind: 5,
+      ty: 4,
+      nm: "Ground Shadow",
+      sr: 1,
+      ks: {
+        o: { a: 0, k: 18 },
+        r: { a: 0, k: 0 },
+        p: { a: 0, k: [250, 435, 0] },
+        a: { a: 0, k: [0, 0, 0] },
+        s: {
+          a: 1,
+          k: [
+            { t: 0, s: [100, 100, 100], e: [106, 94, 100] },
+            { t: 60, s: [106, 94, 100], e: [100, 100, 100] },
+            { t: 120, s: [100, 100, 100] }
+          ]
+        }
+      },
+      shapes: [
+        {
+          ty: "gr",
+          nm: "Shadow Ellipse",
+          it: [
+            { ty: "el", nm: "Shadow", p: { a: 0, k: [0, 0] }, s: { a: 0, k: [180, 26] } },
+            { ty: "fl", nm: "Fill", c: { a: 0, k: [0.06, 0.09, 0.16, 1] }, o: { a: 0, k: 100 } },
+            { ty: "tr", p: { a: 0, k: [0, 0] }, a: { a: 0, k: [0, 0] }, s: { a: 0, k: [100, 100] }, r: { a: 0, k: 0 }, o: { a: 0, k: 100 } }
+          ]
+        }
+      ]
+    }
+  ]
+};
+
+const outputPath = path.join(process.cwd(), 'public', 'animations', 'mushroom-lottie.json');
+fs.writeFileSync(outputPath, JSON.stringify(lottieAnimation, null, 2), 'utf8');
+console.log('Successfully generated Lottie JSON animation at:', outputPath);

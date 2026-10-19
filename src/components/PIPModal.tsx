@@ -1,6 +1,7 @@
-import React from 'react';
 import { AlertTriangle, ShieldAlert, ArrowRight } from 'lucide-react';
 import { MascotGerald } from './MascotGerald';
+import { MascotMushroom } from './MascotMushroom';
+import { store } from '../lib/store';
 
 interface PIPModalProps {
   isOpen: boolean;
@@ -9,6 +10,7 @@ interface PIPModalProps {
 
 export const PIPModal: React.FC<PIPModalProps> = ({ isOpen, onStartPIPLesson }) => {
   if (!isOpen) return null;
+  const mascotType = store.getMascotType();
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm animate-pop-in">
@@ -28,7 +30,11 @@ export const PIPModal: React.FC<PIPModalProps> = ({ isOpen, onStartPIPLesson }) 
 
         <div className="p-6 md:p-8">
           <div className="flex items-start gap-4 mb-5">
-            <MascotGerald mood="wilting" size="sm" speechText="My leaves... the optics are compromised!" />
+            {mascotType === 'mushroom' ? (
+              <MascotMushroom mood="wilting" size="sm" speechText="My cap is dried up... HR is monitoring!" />
+            ) : (
+              <MascotGerald mood="wilting" size="sm" speechText="My leaves... the optics are compromised!" />
+            )}
             <div>
               <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-100 dark:bg-rose-950 text-rose-800 dark:text-rose-300 font-black text-xs uppercase tracking-wide mb-1">
                 <AlertTriangle size={14} /> Morale Depleted (0/5)

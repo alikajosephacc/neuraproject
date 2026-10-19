@@ -9,6 +9,7 @@ import { BossBattleScreen } from './screens/BossBattleScreen';
 import { PIPModal } from './components/PIPModal';
 import { PromotionModal } from './components/PromotionModal';
 import { RankLadderModal } from './components/RankLadderModal';
+import { MascotLabModal } from './components/MascotLabModal';
 import { sound } from './lib/sound';
 
 type ViewMode = 'path' | 'lesson' | 'boss';
@@ -25,6 +26,7 @@ export const App: React.FC = () => {
 
   // Modals
   const [isRankLadderOpen, setIsRankLadderOpen] = useState(false);
+  const [isMascotLabOpen, setIsMascotLabOpen] = useState(false);
   const [promotedRank, setPromotedRank] = useState<number | null>(null);
 
   const units: Unit[] = unitsData as Unit[];
@@ -165,6 +167,7 @@ export const App: React.FC = () => {
         onToggleSound={() => store.toggleSound()}
         onToggleDarkMode={() => store.toggleDarkMode()}
         onOpenRankModal={() => setIsRankLadderOpen(true)}
+        onOpenMascotLab={() => setIsMascotLabOpen(true)}
       />
 
       {/* Main Screens */}
@@ -225,6 +228,12 @@ export const App: React.FC = () => {
         onClose={() => setIsRankLadderOpen(false)}
       />
 
+      {/* Mascot Lab / Duolingo Mushroom Creative Technologist Modal */}
+      <MascotLabModal
+        isOpen={isMascotLabOpen}
+        onClose={() => setIsMascotLabOpen(false)}
+      />
+
       {/* Footer */}
       <footer className="py-6 border-t border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 text-center text-xs text-slate-500 dark:text-slate-400 transition-colors">
         <div className="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
@@ -232,6 +241,12 @@ export const App: React.FC = () => {
             <strong>Circle Back</strong> — Steal//Remake Hackathon submission. Remixed from Duolingo.
           </p>
           <div className="flex items-center gap-4">
+            <button
+              onClick={() => setIsMascotLabOpen(true)}
+              className="text-rose-600 dark:text-rose-400 hover:underline font-extrabold flex items-center gap-1 cursor-pointer"
+            >
+              <span>🍄 Mascot Studio (Mushroom)</span>
+            </button>
             <button
               onClick={() => handleSelectBoss(1)}
               className="text-emerald-700 dark:text-emerald-400 hover:underline font-bold"

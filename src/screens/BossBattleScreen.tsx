@@ -12,6 +12,8 @@ import {
 import { BossExercise } from '../types';
 import { scoreCorporateText, MeterResult } from '../lib/meter';
 import { sound } from '../lib/sound';
+import { SpotlightCard } from '../components/SpotlightCard';
+import { BorderBeam } from '../components/BorderBeam';
 
 interface BossBattleScreenProps {
   boss: BossExercise;
@@ -68,7 +70,8 @@ export const BossBattleScreen: React.FC<BossBattleScreenProps> = ({
 
     return (
       <div className="min-h-[85vh] flex items-center justify-center p-4">
-        <div className="bg-white dark:bg-slate-900 rounded-3xl border-4 border-amber-400 max-w-lg w-full p-8 text-center shadow-2xl space-y-6 animate-pop-in transition-colors">
+        <div className="relative overflow-hidden bg-white dark:bg-slate-900 rounded-3xl border-4 border-amber-400 max-w-lg w-full p-8 text-center shadow-2xl space-y-6 animate-pop-in transition-colors">
+          <BorderBeam size={260} duration={5} borderWidth={3} colorFrom="#f59e0b" colorTo="#10b981" />
           <div className="w-24 h-24 mx-auto rounded-3xl bg-gradient-to-tr from-amber-400 to-rose-400 flex items-center justify-center text-5xl shadow-lg animate-bounce-short text-white">
             👑
           </div>
@@ -149,7 +152,10 @@ export const BossBattleScreen: React.FC<BossBattleScreenProps> = ({
       {/* Main Boss Content */}
       <main className="space-y-6 flex-1 py-2">
         {/* Situation / Prompt Card */}
-        <div className="bg-white dark:bg-slate-850 dark:bg-slate-800 rounded-3xl border-2 border-slate-200 dark:border-slate-700 p-6 shadow-sm space-y-3 transition-colors">
+        <SpotlightCard
+          spotlightColor="rgba(244, 63, 94, 0.12)"
+          className="p-6 shadow-sm space-y-3"
+        >
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded bg-rose-100 dark:bg-rose-950 text-rose-800 dark:text-rose-300">
               The Workplace Crisis
@@ -176,7 +182,7 @@ export const BossBattleScreen: React.FC<BossBattleScreenProps> = ({
               </span>
             ))}
           </div>
-        </div>
+        </SpotlightCard>
 
         {/* Hint Sheet */}
         {showHint && (
@@ -189,7 +195,13 @@ export const BossBattleScreen: React.FC<BossBattleScreenProps> = ({
         )}
 
         {/* Jargon Meter Live Dashboard */}
-        <div className="bg-white dark:bg-slate-850 dark:bg-slate-800 rounded-3xl border-2 border-slate-200 dark:border-slate-700 p-5 shadow-sm space-y-4 transition-colors">
+        <SpotlightCard
+          spotlightColor="rgba(16, 185, 129, 0.14)"
+          className="p-5 shadow-sm space-y-4"
+        >
+          {meterResult.score >= boss.passScore && (
+            <BorderBeam size={220} duration={4} borderWidth={3} colorFrom="#10b981" colorTo="#06b6d4" />
+          )}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Zap
@@ -317,7 +329,7 @@ export const BossBattleScreen: React.FC<BossBattleScreenProps> = ({
               </div>
             </div>
           )}
-        </div>
+        </SpotlightCard>
 
         {/* Textarea for player to write corporate reply */}
         <div className="space-y-2">

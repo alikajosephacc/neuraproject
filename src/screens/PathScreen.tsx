@@ -3,6 +3,8 @@ import { Check, Lock, Play, Zap, Skull, ChevronRight, Sparkles } from 'lucide-re
 import { Unit, Progress } from '../types';
 import { MascotGerald } from '../components/MascotGerald';
 import { Leaderboard } from '../components/Leaderboard';
+import { SpotlightCard } from '../components/SpotlightCard';
+import { BorderBeam } from '../components/BorderBeam';
 import { getRankForXp, getNextRank } from '../lib/ranks';
 import { store } from '../lib/store';
 import { sound } from '../lib/sound';
@@ -127,7 +129,7 @@ export const PathScreen: React.FC<PathScreenProps> = ({
                           }
                         }}
                         disabled={!isUnlocked}
-                        className={`w-16 h-16 sm:w-20 sm:h-20 rounded-3xl flex items-center justify-center font-black text-xl transition-all duration-200 cursor-pointer ${
+                        className={`relative overflow-hidden w-16 h-16 sm:w-20 sm:h-20 rounded-3xl flex items-center justify-center font-black text-xl transition-all duration-200 cursor-pointer ${
                           isCompleted
                             ? 'bg-emerald-500 text-white border-b-4 border-emerald-700 shadow-md hover:bg-emerald-400'
                             : isUnlocked
@@ -136,6 +138,9 @@ export const PathScreen: React.FC<PathScreenProps> = ({
                         }`}
                         title={`${lesson.title} - ${lesson.description}`}
                       >
+                        {isUnlocked && !isCompleted && (
+                          <BorderBeam size={80} duration={4} borderWidth={3} colorFrom="#10b981" colorTo="#06b6d4" />
+                        )}
                         {isCompleted ? (
                           <Check size={28} strokeWidth={3.5} />
                         ) : isUnlocked ? (
@@ -166,13 +171,16 @@ export const PathScreen: React.FC<PathScreenProps> = ({
                       sound.playClick();
                       onSelectBoss(unit.id);
                     }}
-                    className={`w-20 h-20 sm:w-24 sm:h-24 rounded-3xl flex flex-col items-center justify-center font-black transition-all duration-200 cursor-pointer shadow-lg hover:scale-105 active:translate-y-1 ${
+                    className={`relative overflow-hidden w-20 h-20 sm:w-24 sm:h-24 rounded-3xl flex flex-col items-center justify-center font-black transition-all duration-200 cursor-pointer shadow-lg hover:scale-105 active:translate-y-1 ${
                       isBossCompleted
                         ? 'bg-amber-500 text-white border-b-6 border-amber-700'
                         : 'bg-gradient-to-tr from-amber-500 to-rose-500 text-white border-b-6 border-rose-800'
                     }`}
                     title={`Boss Battle: ${unit.boss.title}`}
                   >
+                    {!isBossCompleted && (
+                      <BorderBeam size={100} duration={3} borderWidth={3} colorFrom="#f59e0b" colorTo="#f43f5e" />
+                    )}
                     <Zap size={30} className="fill-white text-white animate-pulse" />
                     <span className="text-[9px] font-extrabold tracking-widest uppercase mt-0.5">
                       {isBossCompleted ? 'CLEARED' : 'BOSS'}
@@ -193,7 +201,10 @@ export const PathScreen: React.FC<PathScreenProps> = ({
       {/* Right Column: Mascot, Rank Progress, Synergy League */}
       <aside className="lg:col-span-5 space-y-6 lg:sticky lg:top-20">
         {/* Gerald Widget */}
-        <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 shadow-xs flex flex-col items-center text-center transition-colors">
+        <SpotlightCard
+          spotlightColor="rgba(16, 185, 129, 0.15)"
+          className="p-6 shadow-xs flex flex-col items-center text-center"
+        >
           <MascotGerald mood={mascotMood} size="md" />
           <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 w-full flex items-center justify-between text-xs font-semibold text-slate-500 dark:text-slate-400">
             <span>Mascot Status:</span>
@@ -209,10 +220,13 @@ export const PathScreen: React.FC<PathScreenProps> = ({
               {mascotMood}
             </span>
           </div>
-        </div>
+        </SpotlightCard>
 
         {/* Promotion Progress Card */}
-        <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-5 shadow-xs transition-colors">
+        <SpotlightCard
+          spotlightColor="rgba(59, 130, 246, 0.12)"
+          className="p-5 shadow-xs"
+        >
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Career Track</span>
             <button
@@ -252,7 +266,7 @@ export const PathScreen: React.FC<PathScreenProps> = ({
               </div>
             </div>
           )}
-        </div>
+        </SpotlightCard>
 
         {/* Fictional Coworker Leaderboard */}
         <Leaderboard playerXp={progress.xp} />

@@ -23,6 +23,7 @@ import {
 } from '../lib/checker';
 import { store } from '../lib/store';
 import { sound } from '../lib/sound';
+import { SpotlightCard } from '../components/SpotlightCard';
 
 interface LessonScreenProps {
   lessonTitle: string;
@@ -447,7 +448,7 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
             {(() => {
               const tr = currentExercise as TranslateExercise;
               return (
-                <div className="bg-white dark:bg-slate-850 dark:bg-slate-800 rounded-3xl border-2 border-slate-200 dark:border-slate-700 p-5 sm:p-6 shadow-sm space-y-4 transition-colors">
+                <SpotlightCard className="p-5 sm:p-6 shadow-sm space-y-4">
                   <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-700/60">
                     <div className="flex items-center gap-2.5">
                       <div className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 font-bold text-xs">
@@ -466,7 +467,7 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
                   <p className="text-xl sm:text-2xl font-black text-slate-800 dark:text-slate-100 leading-snug">
                     "{tr.text}"
                   </p>
-                </div>
+                </SpotlightCard>
               );
             })()}
 
@@ -653,7 +654,10 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
               return (
                 <div className="space-y-5">
                   {/* Email message mockup */}
-                  <div className="bg-white dark:bg-slate-800 rounded-3xl border-2 border-slate-200 dark:border-slate-700 p-5 shadow-sm space-y-3 transition-colors">
+                  <SpotlightCard
+                    spotlightColor="rgba(245, 158, 11, 0.12)"
+                    className="p-5 shadow-sm space-y-3"
+                  >
                     <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-700">
                       <div>
                         <p className="font-extrabold text-xs text-slate-900 dark:text-slate-100">{ctx.sender}</p>
@@ -669,7 +673,7 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
                     <p className="text-sm sm:text-base font-semibold text-slate-800 dark:text-slate-200 leading-relaxed italic bg-slate-50 dark:bg-slate-900/60 p-3 rounded-xl border border-slate-100 dark:border-slate-700">
                       "{ctx.email}"
                     </p>
-                  </div>
+                  </SpotlightCard>
 
                   <p className="font-extrabold text-sm text-slate-800 dark:text-slate-200">
                     What does the sender <span className="underline decoration-amber-500">actually</span> want?

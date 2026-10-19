@@ -10,3 +10,9 @@
     -webkit-tap-highlight-color: transparent;
   }
 }
+
+@keyframes border-beam {
+  100% {
+    offset-distance: 100%;
+  }
+}

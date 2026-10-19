@@ -28,6 +28,11 @@ export default {
         sans: ['Nunito', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
       },
       keyframes: {
+        'border-beam': {
+          '100%': {
+            'offset-distance': '100%',
+          },
+        },
         bounceShort: {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-6px)' },
@@ -43,6 +48,7 @@ export default {
         }
       },
       animation: {
+        'border-beam': 'border-beam calc(var(--duration)*1s) infinite linear',
         'bounce-short': 'bounceShort 0.5s ease-in-out',
         'shake': 'shake 0.4s ease-in-out',
         'pop-in': 'popIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275)',

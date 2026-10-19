@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Unit, Progress, Exercise } from './types';
 import unitsData from './data/units.json';
 import { store } from './lib/store';
-import { TopBar } from './components/TopBar';
+import { DynamicIsland } from './components/DynamicIsland';
 import { PathScreen } from './screens/PathScreen';
 import { LessonScreen } from './screens/LessonScreen';
 import { BossBattleScreen } from './screens/BossBattleScreen';
@@ -160,8 +160,8 @@ export const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200">
-      {/* Top Navigation Bar */}
-      <TopBar
+      {/* Hardware Dynamic Island Telemetry Header */}
+      <DynamicIsland
         progress={progress}
         onReset={() => store.resetProgress()}
         onToggleSound={() => store.toggleSound()}

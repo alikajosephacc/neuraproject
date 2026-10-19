@@ -24,6 +24,8 @@ import {
 import { store } from '../lib/store';
 import { sound } from '../lib/sound';
 import { SpotlightCard } from '../components/SpotlightCard';
+import { DecryptedText } from '../components/DecryptedText';
+import { ClickSpark } from '../components/ClickSpark';
 
 interface LessonScreenProps {
   lessonTitle: string;
@@ -464,18 +466,20 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
                     </span>
                   </div>
 
-                  <p className="text-xl sm:text-2xl font-black text-slate-800 dark:text-slate-100 leading-snug">
-                    "{tr.text}"
-                  </p>
+                  <div className="cursor-pointer group" title="Hover to run telemetry scramble">
+                    <p className="text-xl sm:text-2xl font-black text-slate-800 dark:text-slate-100 leading-snug">
+                      "<DecryptedText text={tr.text} speed={25} maxIterations={8} animateOn="hover" className="font-sans" />"
+                    </p>
+                  </div>
                 </SpotlightCard>
               );
             })()}
 
             {/* Partial Match Locking Banner */}
             {partialNotice && (
-              <div className="p-3.5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/70 border-2 border-emerald-400 dark:border-emerald-700 text-emerald-900 dark:text-emerald-200 text-xs font-bold flex items-start gap-2.5 animate-pop-in">
+              <div className="p-3.5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/70 border-2 border-emerald-400 dark:border-emerald-700 text-emerald-900 dark:text-emerald-200 text-xs font-bold flex items-start gap-2.5 animate-pop-in font-mono">
                 <Lock size={18} className="text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
-                <div className="flex-1 leading-relaxed">
+                <div className="flex-1 leading-relaxed font-sans">
                   {partialNotice}
                 </div>
               </div>
@@ -497,7 +501,7 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
                         return (
                           <div
                             key={`${tile}-${i}`}
-                            className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-emerald-100 dark:bg-emerald-950/80 text-emerald-950 dark:text-emerald-200 font-extrabold text-sm rounded-xl border-2 border-emerald-500 dark:border-emerald-600 shadow-xs select-none"
+                            className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-emerald-100 dark:bg-emerald-950/80 text-emerald-950 dark:text-emerald-200 font-extrabold text-xs sm:text-sm rounded-xl border border-emerald-500 dark:border-emerald-600 shadow-xs select-none font-mono"
                             title="Locked as correct! You can now finish the rest of the sentence."
                           >
                             <Lock size={13} className="text-emerald-700 dark:text-emerald-400" />
@@ -509,7 +513,7 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
                         <button
                           key={`${tile}-${i}`}
                           onClick={() => handleDeselectTile(tile, i)}
-                          className="px-3.5 py-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 font-bold text-sm rounded-xl border-b-2 border-slate-300 dark:border-slate-600 shadow-xs hover:border-slate-400 dark:hover:border-slate-500 active:translate-y-0.5 transition-all cursor-pointer animate-pop-in"
+                          className="px-3.5 py-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 font-bold text-xs sm:text-sm rounded-xl border border-slate-200 dark:border-slate-700 border-b-[3px] border-b-slate-300 dark:border-b-slate-900 shadow-xs hover:border-slate-300 dark:hover:border-slate-600 active:translate-y-[2px] active:border-b-[1px] transition-all cursor-pointer animate-pop-in select-none"
                         >
                           {tile}
                         </button>
@@ -518,13 +522,13 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
                   )}
                 </div>
 
-                {/* Available Tiles Pool */}
+                {/* Available Tiles Pool (Teenage Engineering OP-1 Mechanical Keycaps) */}
                 <div className="flex flex-wrap gap-2.5 justify-center">
                   {availableTiles.map((tile, i) => (
                     <button
                       key={`${tile}-${i}`}
                       onClick={() => handleSelectTile(tile, i)}
-                      className="px-4 py-2.5 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 font-bold text-sm sm:text-base rounded-2xl border-2 border-slate-200 dark:border-slate-700 border-b-4 hover:border-slate-300 dark:hover:border-slate-600 active:translate-y-1 shadow-sm transition-all cursor-pointer"
+                      className="px-4 py-2.5 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 font-bold text-xs sm:text-sm rounded-xl border border-slate-200 dark:border-slate-700 border-b-[3.5px] border-b-slate-300 dark:border-b-slate-950 hover:border-slate-300 dark:hover:border-slate-600 active:translate-y-[2px] active:border-b-[1px] shadow-xs transition-all cursor-pointer select-none focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-emerald-500"
                     >
                       {tile}
                     </button>
@@ -726,23 +730,25 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
               : 'Press Enter to submit'}
           </div>
 
-          <button
-            onClick={handleCheckAnswer}
-            disabled={
-              (currentExercise.type === 'translate' &&
-                (currentExercise as TranslateExercise).mode === 'wordbank' &&
-                selectedTiles.length === 0) ||
-              (currentExercise.type === 'translate' &&
-                (currentExercise as TranslateExercise).mode === 'typed' &&
-                !typedInput.trim()) ||
-              (currentExercise.type === 'context' && selectedOption === null) ||
-              (currentExercise.type === 'match' &&
-                matchedPairs.length !== (currentExercise as MatchExercise).pairs.length)
-            }
-            className="w-full sm:w-auto ml-auto px-8 py-3.5 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-200 dark:disabled:bg-slate-800 disabled:text-slate-400 dark:disabled:text-slate-600 disabled:border-transparent active:translate-y-0.5 border-b-4 border-emerald-800 text-white font-black text-sm rounded-2xl shadow-sm transition-all cursor-pointer disabled:cursor-not-allowed"
-          >
-            Check Answer
-          </button>
+          <ClickSpark sparkColor="#10b981" sparkRadius={36} sparkCount={12} className="w-full sm:w-auto ml-auto">
+            <button
+              onClick={handleCheckAnswer}
+              disabled={
+                (currentExercise.type === 'translate' &&
+                  (currentExercise as TranslateExercise).mode === 'wordbank' &&
+                  selectedTiles.length === 0) ||
+                (currentExercise.type === 'translate' &&
+                  (currentExercise as TranslateExercise).mode === 'typed' &&
+                  !typedInput.trim()) ||
+                (currentExercise.type === 'context' && selectedOption === null) ||
+                (currentExercise.type === 'match' &&
+                  matchedPairs.length !== (currentExercise as MatchExercise).pairs.length)
+              }
+              className="w-full sm:w-auto px-8 py-3.5 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-200 dark:disabled:bg-slate-800 disabled:text-slate-400 dark:disabled:text-slate-600 disabled:border-transparent active:translate-y-0.5 border-b-4 border-emerald-800 text-white font-black text-sm rounded-2xl shadow-sm transition-all cursor-pointer disabled:cursor-not-allowed focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2"
+            >
+              Check Answer
+            </button>
+          </ClickSpark>
         </footer>
       )}
 
@@ -779,7 +785,7 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
 
               {/* Model Translation */}
               <div className="text-xs sm:text-sm font-semibold">
-                <span className="font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide text-[10px] block">
+                <span className="font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide text-[10px] block font-mono">
                   Plain English Model:
                 </span>
                 <span className="text-slate-800 dark:text-slate-200">{feedback.model}</span>
@@ -787,7 +793,7 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
 
               {/* Matched vs Missed Ideas (for Typed exercises) */}
               {feedback.ideaResult && (
-                <div className="text-[11px] font-medium space-y-1">
+                <div className="text-[11px] font-medium space-y-1 font-mono">
                   {feedback.ideaResult.matchedIdeas.length > 0 && (
                     <p className="text-emerald-700 dark:text-emerald-400">
                       ✓ Ideas matched: {feedback.ideaResult.matchedIdeas.join(', ')}
@@ -813,17 +819,19 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
               )}
             </div>
 
-            <button
-              onClick={handleContinue}
-              className={`w-full sm:w-auto px-8 py-3.5 text-white font-black text-sm rounded-2xl shadow-md border-b-4 active:translate-y-0.5 transition-all cursor-pointer flex items-center justify-center gap-2 shrink-0 ${
-                feedback.passed
-                  ? 'bg-emerald-600 hover:bg-emerald-500 border-emerald-800'
-                  : 'bg-rose-600 hover:bg-rose-500 border-rose-800'
-              }`}
-            >
-              <span>Continue</span>
-              <ArrowRight size={18} />
-            </button>
+            <ClickSpark sparkColor={feedback.passed ? "#10b981" : "#ef4444"} sparkRadius={36} sparkCount={12} className="w-full sm:w-auto">
+              <button
+                onClick={handleContinue}
+                className={`w-full sm:w-auto px-8 py-3.5 text-white font-black text-sm rounded-2xl shadow-md border-b-4 active:translate-y-0.5 transition-all cursor-pointer flex items-center justify-center gap-2 shrink-0 ${
+                  feedback.passed
+                    ? 'bg-emerald-600 hover:bg-emerald-500 border-emerald-800'
+                    : 'bg-rose-600 hover:bg-rose-500 border-rose-800'
+                }`}
+              >
+                <span>Continue</span>
+                <ArrowRight size={18} />
+              </button>
+            </ClickSpark>
           </div>
         </div>
       )}

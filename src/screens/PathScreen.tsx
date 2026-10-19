@@ -6,6 +6,7 @@ import { MascotMushroom } from '../components/MascotMushroom';
 import { Leaderboard } from '../components/Leaderboard';
 import { SpotlightCard } from '../components/SpotlightCard';
 import { BorderBeam } from '../components/BorderBeam';
+import { ClickSpark } from '../components/ClickSpark';
 import { getRankForXp, getNextRank } from '../lib/ranks';
 import { store } from '../lib/store';
 import { sound } from '../lib/sound';
@@ -123,34 +124,36 @@ export const PathScreen: React.FC<PathScreenProps> = ({
                         </div>
                       )}
 
-                      <button
-                        onClick={() => {
-                          if (isUnlocked) {
-                            sound.playClick();
-                            onSelectLesson(unit.id, lesson.lessonIndex);
-                          }
-                        }}
-                        disabled={!isUnlocked}
-                        className={`relative overflow-hidden w-16 h-16 sm:w-20 sm:h-20 rounded-3xl flex items-center justify-center font-black text-xl transition-all duration-200 cursor-pointer ${
-                          isCompleted
-                            ? 'bg-emerald-500 text-white border-b-4 border-emerald-700 shadow-md hover:bg-emerald-400'
-                            : isUnlocked
-                            ? 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 border-4 border-emerald-500 shadow-lg hover:scale-105 active:translate-y-1'
-                            : 'bg-slate-100 dark:bg-slate-800/60 text-slate-300 dark:text-slate-600 border-4 border-slate-200 dark:border-slate-700 cursor-not-allowed'
-                        }`}
-                        title={`${lesson.title} - ${lesson.description}`}
-                      >
-                        {isUnlocked && !isCompleted && (
-                          <BorderBeam size={80} duration={4} borderWidth={3} colorFrom="#10b981" colorTo="#06b6d4" />
-                        )}
-                        {isCompleted ? (
-                          <Check size={28} strokeWidth={3.5} />
-                        ) : isUnlocked ? (
-                          <Play size={24} className="fill-emerald-500 text-emerald-500 ml-1" />
-                        ) : (
-                          <Lock size={22} />
-                        )}
-                      </button>
+                      <ClickSpark sparkColor="#10b981" sparkRadius={30} sparkCount={8}>
+                        <button
+                          onClick={() => {
+                            if (isUnlocked) {
+                              sound.playClick();
+                              onSelectLesson(unit.id, lesson.lessonIndex);
+                            }
+                          }}
+                          disabled={!isUnlocked}
+                          className={`relative overflow-hidden w-16 h-16 sm:w-20 sm:h-20 rounded-3xl flex items-center justify-center font-black text-xl transition-all duration-200 cursor-pointer focus-visible:outline-hidden focus-visible:ring-4 focus-visible:ring-emerald-500/50 ${
+                            isCompleted
+                              ? 'bg-emerald-500 text-white border-b-4 border-emerald-700 shadow-md hover:bg-emerald-400'
+                              : isUnlocked
+                              ? 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 border-4 border-emerald-500 shadow-lg hover:scale-105 active:translate-y-1'
+                              : 'bg-slate-100 dark:bg-slate-800/60 text-slate-300 dark:text-slate-600 border-4 border-slate-200 dark:border-slate-700 cursor-not-allowed'
+                          }`}
+                          title={`${lesson.title} - ${lesson.description}`}
+                        >
+                          {isUnlocked && !isCompleted && (
+                            <BorderBeam size={80} duration={4} borderWidth={3} colorFrom="#10b981" colorTo="#06b6d4" />
+                          )}
+                          {isCompleted ? (
+                            <Check size={28} strokeWidth={3.5} />
+                          ) : isUnlocked ? (
+                            <Play size={24} className="fill-emerald-500 text-emerald-500 ml-1" />
+                          ) : (
+                            <Lock size={22} />
+                          )}
+                        </button>
+                      </ClickSpark>
 
                       <div className="text-center mt-2 max-w-[150px]">
                         <p className="font-extrabold text-xs text-slate-800 dark:text-slate-200 truncate">
@@ -168,26 +171,28 @@ export const PathScreen: React.FC<PathScreenProps> = ({
                     <Skull size={12} /> Unit Boss
                   </div>
 
-                  <button
-                    onClick={() => {
-                      sound.playClick();
-                      onSelectBoss(unit.id);
-                    }}
-                    className={`relative overflow-hidden w-20 h-20 sm:w-24 sm:h-24 rounded-3xl flex flex-col items-center justify-center font-black transition-all duration-200 cursor-pointer shadow-lg hover:scale-105 active:translate-y-1 ${
-                      isBossCompleted
-                        ? 'bg-amber-500 text-white border-b-6 border-amber-700'
-                        : 'bg-gradient-to-tr from-amber-500 to-rose-500 text-white border-b-6 border-rose-800'
-                    }`}
-                    title={`Boss Battle: ${unit.boss.title}`}
-                  >
-                    {!isBossCompleted && (
-                      <BorderBeam size={100} duration={3} borderWidth={3} colorFrom="#f59e0b" colorTo="#f43f5e" />
-                    )}
-                    <Zap size={30} className="fill-white text-white animate-pulse" />
-                    <span className="text-[9px] font-extrabold tracking-widest uppercase mt-0.5">
-                      {isBossCompleted ? 'CLEARED' : 'BOSS'}
-                    </span>
-                  </button>
+                  <ClickSpark sparkColor="#f59e0b" sparkRadius={36} sparkCount={12}>
+                    <button
+                      onClick={() => {
+                        sound.playClick();
+                        onSelectBoss(unit.id);
+                      }}
+                      className={`relative overflow-hidden w-20 h-20 sm:w-24 sm:h-24 rounded-3xl flex flex-col items-center justify-center font-black transition-all duration-200 cursor-pointer shadow-lg hover:scale-105 active:translate-y-1 focus-visible:outline-hidden focus-visible:ring-4 focus-visible:ring-amber-500/50 ${
+                        isBossCompleted
+                          ? 'bg-amber-500 text-white border-b-6 border-amber-700'
+                          : 'bg-gradient-to-tr from-amber-500 to-rose-500 text-white border-b-6 border-rose-800'
+                      }`}
+                      title={`Boss Battle: ${unit.boss.title}`}
+                    >
+                      {!isBossCompleted && (
+                        <BorderBeam size={100} duration={3} borderWidth={3} colorFrom="#f59e0b" colorTo="#f43f5e" />
+                      )}
+                      <Zap size={30} className="fill-white text-white animate-pulse" />
+                      <span className="text-[9px] font-extrabold tracking-widest uppercase mt-0.5">
+                        {isBossCompleted ? 'CLEARED' : 'BOSS'}
+                      </span>
+                    </button>
+                  </ClickSpark>
 
                   <div className="text-center mt-2 max-w-[180px]">
                     <p className="font-black text-xs text-slate-900 dark:text-slate-100">{unit.boss.title}</p>

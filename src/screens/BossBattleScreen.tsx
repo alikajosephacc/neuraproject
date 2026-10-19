@@ -14,6 +14,8 @@ import { scoreCorporateText, MeterResult } from '../lib/meter';
 import { sound } from '../lib/sound';
 import { SpotlightCard } from '../components/SpotlightCard';
 import { BorderBeam } from '../components/BorderBeam';
+import { DecryptedText } from '../components/DecryptedText';
+import { ClickSpark } from '../components/ClickSpark';
 
 interface BossBattleScreenProps {
   boss: BossExercise;
@@ -163,8 +165,8 @@ export const BossBattleScreen: React.FC<BossBattleScreenProps> = ({
             <span className="text-xs font-bold text-slate-400 dark:text-slate-500">Target Score: {boss.passScore}+</span>
           </div>
 
-          <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white leading-snug">
-            {boss.title}
+          <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white leading-snug cursor-pointer group" title="Hover to scramble telemetry">
+            <DecryptedText text={boss.title} speed={25} maxIterations={8} animateOn="hover" className="font-sans" />
           </h3>
           <p className="text-sm sm:text-base font-medium text-slate-700 dark:text-slate-200 leading-relaxed bg-slate-50 dark:bg-slate-900/60 p-4 rounded-2xl border border-slate-100 dark:border-slate-700">
             {boss.prompt}
@@ -363,14 +365,16 @@ export const BossBattleScreen: React.FC<BossBattleScreenProps> = ({
           </div>
         )}
 
-        <button
-          onClick={handleSubmit}
-          disabled={!inputText.trim()}
-          className="w-full sm:w-auto ml-auto px-8 py-3.5 bg-gradient-to-r from-amber-500 to-rose-500 hover:from-amber-400 hover:to-rose-400 disabled:opacity-40 disabled:cursor-not-allowed active:translate-y-0.5 border-b-4 border-rose-800 text-white font-black text-sm rounded-2xl shadow-md transition-all cursor-pointer flex items-center justify-center gap-2"
-        >
-          <Zap size={18} />
-          <span>Submit to Jargon Meter</span>
-        </button>
+        <ClickSpark sparkColor="#f59e0b" sparkRadius={36} sparkCount={12} className="w-full sm:w-auto ml-auto">
+          <button
+            onClick={handleSubmit}
+            disabled={!inputText.trim()}
+            className="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-amber-500 to-rose-500 hover:from-amber-400 hover:to-rose-400 disabled:opacity-40 disabled:cursor-not-allowed active:translate-y-0.5 border-b-4 border-rose-800 text-white font-black text-sm rounded-2xl shadow-md transition-all cursor-pointer flex items-center justify-center gap-2 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2"
+          >
+            <Zap size={18} />
+            <span>Submit to Jargon Meter</span>
+          </button>
+        </ClickSpark>
       </footer>
     </div>
   );

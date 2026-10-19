@@ -1,0 +1,19 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Build output
+dist
+dist-ssr
+*.local
+
+# Environment & local tools
+.tools
+.env
+.env.local
+.DS_Store
+
+# Vitest
+.vitest
+coverage

@@ -1,0 +1,38 @@
+[
+  {
+    "unitId": 1,
+    "title": "The Friday 4:30 PM Sync Evader",
+    "prompt": "Decline an invite to a 4:30 PM Friday sync from your skip-level manager. You are not going. Sound enthusiastic, protect your weekend, and use corporate meeting speak. Avoid plain negative words!",
+    "bannedWords": ["no", "can't", "cant", "refuse", "busy", "weekend", "stop"],
+    "minPhrases": 3,
+    "passScore": 60,
+    "hint": "Try using phrases like: 'hard stop', 'bandwidth', 'circle back', 'take this offline', 'touch base', or 'parking lot'."
+  },
+  {
+    "unitId": 2,
+    "title": "The Lethal Paper Trail",
+    "prompt": "A coworker asked for a file that was attached to an email you sent yesterday. Write a passive-aggressive email ensuring they know they failed to read it, without directly insulting them.",
+    "bannedWords": ["stupid", "read", "blind", "idiot", "angry", "told you", "again"],
+    "minPhrases": 3,
+    "passScore": 60,
+    "hint": "Try using phrases like: 'per my last email', 'friendly reminder', 'attaching for your visibility', 'as discussed', or 'looping in'."
+  },
+  {
+    "unitId": 3,
+    "title": "The Performance Review Reframe",
+    "prompt": "Explain why the entire quarterly launch was missed without admitting fault. Reframe the disaster as strategic visionary flexibility and proactive team evolution.",
+    "bannedWords": ["failed", "disaster", "mistake", "wrong", "broke", "fault", "sorry"],
+    "minPhrases": 3,
+    "passScore": 60,
+    "hint": "Try using phrases like: 'agile pivot', 'opportunity for growth', 'growth mindset', 'comfortable with ambiguity', 'wear multiple hats', or 'critical path'."
+  },
+  {
+    "unitId": 4,
+    "title": "The LinkedIn Phoenix",
+    "prompt": "You were abruptly let go this morning. Write a viral LinkedIn post reframing this severance event as an inspirational, transcendent milestone. Solicit engagement at the end!",
+    "bannedWords": ["fired", "laid off", "unemployed", "depressed", "broke", "hated", "unfair"],
+    "minPhrases": 3,
+    "passScore": 60,
+    "hint": "Try using phrases like: 'humbled and thrilled', 'next chapter', 'agree?', 'open to new opportunities', 'paradigm shift', or 'game-changing milestone'."
+  }
+]

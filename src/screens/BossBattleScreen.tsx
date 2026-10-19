@@ -68,29 +68,29 @@ export const BossBattleScreen: React.FC<BossBattleScreenProps> = ({
 
     return (
       <div className="min-h-[85vh] flex items-center justify-center p-4">
-        <div className="bg-white rounded-3xl border-4 border-amber-400 max-w-lg w-full p-8 text-center shadow-2xl space-y-6 animate-pop-in">
+        <div className="bg-white dark:bg-slate-900 rounded-3xl border-4 border-amber-400 max-w-lg w-full p-8 text-center shadow-2xl space-y-6 animate-pop-in transition-colors">
           <div className="w-24 h-24 mx-auto rounded-3xl bg-gradient-to-tr from-amber-400 to-rose-400 flex items-center justify-center text-5xl shadow-lg animate-bounce-short text-white">
             👑
           </div>
 
           <div>
-            <span className="px-3 py-1 rounded-full bg-amber-100 text-amber-900 font-black text-xs uppercase tracking-wider">
+            <span className="px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-950 text-amber-900 dark:text-amber-300 font-black text-xs uppercase tracking-wider">
               Boss Battle Cleared!
             </span>
-            <h2 className="text-3xl font-black text-slate-900 tracking-tight mt-2">
+            <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight mt-2">
               Jargon Mastery Achieved
             </h2>
-            <p className="text-sm text-slate-600 mt-1 font-medium">
+            <p className="text-sm text-slate-600 dark:text-slate-300 mt-1 font-medium">
               You converted human authenticity into impenetrable corporate strategy with a Jargon Meter score of{' '}
-              <strong className="text-emerald-700 font-extrabold">{meterResult.score}/100</strong>!
+              <strong className="text-emerald-700 dark:text-emerald-400 font-extrabold">{meterResult.score}/100</strong>!
             </p>
           </div>
 
-          <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 flex items-center justify-center gap-3">
-            <Sparkles size={24} className="text-emerald-600" />
+          <div className="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-2xl p-4 flex items-center justify-center gap-3">
+            <Sparkles size={24} className="text-emerald-600 dark:text-emerald-400" />
             <div className="text-left">
-              <span className="text-xs font-bold uppercase text-emerald-600">Executive Reward</span>
-              <p className="text-2xl font-black text-emerald-800">+{earnedXp} XP</p>
+              <span className="text-xs font-bold uppercase text-emerald-600 dark:text-emerald-400">Executive Reward</span>
+              <p className="text-2xl font-black text-emerald-800 dark:text-emerald-200">+{earnedXp} XP</p>
             </div>
           </div>
 
@@ -107,12 +107,12 @@ export const BossBattleScreen: React.FC<BossBattleScreenProps> = ({
   }
 
   return (
-    <div className="min-h-screen flex flex-col justify-between max-w-3xl mx-auto px-4 py-6">
+    <div className="min-h-screen flex flex-col justify-between max-w-3xl mx-auto px-4 py-6 text-slate-900 dark:text-slate-100">
       {/* Header */}
       <header className="flex items-center justify-between gap-4 mb-4">
         <button
           onClick={onExit}
-          className="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+          className="p-2 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
           title="Exit Boss Battle"
         >
           <X size={24} />
@@ -123,10 +123,10 @@ export const BossBattleScreen: React.FC<BossBattleScreenProps> = ({
             <Zap size={18} />
           </div>
           <div>
-            <h2 className="font-black text-sm text-slate-900 leading-tight">
+            <h2 className="font-black text-sm text-slate-900 dark:text-white leading-tight">
               Unit {boss.unitId} Boss Battle
             </h2>
-            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">
+            <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">
               Reverse Translation Challenge
             </p>
           </div>
@@ -136,8 +136,8 @@ export const BossBattleScreen: React.FC<BossBattleScreenProps> = ({
           onClick={() => setShowHint((h) => !h)}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold border transition-colors cursor-pointer ${
             showHint
-              ? 'bg-amber-100 text-amber-900 border-amber-300'
-              : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
+              ? 'bg-amber-100 dark:bg-amber-950 text-amber-900 dark:text-amber-300 border-amber-300 dark:border-amber-800'
+              : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700'
           }`}
           title="Toggle buzzword hints"
         >
@@ -149,28 +149,28 @@ export const BossBattleScreen: React.FC<BossBattleScreenProps> = ({
       {/* Main Boss Content */}
       <main className="space-y-6 flex-1 py-2">
         {/* Situation / Prompt Card */}
-        <div className="bg-white rounded-3xl border-2 border-slate-200 p-6 shadow-sm space-y-3">
+        <div className="bg-white dark:bg-slate-850 dark:bg-slate-800 rounded-3xl border-2 border-slate-200 dark:border-slate-700 p-6 shadow-sm space-y-3 transition-colors">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded bg-rose-100 text-rose-800">
+            <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded bg-rose-100 dark:bg-rose-950 text-rose-800 dark:text-rose-300">
               The Workplace Crisis
             </span>
-            <span className="text-xs font-bold text-slate-400">Target Score: {boss.passScore}+</span>
+            <span className="text-xs font-bold text-slate-400 dark:text-slate-500">Target Score: {boss.passScore}+</span>
           </div>
 
-          <h3 className="text-xl sm:text-2xl font-black text-slate-900 leading-snug">
+          <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white leading-snug">
             {boss.title}
           </h3>
-          <p className="text-sm sm:text-base font-medium text-slate-700 leading-relaxed bg-slate-50 p-4 rounded-2xl border border-slate-100">
+          <p className="text-sm sm:text-base font-medium text-slate-700 dark:text-slate-200 leading-relaxed bg-slate-50 dark:bg-slate-900/60 p-4 rounded-2xl border border-slate-100 dark:border-slate-700">
             {boss.prompt}
           </p>
 
           {/* Rules / Banned words */}
           <div className="pt-2 flex flex-wrap items-center gap-2 text-xs">
-            <span className="font-bold text-slate-500">Banned Plain Words:</span>
+            <span className="font-bold text-slate-500 dark:text-slate-400">Banned Plain Words:</span>
             {boss.bannedWords.map((word) => (
               <span
                 key={word}
-                className="px-2 py-0.5 rounded-md bg-rose-50 border border-rose-200 text-rose-700 font-mono font-bold"
+                className="px-2 py-0.5 rounded-md bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-900 text-rose-700 dark:text-rose-300 font-mono font-bold"
               >
                 "{word}"
               </span>
@@ -180,7 +180,7 @@ export const BossBattleScreen: React.FC<BossBattleScreenProps> = ({
 
         {/* Hint Sheet */}
         {showHint && (
-          <div className="bg-amber-50 border-2 border-amber-200 rounded-2xl p-4 text-xs text-amber-900 space-y-1.5 animate-pop-in">
+          <div className="bg-amber-50 dark:bg-amber-950/60 border-2 border-amber-200 dark:border-amber-800 rounded-2xl p-4 text-xs text-amber-900 dark:text-amber-200 space-y-1.5 animate-pop-in">
             <p className="font-extrabold flex items-center gap-1.5">
               💡 Corporate Cheat Sheet:
             </p>
@@ -189,7 +189,7 @@ export const BossBattleScreen: React.FC<BossBattleScreenProps> = ({
         )}
 
         {/* Jargon Meter Live Dashboard */}
-        <div className="bg-white rounded-3xl border-2 border-slate-200 p-5 shadow-sm space-y-4">
+        <div className="bg-white dark:bg-slate-850 dark:bg-slate-800 rounded-3xl border-2 border-slate-200 dark:border-slate-700 p-5 shadow-sm space-y-4 transition-colors">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Zap
@@ -200,7 +200,7 @@ export const BossBattleScreen: React.FC<BossBattleScreenProps> = ({
                     : 'text-amber-500'
                 }
               />
-              <span className="font-black text-sm text-slate-800 uppercase tracking-wide">
+              <span className="font-black text-sm text-slate-800 dark:text-slate-200 uppercase tracking-wide">
                 Live Jargon Meter
               </span>
             </div>
@@ -209,10 +209,10 @@ export const BossBattleScreen: React.FC<BossBattleScreenProps> = ({
             <div
               className={`px-3 py-1 rounded-xl font-black text-sm border ${
                 meterResult.score >= boss.passScore
-                  ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                  ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
                   : meterResult.score >= 40
-                  ? 'bg-amber-50 text-amber-800 border-amber-300'
-                  : 'bg-rose-50 text-rose-800 border-rose-300'
+                  ? 'bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-800'
+                  : 'bg-rose-50 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300 border-rose-300 dark:border-rose-800'
               }`}
             >
               Score: {meterResult.score} / 100
@@ -220,10 +220,10 @@ export const BossBattleScreen: React.FC<BossBattleScreenProps> = ({
           </div>
 
           {/* Visual Gauge Bar */}
-          <div className="w-full bg-slate-100 h-4 rounded-full overflow-hidden p-0.5 relative">
+          <div className="w-full bg-slate-100 dark:bg-slate-700 h-4 rounded-full overflow-hidden p-0.5 relative">
             {/* Target 60% Marker */}
             <div
-              className="absolute top-0 bottom-0 w-0.5 bg-slate-400 z-10"
+              className="absolute top-0 bottom-0 w-0.5 bg-slate-400 dark:bg-slate-300 z-10"
               style={{ left: `${boss.passScore}%` }}
               title={`Pass threshold: ${boss.passScore}`}
             />
@@ -245,8 +245,8 @@ export const BossBattleScreen: React.FC<BossBattleScreenProps> = ({
             <div
               className={`p-2.5 rounded-xl border font-bold flex items-center justify-between ${
                 meterResult.cappedByLength
-                  ? 'bg-rose-50 border-rose-200 text-rose-800'
-                  : 'bg-emerald-50 border-emerald-200 text-emerald-800'
+                  ? 'bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-900 text-rose-800 dark:text-rose-300'
+                  : 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300'
               }`}
             >
               <span>Length (Min 15):</span>
@@ -257,8 +257,8 @@ export const BossBattleScreen: React.FC<BossBattleScreenProps> = ({
             <div
               className={`p-2.5 rounded-xl border font-bold flex items-center justify-between ${
                 meterResult.phrasesNeededMet
-                  ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
-                  : 'bg-amber-50 border-amber-200 text-amber-800'
+                  ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300'
+                  : 'bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300'
               }`}
             >
               <span>Phrases (Min {boss.minPhrases}):</span>
@@ -269,8 +269,8 @@ export const BossBattleScreen: React.FC<BossBattleScreenProps> = ({
             <div
               className={`p-2.5 rounded-xl border font-bold flex items-center justify-between ${
                 meterResult.bannedWordsHit.length > 0
-                  ? 'bg-rose-50 border-rose-200 text-rose-800'
-                  : 'bg-emerald-50 border-emerald-200 text-emerald-800'
+                  ? 'bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-900 text-rose-800 dark:text-rose-300'
+                  : 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300'
               }`}
             >
               <span>Banned Words:</span>
@@ -281,16 +281,16 @@ export const BossBattleScreen: React.FC<BossBattleScreenProps> = ({
           {/* Detected Phrases Pills */}
           {meterResult.phrasesFound.length > 0 && (
             <div className="space-y-1">
-              <span className="text-[10px] uppercase font-bold text-slate-400">
+              <span className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500">
                 Corporate Buzzwords Detected (+10 pts each):
               </span>
               <div className="flex flex-wrap gap-1.5">
                 {meterResult.phrasesFound.map((phrase) => (
                   <span
                     key={phrase}
-                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-900 text-xs font-bold"
+                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-900 dark:text-emerald-200 text-xs font-bold border border-emerald-200 dark:border-emerald-800"
                   >
-                    <CheckCircle2 size={13} className="text-emerald-600" />
+                    <CheckCircle2 size={13} className="text-emerald-600 dark:text-emerald-400" />
                     {phrase}
                   </span>
                 ))}
@@ -301,16 +301,16 @@ export const BossBattleScreen: React.FC<BossBattleScreenProps> = ({
           {/* Banned Words Hit Pills */}
           {meterResult.bannedWordsHit.length > 0 && (
             <div className="space-y-1">
-              <span className="text-[10px] uppercase font-bold text-rose-500">
+              <span className="text-[10px] uppercase font-bold text-rose-500 dark:text-rose-400">
                 Banned Plain Words Triggered (-15 pts each):
               </span>
               <div className="flex flex-wrap gap-1.5">
                 {meterResult.bannedWordsHit.map((word) => (
                   <span
                     key={word}
-                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-rose-100 text-rose-900 text-xs font-bold"
+                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-rose-100 dark:bg-rose-950 text-rose-900 dark:text-rose-200 text-xs font-bold border border-rose-200 dark:border-rose-800"
                   >
-                    <AlertTriangle size={13} className="text-rose-600" />
+                    <AlertTriangle size={13} className="text-rose-600 dark:text-rose-400" />
                     {word}
                   </span>
                 ))}
@@ -321,7 +321,7 @@ export const BossBattleScreen: React.FC<BossBattleScreenProps> = ({
 
         {/* Textarea for player to write corporate reply */}
         <div className="space-y-2">
-          <label className="block text-xs font-black uppercase tracking-wider text-slate-600">
+          <label className="block text-xs font-black uppercase tracking-wider text-slate-600 dark:text-slate-400">
             Write your corporate-speak translation:
           </label>
           <textarea
@@ -329,15 +329,15 @@ export const BossBattleScreen: React.FC<BossBattleScreenProps> = ({
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
             placeholder="Craft your corporate response here using meeting jargon, passive aggression, or visionary platitudes..."
-            className="w-full p-4 rounded-2xl border-2 border-slate-300 focus:border-amber-500 focus:outline-hidden text-sm sm:text-base font-semibold text-slate-800 bg-white shadow-xs resize-none transition-all leading-relaxed"
+            className="w-full p-4 rounded-2xl border-2 border-slate-300 dark:border-slate-700 focus:border-amber-500 dark:focus:border-amber-400 focus:outline-hidden text-sm sm:text-base font-semibold text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800 shadow-xs resize-none transition-all leading-relaxed"
           />
         </div>
       </main>
 
       {/* Action Footer */}
-      <footer className="pt-4 border-t border-slate-100 flex items-center justify-between gap-4">
+      <footer className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-4">
         {hasEvaluated && !meterResult.passed && (
-          <div className="flex items-center gap-2 text-rose-600 text-xs font-bold">
+          <div className="flex items-center gap-2 text-rose-600 dark:text-rose-400 text-xs font-bold">
             <AlertTriangle size={16} />
             <span>
               {meterResult.cappedByLength

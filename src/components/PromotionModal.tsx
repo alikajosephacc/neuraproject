@@ -38,7 +38,7 @@ export const PromotionModal: React.FC<PromotionModalProps> = ({ rankIndex, onClo
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm animate-pop-in">
-      <div className="bg-white rounded-3xl max-w-xl w-full border-4 border-emerald-500 shadow-2xl overflow-hidden relative max-h-[92vh] flex flex-col">
+      <div className="bg-white dark:bg-slate-900 rounded-3xl max-w-xl w-full border-4 border-emerald-500 shadow-2xl overflow-hidden relative max-h-[92vh] flex flex-col transition-colors">
         {/* Header Ribbon */}
         <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 px-6 py-4 text-white flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -59,33 +59,33 @@ export const PromotionModal: React.FC<PromotionModalProps> = ({ rankIndex, onClo
         <div className="p-6 md:p-8 overflow-y-auto space-y-5">
           {/* Badge & Title */}
           <div className="text-center space-y-2">
-            <div className="w-20 h-20 mx-auto rounded-3xl bg-emerald-50 border-2 border-emerald-200 flex items-center justify-center text-4xl shadow-inner animate-bounce-short">
+            <div className="w-20 h-20 mx-auto rounded-3xl bg-emerald-50 dark:bg-emerald-950/60 border-2 border-emerald-200 dark:border-emerald-800 flex items-center justify-center text-4xl shadow-inner animate-bounce-short">
               {rank.badge}
             </div>
-            <div className="inline-block px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-extrabold text-xs uppercase tracking-wider">
+            <div className="inline-block px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 font-extrabold text-xs uppercase tracking-wider">
               Level {rank.index} Title
             </div>
-            <h2 className="text-3xl font-black text-slate-900 tracking-tight">
+            <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
               {rank.title}
             </h2>
-            <p className="text-slate-600 text-sm italic font-medium max-w-md mx-auto">
+            <p className="text-slate-600 dark:text-slate-300 text-sm italic font-medium max-w-md mx-auto">
               "{rank.blurb}"
             </p>
           </div>
 
           {/* LinkedIn Style Post Card */}
-          <div className="bg-slate-50 border-2 border-blue-200 rounded-2xl p-4 sm:p-5 relative">
-            <div className="flex items-center gap-2 mb-3 pb-2 border-b border-slate-200">
+          <div className="bg-slate-50 dark:bg-slate-800 border-2 border-blue-200 dark:border-blue-800 rounded-2xl p-4 sm:p-5 relative transition-colors">
+            <div className="flex items-center gap-2 mb-3 pb-2 border-b border-slate-200 dark:border-slate-700">
               <div className="w-7 h-7 rounded bg-[#0a66c2] flex items-center justify-center text-white font-black text-xs">
                 in
               </div>
               <div>
-                <p className="text-xs font-bold text-slate-900">Your Fictional LinkedIn Post</p>
-                <p className="text-[10px] text-slate-400">Ready to copy & share</p>
+                <p className="text-xs font-bold text-slate-900 dark:text-slate-100">Your Fictional LinkedIn Post</p>
+                <p className="text-[10px] text-slate-400 dark:text-slate-400">Ready to copy & share</p>
               </div>
             </div>
 
-            <pre className="text-xs font-sans text-slate-800 whitespace-pre-wrap leading-relaxed select-all bg-white p-3.5 rounded-xl border border-slate-200">
+            <pre className="text-xs font-sans text-slate-800 dark:text-slate-200 whitespace-pre-wrap leading-relaxed select-all bg-white dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700">
               {rank.linkedInAnnouncement}
             </pre>
 
@@ -94,7 +94,7 @@ export const PromotionModal: React.FC<PromotionModalProps> = ({ rankIndex, onClo
               className={`mt-3 w-full py-2.5 px-4 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer ${
                 copied
                   ? 'bg-emerald-600 text-white'
-                  : 'bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-300'
+                  : 'bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900 border border-blue-300 dark:border-blue-800'
               }`}
             >
               {copied ? (

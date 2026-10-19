@@ -29,6 +29,7 @@ const DEFAULT_PROGRESS: Progress = {
   completedLessons: [],
   rank: 0,
   soundEnabled: true,
+  darkMode: false,
 };
 
 type Listener = () => void;
@@ -42,6 +43,7 @@ class GameStore {
     this.progress = this.load();
     this.checkStreakIntegrity();
     sound.enabled = this.progress.soundEnabled;
+    this.applyTheme(this.progress.darkMode);
   }
 
   private load(): Progress {
@@ -61,6 +63,16 @@ class GameStore {
     return { ...DEFAULT_PROGRESS };
   }
 
+  private applyTheme(isDark: boolean) {
+    if (typeof document !== 'undefined') {
+      if (isDark) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    }
+  }
+
   private save() {
     if (typeof window === 'undefined') return;
     try {
@@ -68,6 +80,7 @@ class GameStore {
     } catch (e) {
       console.error('Error saving progress to localStorage', e);
     }
+    this.applyTheme(this.progress.darkMode);
     this.notify();
   }
 
@@ -122,6 +135,13 @@ class GameStore {
     return this.progress.soundEnabled;
   }
 
+  public toggleDarkMode(): boolean {
+    this.progress.darkMode = !this.progress.darkMode;
+    this.applyTheme(this.progress.darkMode);
+    this.save();
+    return this.progress.darkMode;
+  }
+
   public completeLesson(lessonId: string, earnedXp: number): { promotedToRank: number | null } {
     const today = getTodayString();
     const yesterday = getYesterdayString();
@@ -174,6 +194,7 @@ class GameStore {
   public resetProgress() {
     this.progress = { ...DEFAULT_PROGRESS };
     this.newlyPromotedRank = null;
+    this.applyTheme(false);
     this.save();
   }
 }

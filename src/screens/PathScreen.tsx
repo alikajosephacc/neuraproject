@@ -49,7 +49,7 @@ export const PathScreen: React.FC<PathScreenProps> = ({
           return (
             <section
               key={unit.id}
-              className="bg-white rounded-3xl border-2 border-slate-200 shadow-sm overflow-hidden"
+              className="bg-white dark:bg-slate-900 rounded-3xl border-2 border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden transition-colors"
             >
               {/* Unit Banner Header */}
               <div
@@ -93,19 +93,17 @@ export const PathScreen: React.FC<PathScreenProps> = ({
               <div className="p-8 flex flex-col items-center space-y-7 relative">
                 {/* Winding connector SVG lines */}
                 <div className="absolute inset-0 pointer-events-none flex justify-center">
-                  <div className="w-1 h-full bg-slate-100 -z-0" />
+                  <div className="w-1 h-full bg-slate-100 dark:bg-slate-800 -z-0" />
                 </div>
 
                 {unit.lessons.map((lesson, idx) => {
                   const isCompleted = progress.completedLessons.includes(lesson.id);
-                  // A lesson is unlocked if it's the very first lesson, or the previous lesson was completed
                   const isUnlocked =
                     (unit.id === 1 && idx === 0) ||
                     progress.completedLessons.includes(lesson.id) ||
                     (idx > 0 && progress.completedLessons.includes(unit.lessons[idx - 1].id)) ||
                     (idx === 0 && progress.completedLessons.includes(units[unit.id - 2]?.lessons?.slice(-1)[0]?.id ?? ''));
 
-                  // Alternating winding horizontal offsets for Duolingo curve feel
                   const offsets = ['translate-x-0', '-translate-x-12 sm:-translate-x-16', 'translate-x-12 sm:translate-x-16'];
                   const offsetClass = offsets[idx % offsets.length];
 
@@ -133,8 +131,8 @@ export const PathScreen: React.FC<PathScreenProps> = ({
                           isCompleted
                             ? 'bg-emerald-500 text-white border-b-4 border-emerald-700 shadow-md hover:bg-emerald-400'
                             : isUnlocked
-                            ? 'bg-white text-slate-800 border-4 border-emerald-500 shadow-lg hover:scale-105 active:translate-y-1'
-                            : 'bg-slate-100 text-slate-300 border-4 border-slate-200 cursor-not-allowed'
+                            ? 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 border-4 border-emerald-500 shadow-lg hover:scale-105 active:translate-y-1'
+                            : 'bg-slate-100 dark:bg-slate-800/60 text-slate-300 dark:text-slate-600 border-4 border-slate-200 dark:border-slate-700 cursor-not-allowed'
                         }`}
                         title={`${lesson.title} - ${lesson.description}`}
                       >
@@ -148,10 +146,10 @@ export const PathScreen: React.FC<PathScreenProps> = ({
                       </button>
 
                       <div className="text-center mt-2 max-w-[150px]">
-                        <p className="font-extrabold text-xs text-slate-800 truncate">
+                        <p className="font-extrabold text-xs text-slate-800 dark:text-slate-200 truncate">
                           {lesson.title}
                         </p>
-                        <p className="text-[10px] text-slate-400 font-medium">6 Action Items</p>
+                        <p className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">6 Action Items</p>
                       </div>
                     </div>
                   );
@@ -182,8 +180,8 @@ export const PathScreen: React.FC<PathScreenProps> = ({
                   </button>
 
                   <div className="text-center mt-2 max-w-[180px]">
-                    <p className="font-black text-xs text-slate-900">{unit.boss.title}</p>
-                    <p className="text-[10px] text-rose-600 font-bold">Jargon Meter Challenge</p>
+                    <p className="font-black text-xs text-slate-900 dark:text-slate-100">{unit.boss.title}</p>
+                    <p className="text-[10px] text-rose-600 dark:text-rose-400 font-bold">Jargon Meter Challenge</p>
                   </div>
                 </div>
               </div>
@@ -195,17 +193,17 @@ export const PathScreen: React.FC<PathScreenProps> = ({
       {/* Right Column: Mascot, Rank Progress, Synergy League */}
       <aside className="lg:col-span-5 space-y-6 lg:sticky lg:top-20">
         {/* Gerald Widget */}
-        <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-xs flex flex-col items-center text-center">
+        <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 shadow-xs flex flex-col items-center text-center transition-colors">
           <MascotGerald mood={mascotMood} size="md" />
-          <div className="mt-4 pt-4 border-t border-slate-100 w-full flex items-center justify-between text-xs font-semibold text-slate-500">
+          <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 w-full flex items-center justify-between text-xs font-semibold text-slate-500 dark:text-slate-400">
             <span>Mascot Status:</span>
             <span
               className={`font-black uppercase tracking-wider ${
                 mascotMood === 'thriving'
-                  ? 'text-emerald-600'
+                  ? 'text-emerald-600 dark:text-emerald-400'
                   : mascotMood === 'wilting'
-                  ? 'text-rose-600'
-                  : 'text-slate-600'
+                  ? 'text-rose-600 dark:text-rose-400'
+                  : 'text-slate-600 dark:text-slate-300'
               }`}
             >
               {mascotMood}
@@ -214,27 +212,27 @@ export const PathScreen: React.FC<PathScreenProps> = ({
         </div>
 
         {/* Promotion Progress Card */}
-        <div className="bg-white rounded-3xl border border-slate-200 p-5 shadow-xs">
+        <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-5 shadow-xs transition-colors">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Career Track</span>
+            <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Career Track</span>
             <button
               onClick={onOpenRankModal}
-              className="text-xs font-black text-emerald-600 hover:text-emerald-700 flex items-center gap-0.5 cursor-pointer"
+              className="text-xs font-black text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 flex items-center gap-0.5 cursor-pointer"
             >
               Ladder <ChevronRight size={14} />
             </button>
           </div>
 
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-2xl">
+            <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center text-2xl">
               {currentRank.badge}
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <h4 className="font-black text-slate-800 text-base">{currentRank.title}</h4>
+                <h4 className="font-black text-slate-800 dark:text-slate-100 text-base">{currentRank.title}</h4>
                 <Sparkles size={14} className="text-amber-500" />
               </div>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 {nextRank ? `${xpRemaining} XP to ${nextRank.title}` : 'Peak Corporate Enlightenment'}
               </p>
             </div>
@@ -242,13 +240,13 @@ export const PathScreen: React.FC<PathScreenProps> = ({
 
           {nextRank && (
             <div className="space-y-1.5">
-              <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+              <div className="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden">
                 <div
                   className="bg-emerald-500 h-full rounded-full transition-all duration-500"
                   style={{ width: `${rankProgressPercent}%` }}
                 />
               </div>
-              <div className="flex justify-between text-[10px] font-bold text-slate-400">
+              <div className="flex justify-between text-[10px] font-bold text-slate-400 dark:text-slate-500">
                 <span>{progress.xp} XP</span>
                 <span>{nextRank.minXp} XP</span>
               </div>

@@ -18,6 +18,7 @@ export type TranslateExercise = {
   // wordbank
   tiles?: string[];
   accepted?: string[][];
+  acceptedAlternatives?: string[]; // Multiple acceptable plain/satirical variations
   // typed
   ideas?: string[][]; // each inner array is synonyms for one required idea
   ideaLabels?: string[]; // friendly label for feedback display
@@ -85,6 +86,7 @@ export interface Progress {
   completedLessons: string[]; // lesson IDs or unit-boss IDs
   rank: number; // index into rank ladder
   soundEnabled: boolean;
+  darkMode: boolean;
 }
 
 export interface RankInfo {

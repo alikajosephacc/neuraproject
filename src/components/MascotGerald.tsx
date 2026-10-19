@@ -33,13 +33,13 @@ export const MascotGerald: React.FC<MascotProps> = ({
     <div className={`flex flex-col items-center select-none ${className}`}>
       {/* Speech Bubble */}
       {bubbleText && (
-        <div className="relative mb-3 max-w-[260px] bg-white border-2 border-slate-200 rounded-2xl px-4 py-2.5 shadow-sm text-sm text-slate-700 animate-pop-in">
-          <p className="font-semibold text-xs tracking-wide uppercase text-emerald-600 mb-0.5">
+        <div className="relative mb-3 max-w-[260px] bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-2.5 shadow-sm text-sm text-slate-700 dark:text-slate-200 animate-pop-in transition-colors">
+          <p className="font-semibold text-xs tracking-wide uppercase text-emerald-600 dark:text-emerald-400 mb-0.5">
             Gerald (Office Ficus)
           </p>
           <p className="leading-snug">{bubbleText}</p>
           {/* Bubble tail */}
-          <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-3 h-3 bg-white border-b-2 border-r-2 border-slate-200 rotate-45" />
+          <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-3 h-3 bg-white dark:bg-slate-800 border-b-2 border-r-2 border-slate-200 dark:border-slate-700 rotate-45" />
         </div>
       )}
 

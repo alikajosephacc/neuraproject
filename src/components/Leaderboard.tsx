@@ -73,13 +73,13 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ playerXp }) => {
   ].sort((a, b) => b.xp - a.xp);
 
   return (
-    <div className="bg-white rounded-3xl border border-slate-200 p-5 shadow-xs">
-      <div className="flex items-center justify-between mb-4 pb-2 border-b border-slate-100">
+    <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-5 shadow-xs transition-colors">
+      <div className="flex items-center justify-between mb-4 pb-2 border-b border-slate-100 dark:border-slate-800">
         <div className="flex items-center gap-2">
           <Trophy size={18} className="text-amber-500" />
-          <h3 className="font-extrabold text-slate-800 text-sm tracking-tight">Synergy League</h3>
+          <h3 className="font-extrabold text-slate-800 dark:text-slate-100 text-sm tracking-tight">Synergy League</h3>
         </div>
-        <span className="text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full flex items-center gap-1">
+        <span className="text-[10px] font-bold uppercase tracking-wider bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300 px-2 py-0.5 rounded-full flex items-center gap-1">
           <TrendingUp size={12} /> Division 1
         </span>
       </div>
@@ -92,8 +92,8 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ playerXp }) => {
               key={person.name}
               className={`flex items-center justify-between p-2.5 rounded-2xl transition-all ${
                 isPlayer
-                  ? 'bg-emerald-50 border-2 border-emerald-400 font-bold shadow-xs'
-                  : 'hover:bg-slate-50 border border-transparent'
+                  ? 'bg-emerald-50 dark:bg-emerald-950/60 border-2 border-emerald-400 dark:border-emerald-600 font-bold shadow-xs'
+                  : 'hover:bg-slate-50 dark:hover:bg-slate-800/60 border border-transparent'
               }`}
             >
               <div className="flex items-center gap-2.5 min-w-0">
@@ -104,8 +104,8 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ playerXp }) => {
                       : idx === 1
                       ? 'text-slate-400 text-sm'
                       : idx === 2
-                      ? 'text-amber-700 text-sm'
-                      : 'text-slate-400'
+                      ? 'text-amber-700 dark:text-amber-500 text-sm'
+                      : 'text-slate-400 dark:text-slate-500'
                   }`}
                 >
                   {idx + 1}
@@ -113,7 +113,13 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ playerXp }) => {
                 <span className="text-xl shrink-0">{person.avatar}</span>
                 <div className="min-w-0">
                   <div className="flex items-center gap-1.5">
-                    <p className={`text-xs truncate ${isPlayer ? 'text-emerald-900 font-black' : 'text-slate-800 font-bold'}`}>
+                    <p
+                      className={`text-xs truncate ${
+                        isPlayer
+                          ? 'text-emerald-900 dark:text-emerald-200 font-black'
+                          : 'text-slate-800 dark:text-slate-200 font-bold'
+                      }`}
+                    >
                       {person.name}
                     </p>
                     {isPlayer && (
@@ -122,15 +128,21 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ playerXp }) => {
                       </span>
                     )}
                   </div>
-                  <p className="text-[10px] text-slate-400 truncate">{person.tagline}</p>
+                  <p className="text-[10px] text-slate-400 dark:text-slate-500 truncate">{person.tagline}</p>
                 </div>
               </div>
 
               <div className="text-right shrink-0 ml-2">
-                <span className={`text-xs font-extrabold ${isPlayer ? 'text-emerald-700' : 'text-slate-700'}`}>
+                <span
+                  className={`text-xs font-extrabold ${
+                    isPlayer
+                      ? 'text-emerald-700 dark:text-emerald-300'
+                      : 'text-slate-700 dark:text-slate-300'
+                  }`}
+                >
                   {person.xp}
                 </span>
-                <span className="text-[10px] font-medium text-slate-400 ml-0.5">XP</span>
+                <span className="text-[10px] font-medium text-slate-400 dark:text-slate-500 ml-0.5">XP</span>
               </div>
             </div>
           );

@@ -12,9 +12,15 @@ import {
   Users,
   Lightbulb,
   CornerDownLeft,
+  Lock,
+  Smile,
 } from 'lucide-react';
 import { Exercise, TranslateExercise, MatchExercise, ContextExercise } from '../types';
-import { checkTypedAnswer, checkWordBankAnswer, IdeaCheckResult } from '../lib/checker';
+import {
+  checkTypedAnswer,
+  checkWordBankAnswerAdvanced,
+  IdeaCheckResult,
+} from '../lib/checker';
 import { store } from '../lib/store';
 import { sound } from '../lib/sound';
 
@@ -47,9 +53,14 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
   // Word Bank state
   const [selectedTiles, setSelectedTiles] = useState<string[]>([]);
   const [availableTiles, setAvailableTiles] = useState<string[]>([]);
+  const [lockedTileCount, setLockedTileCount] = useState(0); // number of tiles locked from the left
 
   // Typed input state
   const [typedInput, setTypedInput] = useState('');
+  const [lockedIdeas, setLockedIdeas] = useState<string[]>([]);
+
+  // Partial match banner
+  const [partialNotice, setPartialNotice] = useState<string | null>(null);
 
   // Match state
   const [selectedLeft, setSelectedLeft] = useState<number | null>(null);
@@ -67,6 +78,7 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
     snark?: string;
     ideaResult?: IdeaCheckResult;
     why?: string;
+    isSatiricalBonus?: boolean;
   } | null>(null);
 
   const [isCompleted, setIsCompleted] = useState(false);
@@ -75,6 +87,10 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
   // Initialize state when current question changes
   useEffect(() => {
     if (!currentExercise) return;
+
+    setLockedTileCount(0);
+    setLockedIdeas([]);
+    setPartialNotice(null);
 
     if (currentExercise.type === 'translate') {
       const tr = currentExercise as TranslateExercise;
@@ -86,10 +102,12 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
         setTimeout(() => textInputRef.current?.focus(), 100);
       }
     } else if (currentExercise.type === 'match') {
-      const m = currentExercise as MatchExercise;
       setSelectedLeft(null);
       setMatchedPairs([]);
-      const rightItems = m.pairs.map((p, idx) => ({ originalIndex: idx, text: p[1] }));
+      const rightItems = (currentExercise as MatchExercise).pairs.map((p, idx) => ({
+        originalIndex: idx,
+        text: p[1],
+      }));
       setShuffledRight(rightItems.sort(() => Math.random() - 0.5));
     } else if (currentExercise.type === 'context') {
       setSelectedOption(null);
@@ -128,17 +146,25 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [feedback, currentExercise, selectedTiles, typedInput, selectedOption, matchedPairs]);
 
-  // Word Bank tile click
+  // Word Bank tile selection
   const handleSelectTile = (tile: string, index: number) => {
     sound.playClick();
     setSelectedTiles((prev) => [...prev, tile]);
     setAvailableTiles((prev) => prev.filter((_, i) => i !== index));
+    setPartialNotice(null);
   };
 
+  // Word Bank tile deselection (only unlocked tiles can be removed)
   const handleDeselectTile = (tile: string, index: number) => {
+    if (index < lockedTileCount) {
+      // Locked tile cannot be removed!
+      sound.playClick();
+      return;
+    }
     sound.playClick();
     setSelectedTiles((prev) => prev.filter((_, i) => i !== index));
     setAvailableTiles((prev) => [...prev, tile]);
+    setPartialNotice(null);
   };
 
   // Match item click
@@ -169,10 +195,12 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
     if (!currentExercise || feedback?.show) return;
 
     let passed = false;
+    let isPartialMatch = false;
     let model = '';
     let snark = '';
     let why = '';
     let ideaResult: IdeaCheckResult | undefined;
+    let isSatiricalBonus = false;
 
     if (currentExercise.type === 'translate') {
       const tr = currentExercise as TranslateExercise;
@@ -181,11 +209,60 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
 
       if (tr.mode === 'wordbank') {
         if (selectedTiles.length === 0) return;
-        passed = checkWordBankAnswer(selectedTiles, tr.accepted, tr.model);
+
+        // Evaluate with advanced partial prefix locking
+        const wbResult = checkWordBankAnswerAdvanced(
+          selectedTiles,
+          tr.accepted,
+          tr.acceptedAlternatives,
+          tr.model
+        );
+
+        if (wbResult.passed) {
+          passed = true;
+          setLockedTileCount(selectedTiles.length);
+        } else if (wbResult.isPartial) {
+          // PARTIAL MATCH: Lock correct prefix tiles! Allow correcting the rest!
+          isPartialMatch = true;
+          const newLockedCount = wbResult.longestPrefixLength;
+          setLockedTileCount(newLockedCount);
+
+          // Return wrong tiles to available pool
+          const wrongTiles = selectedTiles.slice(newLockedCount);
+          setAvailableTiles((prev) => [...prev, ...wrongTiles]);
+          setSelectedTiles(selectedTiles.slice(0, newLockedCount));
+
+          const lockedWords = selectedTiles.slice(0, newLockedCount).join(' ');
+          setPartialNotice(
+            `🔒 Part of your translation is correct! We locked "${lockedWords}". Now pick the remaining words to finish!`
+          );
+          sound.playCorrect();
+          return; // Do not fail or deduct morale!
+        }
       } else {
+        // Typed Mode
         if (!typedInput.trim()) return;
-        ideaResult = checkTypedAnswer(typedInput, tr.ideas, tr.needed, tr.ideaLabels);
-        passed = ideaResult.passed;
+        ideaResult = checkTypedAnswer(
+          typedInput,
+          tr.ideas,
+          tr.needed,
+          tr.ideaLabels,
+          tr.acceptedAlternatives
+        );
+
+        if (ideaResult.passed) {
+          passed = true;
+          isSatiricalBonus = !!ideaResult.isSatiricalBonus;
+        } else if (ideaResult.isPartial) {
+          // PARTIAL MATCH: Lock matched ideas!
+          isPartialMatch = true;
+          setLockedIdeas(ideaResult.matchedIdeas);
+          setPartialNotice(
+            `🔒 Part 1 recognized: [${ideaResult.matchedIdeas.join(', ')}]. Now add what they actually plan to do (e.g. ${ideaResult.missedIdeas.join(' or ')}) to complete the translation!`
+          );
+          sound.playCorrect();
+          return; // Do not fail or deduct morale!
+        }
       }
     } else if (currentExercise.type === 'match') {
       const m = currentExercise as MatchExercise;
@@ -203,7 +280,7 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
 
     if (passed) {
       sound.playCorrect();
-    } else {
+    } else if (!isPartialMatch) {
       sound.playWrong();
       setMistakes((prev) => prev + 1);
       // Cost 1 morale point (unless PIP lesson where morale loss is exempted)
@@ -219,6 +296,7 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
       snark,
       ideaResult,
       why,
+      isSatiricalBonus,
     });
   };
 
@@ -270,19 +348,19 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
 
     return (
       <div className="min-h-[80vh] flex items-center justify-center p-4">
-        <div className="bg-white rounded-3xl border-2 border-slate-200 max-w-md w-full p-8 text-center shadow-xl space-y-6 animate-pop-in">
-          <div className="w-24 h-24 mx-auto rounded-3xl bg-emerald-100 flex items-center justify-center text-5xl shadow-inner animate-bounce-short">
+        <div className="bg-white dark:bg-slate-800 rounded-3xl border-2 border-slate-200 dark:border-slate-700 max-w-md w-full p-8 text-center shadow-xl space-y-6 animate-pop-in transition-colors">
+          <div className="w-24 h-24 mx-auto rounded-3xl bg-emerald-100 dark:bg-emerald-950 flex items-center justify-center text-5xl shadow-inner animate-bounce-short">
             🎉
           </div>
 
           <div>
-            <div className="inline-block px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-extrabold text-xs uppercase tracking-wider mb-2">
+            <div className="inline-block px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 font-extrabold text-xs uppercase tracking-wider mb-2">
               Deliverable Shipped
             </div>
-            <h2 className="text-3xl font-black text-slate-900 tracking-tight">
+            <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
               {isPIPLesson ? 'PIP Remediation Passed!' : 'Lesson Complete!'}
             </h2>
-            <p className="text-sm text-slate-500 mt-1 font-medium">
+            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 font-medium">
               {isPIPLesson
                 ? 'Your morale has been successfully restored to 5/5. HR is satisfied.'
                 : 'Your organizational synergy metrics are on the rise.'}
@@ -291,23 +369,23 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
 
           {/* Reward Metrics */}
           <div className="grid grid-cols-2 gap-3">
-            <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4">
-              <div className="flex items-center justify-center gap-1 text-emerald-600 font-black text-xs uppercase">
+            <div className="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-2xl p-4">
+              <div className="flex items-center justify-center gap-1 text-emerald-600 dark:text-emerald-400 font-black text-xs uppercase">
                 <Sparkles size={14} /> Total XP
               </div>
-              <p className="text-3xl font-black text-emerald-800 mt-1">+{totalXp}</p>
+              <p className="text-3xl font-black text-emerald-800 dark:text-emerald-200 mt-1">+{totalXp}</p>
             </div>
 
-            <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4">
-              <div className="flex items-center justify-center gap-1 text-amber-600 font-black text-xs uppercase">
+            <div className="bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded-2xl p-4">
+              <div className="flex items-center justify-center gap-1 text-amber-600 dark:text-amber-400 font-black text-xs uppercase">
                 Mistakes
               </div>
-              <p className="text-3xl font-black text-amber-800 mt-1">{mistakes}</p>
+              <p className="text-3xl font-black text-amber-800 dark:text-amber-200 mt-1">{mistakes}</p>
             </div>
           </div>
 
           {bonus > 0 && (
-            <div className="bg-gradient-to-r from-amber-100 to-amber-50 border border-amber-300 rounded-2xl p-3 text-xs font-bold text-amber-900 flex items-center justify-center gap-2">
+            <div className="bg-gradient-to-r from-amber-100 to-amber-50 dark:from-amber-950/60 dark:to-amber-900/40 border border-amber-300 dark:border-amber-800 rounded-2xl p-3 text-xs font-bold text-amber-900 dark:text-amber-200 flex items-center justify-center gap-2">
               <span>🌟 Flawless Lesson Bonus: +20 XP (Zero Action Items Missed!)</span>
             </div>
           )}
@@ -327,19 +405,19 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
   const snapshot = store.getSnapshot();
 
   return (
-    <div className="min-h-screen flex flex-col justify-between max-w-3xl mx-auto px-4 py-6">
+    <div className="min-h-screen flex flex-col justify-between max-w-3xl mx-auto px-4 py-6 text-slate-900 dark:text-slate-100">
       {/* Header Bar */}
       <header className="flex items-center justify-between gap-4 mb-6">
         <button
           onClick={onExit}
-          className="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+          className="p-2 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
           title="Exit lesson"
         >
           <X size={24} />
         </button>
 
         {/* Lesson Progress Bar */}
-        <div className="flex-1 bg-slate-200 h-3.5 rounded-full overflow-hidden p-0.5">
+        <div className="flex-1 bg-slate-200 dark:bg-slate-800 h-3.5 rounded-full overflow-hidden p-0.5">
           <div
             className="bg-emerald-500 h-full rounded-full transition-all duration-300 ease-out"
             style={{ width: `${progressPercent}%` }}
@@ -347,9 +425,9 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
         </div>
 
         {/* Morale counter in lesson */}
-        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-50 border border-rose-200">
+        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-900">
           <Heart size={18} className="fill-rose-500 text-rose-500" />
-          <span className="font-black text-xs text-rose-700">
+          <span className="font-black text-xs text-rose-700 dark:text-rose-300">
             {isPIPLesson ? '∞' : snapshot.morale}
           </span>
         </div>
@@ -359,7 +437,7 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
       <main className="flex-1 flex flex-col justify-center max-w-2xl mx-auto w-full py-4">
         {currentExercise.type === 'translate' && (
           <div className="space-y-6">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-400">
+            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
               <span>{unitTheme}</span>
               <span>•</span>
               <span>{lessonTitle}</span>
@@ -369,48 +447,73 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
             {(() => {
               const tr = currentExercise as TranslateExercise;
               return (
-                <div className="bg-white rounded-3xl border-2 border-slate-200 p-5 sm:p-6 shadow-sm space-y-4">
-                  <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                <div className="bg-white dark:bg-slate-850 dark:bg-slate-800 rounded-3xl border-2 border-slate-200 dark:border-slate-700 p-5 sm:p-6 shadow-sm space-y-4 transition-colors">
+                  <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-700/60">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600 font-bold text-xs">
+                      <div className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 font-bold text-xs">
                         {tr.channel === 'email' ? <Mail size={16} /> : tr.channel === 'slack' ? <MessageSquare size={16} /> : <Users size={16} />}
                       </div>
                       <div>
-                        <p className="font-extrabold text-xs text-slate-800">{tr.sender}</p>
-                        <p className="text-[10px] text-slate-400 uppercase font-semibold">{tr.channel}</p>
+                        <p className="font-extrabold text-xs text-slate-800 dark:text-slate-200">{tr.sender}</p>
+                        <p className="text-[10px] text-slate-400 dark:text-slate-500 uppercase font-semibold">{tr.channel}</p>
                       </div>
                     </div>
-                    <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-slate-100 text-slate-600">
+                    <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
                       Corporate Speak
                     </span>
                   </div>
 
-                  <p className="text-xl sm:text-2xl font-black text-slate-800 leading-snug">
+                  <p className="text-xl sm:text-2xl font-black text-slate-800 dark:text-slate-100 leading-snug">
                     "{tr.text}"
                   </p>
                 </div>
               );
             })()}
 
+            {/* Partial Match Locking Banner */}
+            {partialNotice && (
+              <div className="p-3.5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/70 border-2 border-emerald-400 dark:border-emerald-700 text-emerald-900 dark:text-emerald-200 text-xs font-bold flex items-start gap-2.5 animate-pop-in">
+                <Lock size={18} className="text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+                <div className="flex-1 leading-relaxed">
+                  {partialNotice}
+                </div>
+              </div>
+            )}
+
             {/* Interaction: Word Bank or Typed */}
             {(currentExercise as TranslateExercise).mode === 'wordbank' ? (
               <div className="space-y-6">
                 {/* Sentence Assembling Tray */}
-                <div className="min-h-[70px] p-3 rounded-2xl border-2 border-dashed border-slate-300 bg-slate-100/60 flex flex-wrap gap-2 items-center">
+                <div className="min-h-[76px] p-3 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 bg-slate-100/70 dark:bg-slate-900/60 flex flex-wrap gap-2 items-center">
                   {selectedTiles.length === 0 ? (
-                    <span className="text-slate-400 text-xs italic ml-2">
+                    <span className="text-slate-400 dark:text-slate-500 text-xs italic ml-2">
                       Tap tiles below to build the plain English translation...
                     </span>
                   ) : (
-                    selectedTiles.map((tile, i) => (
-                      <button
-                        key={`${tile}-${i}`}
-                        onClick={() => handleDeselectTile(tile, i)}
-                        className="px-3.5 py-2 bg-white text-slate-800 font-bold text-sm rounded-xl border-b-2 border-slate-300 shadow-xs hover:border-slate-400 active:translate-y-0.5 transition-all cursor-pointer animate-pop-in"
-                      >
-                        {tile}
-                      </button>
-                    ))
+                    selectedTiles.map((tile, i) => {
+                      const isLocked = i < lockedTileCount;
+                      if (isLocked) {
+                        return (
+                          <div
+                            key={`${tile}-${i}`}
+                            className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-emerald-100 dark:bg-emerald-950/80 text-emerald-950 dark:text-emerald-200 font-extrabold text-sm rounded-xl border-2 border-emerald-500 dark:border-emerald-600 shadow-xs select-none"
+                            title="Locked as correct! You can now finish the rest of the sentence."
+                          >
+                            <Lock size={13} className="text-emerald-700 dark:text-emerald-400" />
+                            <span>{tile}</span>
+                          </div>
+                        );
+                      }
+                      return (
+                        <button
+                          key={`${tile}-${i}`}
+                          onClick={() => handleDeselectTile(tile, i)}
+                          className="px-3.5 py-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 font-bold text-sm rounded-xl border-b-2 border-slate-300 dark:border-slate-600 shadow-xs hover:border-slate-400 dark:hover:border-slate-500 active:translate-y-0.5 transition-all cursor-pointer animate-pop-in"
+                        >
+                          {tile}
+                        </button>
+                      );
+                    })
                   )}
                 </div>
 
@@ -420,7 +523,7 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
                     <button
                       key={`${tile}-${i}`}
                       onClick={() => handleSelectTile(tile, i)}
-                      className="px-4 py-2.5 bg-white text-slate-800 font-bold text-sm sm:text-base rounded-2xl border-2 border-slate-200 border-b-4 hover:border-slate-300 active:translate-y-1 shadow-sm transition-all cursor-pointer"
+                      className="px-4 py-2.5 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 font-bold text-sm sm:text-base rounded-2xl border-2 border-slate-200 dark:border-slate-700 border-b-4 hover:border-slate-300 dark:hover:border-slate-600 active:translate-y-1 shadow-sm transition-all cursor-pointer"
                     >
                       {tile}
                     </button>
@@ -430,22 +533,44 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
             ) : (
               /* Typed Mode */
               <div className="space-y-3">
+                {lockedIdeas.length > 0 && (
+                  <div className="flex flex-wrap items-center gap-2 p-3 rounded-2xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-300 dark:border-emerald-800">
+                    <span className="text-xs font-black text-emerald-800 dark:text-emerald-300 flex items-center gap-1">
+                      <Lock size={14} /> Locked Ideas:
+                    </span>
+                    {lockedIdeas.map((idea) => (
+                      <span
+                        key={idea}
+                        className="px-2.5 py-0.5 rounded-full bg-emerald-200 dark:bg-emerald-900 text-emerald-900 dark:text-emerald-100 text-xs font-bold"
+                      >
+                        ✓ {idea}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
                 <div className="relative">
                   <input
                     ref={textInputRef}
                     type="text"
                     value={typedInput}
-                    onChange={(e) => setTypedInput(e.target.value)}
+                    onChange={(e) => {
+                      setTypedInput(e.target.value);
+                      setPartialNotice(null);
+                    }}
                     placeholder="Type what this actually means in plain English..."
-                    className="w-full px-5 py-4 rounded-2xl border-2 border-slate-300 focus:border-emerald-500 focus:outline-hidden text-base sm:text-lg font-bold text-slate-800 bg-white shadow-xs transition-all"
+                    className="w-full px-5 py-4 rounded-2xl border-2 border-slate-300 dark:border-slate-700 focus:border-emerald-500 dark:focus:border-emerald-400 focus:outline-hidden text-base sm:text-lg font-bold text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800 shadow-xs transition-all"
                   />
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2 hidden sm:flex items-center gap-1 text-[11px] font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-md">
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2 hidden sm:flex items-center gap-1 text-[11px] font-bold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded-md">
                     <span>Press</span> <CornerDownLeft size={12} />
                   </div>
                 </div>
-                <p className="text-xs text-slate-400 text-right">
-                  Checked by Idea Matcher (meaning & synonyms, not exact spelling)
-                </p>
+                <div className="flex items-center justify-between text-xs text-slate-400 dark:text-slate-500">
+                  <span className="flex items-center gap-1">
+                    <Smile size={14} className="text-amber-500" /> Multiple plain & satirical interpretations accepted
+                  </span>
+                  <span>Checked by Idea Matcher</span>
+                </div>
               </div>
             )}
           </div>
@@ -454,7 +579,7 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
         {/* Exercise: Match Pairs */}
         {currentExercise.type === 'match' && (
           <div className="space-y-6">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-400">
+            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
               <span>{unitTheme}</span>
               <span>•</span>
               <span>Match Pairs: Corporate Speak &harr; Plain English</span>
@@ -476,10 +601,10 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
                           disabled={isMatched}
                           className={`w-full p-3.5 rounded-2xl text-left font-black text-xs sm:text-sm border-2 transition-all cursor-pointer ${
                             isMatched
-                              ? 'bg-emerald-50 text-emerald-800 border-emerald-300 opacity-60 cursor-default'
+                              ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800 opacity-60 cursor-default'
                               : isSelected
-                              ? 'bg-blue-50 text-blue-800 border-blue-500 shadow-md ring-2 ring-blue-300'
-                              : 'bg-white text-slate-800 border-slate-200 hover:border-slate-300 shadow-xs'
+                              ? 'bg-blue-50 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300 border-blue-500 shadow-md ring-2 ring-blue-300 dark:ring-blue-700'
+                              : 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 shadow-xs'
                           }`}
                         >
                           {pair[0]}
@@ -499,8 +624,8 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
                           disabled={isMatched}
                           className={`w-full p-3.5 rounded-2xl text-left font-medium text-xs sm:text-sm border-2 transition-all cursor-pointer ${
                             isMatched
-                              ? 'bg-emerald-50 text-emerald-800 border-emerald-300 opacity-60 cursor-default'
-                              : 'bg-white text-slate-700 border-slate-200 hover:border-slate-300 shadow-xs'
+                              ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800 opacity-60 cursor-default'
+                              : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 shadow-xs'
                           }`}
                         >
                           {item.text}
@@ -517,7 +642,7 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
         {/* Exercise: Context Scenario */}
         {currentExercise.type === 'context' && (
           <div className="space-y-6">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-400">
+            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
               <span>{unitTheme}</span>
               <span>•</span>
               <span>Context Analysis</span>
@@ -528,25 +653,25 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
               return (
                 <div className="space-y-5">
                   {/* Email message mockup */}
-                  <div className="bg-white rounded-3xl border-2 border-slate-200 p-5 shadow-sm space-y-3">
-                    <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+                  <div className="bg-white dark:bg-slate-800 rounded-3xl border-2 border-slate-200 dark:border-slate-700 p-5 shadow-sm space-y-3 transition-colors">
+                    <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-700">
                       <div>
-                        <p className="font-extrabold text-xs text-slate-900">{ctx.sender}</p>
-                        <p className="text-[10px] text-slate-400 font-medium">{ctx.senderRole}</p>
+                        <p className="font-extrabold text-xs text-slate-900 dark:text-slate-100">{ctx.sender}</p>
+                        <p className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">{ctx.senderRole}</p>
                       </div>
-                      <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-amber-100 text-amber-800">
+                      <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300">
                         {ctx.subject ? 'Email' : 'Chat'}
                       </span>
                     </div>
                     {ctx.subject && (
-                      <p className="text-xs font-black text-slate-700">Subject: {ctx.subject}</p>
+                      <p className="text-xs font-black text-slate-700 dark:text-slate-300">Subject: {ctx.subject}</p>
                     )}
-                    <p className="text-sm sm:text-base font-semibold text-slate-800 leading-relaxed italic bg-slate-50 p-3 rounded-xl border border-slate-100">
+                    <p className="text-sm sm:text-base font-semibold text-slate-800 dark:text-slate-200 leading-relaxed italic bg-slate-50 dark:bg-slate-900/60 p-3 rounded-xl border border-slate-100 dark:border-slate-700">
                       "{ctx.email}"
                     </p>
                   </div>
 
-                  <p className="font-extrabold text-sm text-slate-800">
+                  <p className="font-extrabold text-sm text-slate-800 dark:text-slate-200">
                     What does the sender <span className="underline decoration-amber-500">actually</span> want?
                   </p>
 
@@ -563,15 +688,15 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
                           }}
                           className={`w-full p-4 rounded-2xl text-left flex items-start gap-3 border-2 transition-all cursor-pointer ${
                             isSelected
-                              ? 'bg-emerald-50 text-emerald-900 border-emerald-500 shadow-md ring-2 ring-emerald-200'
-                              : 'bg-white text-slate-700 border-slate-200 hover:border-slate-300 shadow-xs'
+                              ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-900 dark:text-emerald-200 border-emerald-500 shadow-md ring-2 ring-emerald-200 dark:ring-emerald-800'
+                              : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 shadow-xs'
                           }`}
                         >
                           <span
                             className={`w-6 h-6 rounded-lg text-xs font-black flex items-center justify-center shrink-0 ${
                               isSelected
                                 ? 'bg-emerald-600 text-white'
-                                : 'bg-slate-100 text-slate-600'
+                                : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
                             }`}
                           >
                             {idx + 1}
@@ -590,8 +715,8 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
 
       {/* Bottom Action Footer (Before Check) */}
       {!feedback?.show && (
-        <footer className="pt-4 border-t border-slate-100 flex items-center justify-between">
-          <div className="text-xs text-slate-400 hidden sm:block">
+        <footer className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+          <div className="text-xs text-slate-400 dark:text-slate-500 hidden sm:block">
             {currentExercise.type === 'context'
               ? 'Press 1-4 to select, Enter to check'
               : 'Press Enter to submit'}
@@ -610,7 +735,7 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
               (currentExercise.type === 'match' &&
                 matchedPairs.length !== (currentExercise as MatchExercise).pairs.length)
             }
-            className="w-full sm:w-auto ml-auto px-8 py-3.5 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-200 disabled:text-slate-400 disabled:border-transparent active:translate-y-0.5 border-b-4 border-emerald-800 text-white font-black text-sm rounded-2xl shadow-sm transition-all cursor-pointer disabled:cursor-not-allowed"
+            className="w-full sm:w-auto ml-auto px-8 py-3.5 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-200 dark:disabled:bg-slate-800 disabled:text-slate-400 dark:disabled:text-slate-600 disabled:border-transparent active:translate-y-0.5 border-b-4 border-emerald-800 text-white font-black text-sm rounded-2xl shadow-sm transition-all cursor-pointer disabled:cursor-not-allowed"
           >
             Check Answer
           </button>
@@ -622,8 +747,8 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
         <div
           className={`fixed inset-x-0 bottom-0 z-40 p-5 sm:p-6 shadow-2xl transition-all border-t-4 animate-pop-in ${
             feedback.passed
-              ? 'bg-emerald-50 border-emerald-500 text-emerald-950'
-              : 'bg-rose-50 border-rose-500 text-rose-950'
+              ? 'bg-emerald-50 dark:bg-slate-900 border-emerald-500 text-emerald-950 dark:text-emerald-100'
+              : 'bg-rose-50 dark:bg-slate-900 border-rose-500 text-rose-950 dark:text-rose-100'
           }`}
         >
           <div className="max-w-3xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -631,15 +756,17 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
               <div className="flex items-center gap-2">
                 {feedback.passed ? (
                   <>
-                    <CheckCircle2 size={24} className="text-emerald-600 shrink-0" />
-                    <h3 className="text-lg font-black text-emerald-800">
-                      Synergistic! You nailed it.
+                    <CheckCircle2 size={24} className="text-emerald-600 dark:text-emerald-400 shrink-0" />
+                    <h3 className="text-lg font-black text-emerald-800 dark:text-emerald-300">
+                      {feedback.isSatiricalBonus
+                        ? '🔥 Satirical Genius! Perfectly decoded the corporate subtext.'
+                        : 'Synergistic! You nailed it.'}
                     </h3>
                   </>
                 ) : (
                   <>
-                    <AlertCircle size={24} className="text-rose-600 shrink-0" />
-                    <h3 className="text-lg font-black text-rose-800">
+                    <AlertCircle size={24} className="text-rose-600 dark:text-rose-400 shrink-0" />
+                    <h3 className="text-lg font-black text-rose-800 dark:text-rose-300">
                       Needs Alignment! Question re-queued.
                     </h3>
                   </>
@@ -648,22 +775,22 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
 
               {/* Model Translation */}
               <div className="text-xs sm:text-sm font-semibold">
-                <span className="font-bold text-slate-500 uppercase tracking-wide text-[10px] block">
+                <span className="font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide text-[10px] block">
                   Plain English Model:
                 </span>
-                <span>{feedback.model}</span>
+                <span className="text-slate-800 dark:text-slate-200">{feedback.model}</span>
               </div>
 
               {/* Matched vs Missed Ideas (for Typed exercises) */}
               {feedback.ideaResult && (
                 <div className="text-[11px] font-medium space-y-1">
                   {feedback.ideaResult.matchedIdeas.length > 0 && (
-                    <p className="text-emerald-700">
+                    <p className="text-emerald-700 dark:text-emerald-400">
                       ✓ Ideas matched: {feedback.ideaResult.matchedIdeas.join(', ')}
                     </p>
                   )}
                   {feedback.ideaResult.missedIdeas.length > 0 && (
-                    <p className="text-rose-700">
+                    <p className="text-rose-700 dark:text-rose-400">
                       ✗ Ideas missed: {feedback.ideaResult.missedIdeas.join(', ')}
                     </p>
                   )}
@@ -672,10 +799,10 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
 
               {/* Snark / Why people say this */}
               {(feedback.snark || feedback.why) && (
-                <div className="flex items-start gap-1.5 text-xs text-slate-600 bg-white/70 p-2.5 rounded-xl border border-slate-200/60">
+                <div className="flex items-start gap-1.5 text-xs text-slate-600 dark:text-slate-300 bg-white/70 dark:bg-slate-800/80 p-2.5 rounded-xl border border-slate-200/60 dark:border-slate-700/60">
                   <Lightbulb size={16} className="text-amber-500 shrink-0 mt-0.5" />
                   <p>
-                    <span className="font-bold text-slate-800">Why people talk this way: </span>
+                    <span className="font-bold text-slate-800 dark:text-slate-100">Why people talk this way: </span>
                     {feedback.snark || feedback.why}
                   </p>
                 </div>

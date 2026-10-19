@@ -81,7 +81,15 @@ export const App: React.FC = () => {
         model: 'Stop talking about this in front of everyone',
         snark: "The quintessential corporate silencing technique.",
         tiles: ['Stop', 'talking', 'about', 'this', 'in', 'front', 'of', 'everyone', 'loudly', 'forever'],
-        accepted: [['Stop', 'talking', 'about', 'this', 'in', 'front', 'of', 'everyone']],
+        accepted: [
+          ['Stop', 'talking', 'about', 'this', 'in', 'front', 'of', 'everyone'],
+          ['Stop', 'talking', 'about', 'this'],
+        ],
+        acceptedAlternatives: [
+          'stop talking about this in front of everyone',
+          'stop talking about this right now',
+          'shut up in front of everyone'
+        ]
       },
       {
         id: 'pip-2',
@@ -93,7 +101,14 @@ export const App: React.FC = () => {
         model: 'Can you not read',
         snark: 'A polite dagger in corporate correspondence.',
         tiles: ['Can', 'you', 'not', 'read', 'yesterday', 'please'],
-        accepted: [['Can', 'you', 'not', 'read']],
+        accepted: [
+          ['Can', 'you', 'not', 'read'],
+          ['you', 'can', 'not', 'read']
+        ],
+        acceptedAlternatives: [
+          'can you not read',
+          'read what i sent you'
+        ]
       },
       {
         id: 'pip-3',
@@ -142,12 +157,13 @@ export const App: React.FC = () => {
   const currentUnit = units.find((u) => u.id === activeUnitId) || units[0];
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200">
       {/* Top Navigation Bar */}
       <TopBar
         progress={progress}
         onReset={() => store.resetProgress()}
         onToggleSound={() => store.toggleSound()}
+        onToggleDarkMode={() => store.toggleDarkMode()}
         onOpenRankModal={() => setIsRankLadderOpen(true)}
       />
 
@@ -210,7 +226,7 @@ export const App: React.FC = () => {
       />
 
       {/* Footer */}
-      <footer className="py-6 border-t border-slate-200 bg-white/50 text-center text-xs text-slate-500">
+      <footer className="py-6 border-t border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 text-center text-xs text-slate-500 dark:text-slate-400 transition-colors">
         <div className="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p>
             <strong>Circle Back</strong> — Steal//Remake Hackathon submission. Remixed from Duolingo.
@@ -218,13 +234,13 @@ export const App: React.FC = () => {
           <div className="flex items-center gap-4">
             <button
               onClick={() => handleSelectBoss(1)}
-              className="text-emerald-700 hover:underline font-bold"
+              className="text-emerald-700 dark:text-emerald-400 hover:underline font-bold"
             >
               ⚡ Test Unit 1 Boss
             </button>
             <button
               onClick={() => handleSelectBoss(4)}
-              className="text-amber-700 hover:underline font-bold"
+              className="text-amber-700 dark:text-amber-400 hover:underline font-bold"
             >
               ⚡ Test LinkedIn Boss
             </button>

@@ -46,7 +46,23 @@
                 "front",
                 "of",
                 "everyone"
+              ],
+              [
+                "Stop",
+                "talking",
+                "about",
+                "this",
+                "front",
+                "everyone"
               ]
+            ],
+            "acceptedAlternatives": [
+              "stop talking about this in front of everyone",
+              "stop talking about this right now",
+              "stop embarrassing yourself",
+              "shut up in front of everyone",
+              "do not discuss this here",
+              "shut up and talk later"
             ]
           },
           {
@@ -76,6 +92,13 @@
                 "again",
                 "later"
               ]
+            ],
+            "acceptedAlternatives": [
+              "talk about this again later",
+              "discuss this later",
+              "delay this conversation",
+              "pretend we will follow up",
+              "follow up later"
             ]
           },
           {
@@ -103,6 +126,13 @@
                 "or",
                 "energy"
               ]
+            ],
+            "acceptedAlternatives": [
+              "more time or energy",
+              "more time to do this",
+              "have no time",
+              "busy right now",
+              "too much work"
             ]
           },
           {
@@ -141,7 +171,25 @@
                 "want",
                 "to",
                 "leave"
+              ],
+              [
+                "I",
+                "have",
+                "another",
+                "meeting",
+                "I",
+                "just",
+                "want",
+                "to",
+                "leave"
               ]
+            ],
+            "acceptedAlternatives": [
+              "i have another meeting or i just want to leave",
+              "i want to leave now",
+              "leaving before action items",
+              "must leave right now",
+              "escape this meeting"
             ]
           },
           {
@@ -219,7 +267,19 @@
                 "this",
                 "complicated",
                 "mess"
+              ],
+              [
+                "Explain",
+                "analyze",
+                "this",
+                "complicated",
+                "mess"
               ]
+            ],
+            "acceptedAlternatives": [
+              "explain or analyze this complicated mess",
+              "explain this disaster",
+              "break down this complicated mess"
             ]
           },
           {
@@ -245,6 +305,11 @@
                 "to",
                 "coordinate"
               ]
+            ],
+            "acceptedAlternatives": [
+              "meet to coordinate",
+              "talk to each other",
+              "schedule another meeting"
             ]
           },
           {
@@ -272,6 +337,12 @@
                 "the",
                 "restroom"
               ]
+            ],
+            "acceptedAlternatives": [
+              "go to the restroom",
+              "use the bathroom",
+              "pee break",
+              "escape to the bathroom"
             ]
           },
           {
@@ -304,8 +375,17 @@
                 "impossibly",
                 "large",
                 "task"
+              ],
+              [
+                "Try",
+                "to",
+                "do",
+                "impossibly",
+                "large",
+                "task"
               ]
-            ]
+            ],
+            "acceptedAlternatives": []
           },
           {
             "id": "u1-l2-match",
@@ -378,7 +458,8 @@
                 "noticeable",
                 "progress"
               ]
-            ]
+            ],
+            "acceptedAlternatives": []
           },
           {
             "id": "u1-l3-t2",
@@ -407,7 +488,8 @@
                 "minimal",
                 "effort"
               ]
-            ]
+            ],
+            "acceptedAlternatives": []
           },
           {
             "id": "u1-l3-t3",
@@ -434,7 +516,8 @@
                 "without",
                 "details"
               ]
-            ]
+            ],
+            "acceptedAlternatives": []
           },
           {
             "id": "u1-l3-t4",
@@ -464,8 +547,15 @@
                 "or",
                 "bottom",
                 "line"
+              ],
+              [
+                "final",
+                "conclusion",
+                "bottom",
+                "line"
               ]
-            ]
+            ],
+            "acceptedAlternatives": []
           },
           {
             "id": "u1-l3-match",
@@ -568,6 +658,13 @@
                 "not",
                 "read?"
               ]
+            ],
+            "acceptedAlternatives": [
+              "can you not read",
+              "learn how to read your inbox",
+              "read what i sent you",
+              "did you even read my email",
+              "you failed to read"
             ]
           },
           {
@@ -605,6 +702,12 @@
                 "days",
                 "ago"
               ]
+            ],
+            "acceptedAlternatives": [
+              "pay attention to what you ignored",
+              "stop ignoring this task",
+              "do what you promised",
+              "this is not friendly do your job"
             ]
           },
           {
@@ -628,6 +731,11 @@
                 "Notice",
                 "me"
               ]
+            ],
+            "acceptedAlternatives": [
+              "notice me",
+              "look at this now",
+              "harassing you until you reply"
             ]
           },
           {
@@ -664,7 +772,22 @@
                 "cannot",
                 "deny",
                 "this"
+              ],
+              [
+                "Creating",
+                "paper",
+                "trail",
+                "so",
+                "you",
+                "cannot",
+                "deny",
+                "this"
               ]
+            ],
+            "acceptedAlternatives": [
+              "creating a paper trail so you cannot deny this",
+              "documenting so you cannot lie",
+              "paper trail to blame you"
             ]
           },
           {
@@ -753,7 +876,24 @@
                 "if",
                 "it",
                 "fails"
+              ],
+              [
+                "Look",
+                "at",
+                "this",
+                "so",
+                "you",
+                "share",
+                "blame",
+                "if",
+                "it",
+                "fails"
               ]
+            ],
+            "acceptedAlternatives": [
+              "look at this so you share the blame",
+              "sharing the blame with you",
+              "making sure you are implicated"
             ]
           },
           {
@@ -787,7 +927,8 @@
                 "brought",
                 "receipts"
               ]
-            ]
+            ],
+            "acceptedAlternatives": []
           },
           {
             "id": "u2-l2-t3",
@@ -814,7 +955,8 @@
                 "and",
                 "backup"
               ]
-            ]
+            ],
+            "acceptedAlternatives": []
           },
           {
             "id": "u2-l2-t4",
@@ -849,7 +991,8 @@
                 "chose",
                 "peace"
               ]
-            ]
+            ],
+            "acceptedAlternatives": []
           },
           {
             "id": "u2-l2-match",
@@ -937,8 +1080,21 @@
                 "had",
                 "to",
                 "rewrite"
+              ],
+              [
+                "Look",
+                "at",
+                "how",
+                "much",
+                "your",
+                "work",
+                "I",
+                "had",
+                "to",
+                "rewrite"
               ]
-            ]
+            ],
+            "acceptedAlternatives": []
           },
           {
             "id": "u2-l3-t2",
@@ -967,7 +1123,8 @@
                 "until",
                 "today"
               ]
-            ]
+            ],
+            "acceptedAlternatives": []
           },
           {
             "id": "u2-l3-t3",
@@ -996,7 +1153,8 @@
                 "you",
                 "again"
               ]
-            ]
+            ],
+            "acceptedAlternatives": []
           },
           {
             "id": "u2-l3-t4",
@@ -1025,7 +1183,8 @@
                 "without",
                 "changes"
               ]
-            ]
+            ],
+            "acceptedAlternatives": []
           },
           {
             "id": "u2-l3-match",
@@ -1137,7 +1296,13 @@
               "acknowledging failure/poor performance",
               "need for improvement"
             ],
-            "needed": 1
+            "needed": 1,
+            "acceptedAlternatives": [
+              "you are bad at this",
+              "you failed",
+              "terrible performance",
+              "you made a huge mistake"
+            ]
           },
           {
             "id": "u3-l1-t2",
@@ -1170,7 +1335,13 @@
               "referencing the boss/manager",
               "doing their work or babysitting them"
             ],
-            "needed": 2
+            "needed": 2,
+            "acceptedAlternatives": [
+              "needs to do their boss's job",
+              "babysit your manager",
+              "do executive work without pay",
+              "remind your boss of everything"
+            ]
           },
           {
             "id": "u3-l1-t3",
@@ -1205,7 +1376,12 @@
               "working more/overtime",
               "without compensation or authority"
             ],
-            "needed": 1
+            "needed": 1,
+            "acceptedAlternatives": [
+              "work overtime without extra pay",
+              "take the blame for free",
+              "work through the weekend"
+            ]
           },
           {
             "id": "u3-l1-t4",
@@ -1238,7 +1414,8 @@
               "dressing better/appearance",
               "speaking with confidence/acting important"
             ],
-            "needed": 1
+            "needed": 1,
+            "acceptedAlternatives": []
           },
           {
             "id": "u3-l1-match",
@@ -1319,7 +1496,8 @@
               "lack of training/support",
               "working completely alone"
             ],
-            "needed": 1
+            "needed": 1,
+            "acceptedAlternatives": []
           },
           {
             "id": "u3-l2-t2",
@@ -1352,7 +1530,8 @@
               "social conformity or drinking beer",
               "arbitrary subjective likeness"
             ],
-            "needed": 1
+            "needed": 1,
+            "acceptedAlternatives": []
           },
           {
             "id": "u3-l2-t3",
@@ -1386,7 +1565,8 @@
               "posting obvious platitudes",
               "online corporate posturing"
             ],
-            "needed": 1
+            "needed": 1,
+            "acceptedAlternatives": []
           },
           {
             "id": "u3-l2-t4",
@@ -1420,7 +1600,8 @@
               "failure of the original plan",
               "panicked sudden change"
             ],
-            "needed": 1
+            "needed": 1,
+            "acceptedAlternatives": []
           },
           {
             "id": "u3-l2-match",
@@ -1501,7 +1682,8 @@
               "blindly agreeing/nodding",
               "deferring to the highest paid boss"
             ],
-            "needed": 1
+            "needed": 1,
+            "acceptedAlternatives": []
           },
           {
             "id": "u3-l3-t2",
@@ -1533,7 +1715,8 @@
               "actually being useful",
               "delivering genuine value"
             ],
-            "needed": 1
+            "needed": 1,
+            "acceptedAlternatives": []
           },
           {
             "id": "u3-l3-t3",
@@ -1556,14 +1739,17 @@
                 "boss",
                 "team",
                 "company",
-                "problem"
+                "problem",
+                "bad",
+                "fail"
               ]
             ],
             "ideaLabels": [
               "core meaning",
               "contextual implication"
             ],
-            "needed": 1
+            "needed": 1,
+            "acceptedAlternatives": []
           },
           {
             "id": "u3-l3-t4",
@@ -1586,14 +1772,17 @@
                 "boss",
                 "team",
                 "company",
-                "problem"
+                "problem",
+                "bad",
+                "fail"
               ]
             ],
             "ideaLabels": [
               "core meaning",
               "contextual implication"
             ],
-            "needed": 1
+            "needed": 1,
+            "acceptedAlternatives": []
           },
           {
             "id": "u3-l3-match",
@@ -1703,7 +1892,13 @@
               "shameless bragging/boasting",
               "new job/career announcement"
             ],
-            "needed": 1
+            "needed": 1,
+            "acceptedAlternatives": [
+              "arrogant and bragging about my promotion",
+              "boasting about my career",
+              "shameless flex on linkedin",
+              "bragging to my network"
+            ]
           },
           {
             "id": "u4-l1-t2",
@@ -1735,7 +1930,8 @@
               "standard job change",
               "leaving for more money"
             ],
-            "needed": 1
+            "needed": 1,
+            "acceptedAlternatives": []
           },
           {
             "id": "u4-l1-t3",
@@ -1768,7 +1964,13 @@
               "soliciting comments/engagement",
               "manipulating social media algorithm"
             ],
-            "needed": 1
+            "needed": 1,
+            "acceptedAlternatives": [
+              "leave comments for the algorithm",
+              "boost my social media reach",
+              "give me likes and comments",
+              "stroke my ego"
+            ]
           },
           {
             "id": "u4-l1-t4",
@@ -1801,7 +2003,12 @@
               "laid off or unemployed",
               "actively seeking employment"
             ],
-            "needed": 1
+            "needed": 1,
+            "acceptedAlternatives": [
+              "i was laid off or fired",
+              "unemployed and desperate",
+              "looking for work immediately"
+            ]
           },
           {
             "id": "u4-l1-match",
@@ -1880,7 +2087,8 @@
               "selling the same thing with a subscription",
               "rebranding mundane concepts"
             ],
-            "needed": 1
+            "needed": 1,
+            "acceptedAlternatives": []
           },
           {
             "id": "u4-l2-t2",
@@ -1915,7 +2123,8 @@
               "hyping a minor update",
               "celebrating trivial changes"
             ],
-            "needed": 1
+            "needed": 1,
+            "acceptedAlternatives": []
           },
           {
             "id": "u4-l2-t3",
@@ -1947,7 +2156,8 @@
               "reframing a blunder into a genius lesson",
               "humblebragging"
             ],
-            "needed": 1
+            "needed": 1,
+            "acceptedAlternatives": []
           },
           {
             "id": "u4-l2-t4",
@@ -1980,7 +2190,8 @@
               "burning venture capital on ads",
               "reckless runway consumption"
             ],
-            "needed": 1
+            "needed": 1,
+            "acceptedAlternatives": []
           },
           {
             "id": "u4-l2-match",
@@ -2051,14 +2262,17 @@
                 "boss",
                 "team",
                 "company",
-                "problem"
+                "problem",
+                "bad",
+                "fail"
               ]
             ],
             "ideaLabels": [
               "core meaning",
               "contextual implication"
             ],
-            "needed": 1
+            "needed": 1,
+            "acceptedAlternatives": []
           },
           {
             "id": "u4-l3-t2",
@@ -2081,14 +2295,17 @@
                 "boss",
                 "team",
                 "company",
-                "problem"
+                "problem",
+                "bad",
+                "fail"
               ]
             ],
             "ideaLabels": [
               "core meaning",
               "contextual implication"
             ],
-            "needed": 1
+            "needed": 1,
+            "acceptedAlternatives": []
           },
           {
             "id": "u4-l3-t3",
@@ -2111,14 +2328,17 @@
                 "boss",
                 "team",
                 "company",
-                "problem"
+                "problem",
+                "bad",
+                "fail"
               ]
             ],
             "ideaLabels": [
               "core meaning",
               "contextual implication"
             ],
-            "needed": 1
+            "needed": 1,
+            "acceptedAlternatives": []
           },
           {
             "id": "u4-l3-t4",
@@ -2151,7 +2371,8 @@
               "shipping buggy broken code",
               "glorified carelessness"
             ],
-            "needed": 1
+            "needed": 1,
+            "acceptedAlternatives": []
           },
           {
             "id": "u4-l3-match",

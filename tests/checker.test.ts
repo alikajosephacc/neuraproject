@@ -1,5 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { normalizeText, containsSynonym, checkTypedAnswer, checkWordBankAnswer } from '../src/lib/checker';
+import {
+  normalizeText,
+  containsSynonym,
+  checkTypedAnswer,
+  checkWordBankAnswerAdvanced,
+} from '../src/lib/checker';
 
 describe('Answer Checker (Idea Matcher & Word Bank)', () => {
   describe('normalizeText', () => {
@@ -20,63 +25,100 @@ describe('Answer Checker (Idea Matcher & Word Bank)', () => {
       expect(containsSynonym('we have no time today', 'no time')).toBe(true);
     });
 
-    it('handles punctuation around words', () => {
+    it('handles punctuation and word suffixes (s, ed, ing)', () => {
       expect(containsSynonym('Later! We can talk later.', 'later')).toBe(true);
-      expect(containsSynonym("It's postponed indefinitely.", 'postponed')).toBe(true);
+      expect(containsSynonym("It's postponed indefinitely.", 'postpone')).toBe(true);
+      expect(containsSynonym('They are prioritizing meetings.', 'prioritize')).toBe(true);
     });
   });
 
-  describe('checkTypedAnswer (Section 7)', () => {
+  describe('checkTypedAnswer (Multiple Answers & Partial Idea Locking)', () => {
     const ideas = [
       ['later', 'not now', 'another time', 'postpone', 'delay'],
       ['busy', 'no time', 'not a priority', 'low priority'],
     ];
+    const ideaLabels = ['rescheduling / postponing', 'lack of bandwidth / busy'];
+    const satiricalAlternatives = [
+      'shut up in front of everyone',
+      'stop talking about this now',
+      'avoid this topic forever',
+    ];
 
     it('passes when at least "needed" ideas are matched', () => {
-      const result = checkTypedAnswer("I'm too busy to look at this today", ideas, 1);
+      const result = checkTypedAnswer("I'm too busy to look at this today", ideas, 1, ideaLabels);
       expect(result.passed).toBe(true);
       expect(result.matchedCount).toBe(1);
       expect(result.missedIdeas.length).toBe(1);
     });
 
-    it('passes when both ideas are matched', () => {
-      const result = checkTypedAnswer("We have no time right now, let's do this another time", ideas, 1);
-      expect(result.passed).toBe(true);
-      expect(result.matchedCount).toBe(2);
-    });
-
-    it('fails when no ideas match', () => {
-      const result = checkTypedAnswer('The sky is blue today', ideas, 1);
+    it('detects partial match and locks satisfied ideas', () => {
+      // Only matches idea 1 ('delay'), but needed is 2
+      const result = checkTypedAnswer('We should delay this meeting', ideas, 2, ideaLabels);
       expect(result.passed).toBe(false);
-      expect(result.matchedCount).toBe(0);
-      expect(result.missedIdeas.length).toBe(2);
+      expect(result.isPartial).toBe(true);
+      expect(result.lockedIdeas).toContain('rescheduling / postponing');
+      expect(result.missedIdeas).toContain('lack of bandwidth / busy');
     });
 
-    it('enforces needed threshold of 2 when specified', () => {
-      const result1 = checkTypedAnswer("I'm busy", ideas, 2);
-      expect(result1.passed).toBe(false);
-
-      const result2 = checkTypedAnswer("I'm busy, so postpone it for another time", ideas, 2);
-      expect(result2.passed).toBe(true);
+    it('accepts alternative satirical answers directly', () => {
+      const result = checkTypedAnswer(
+        'shut up in front of everyone',
+        ideas,
+        2,
+        ideaLabels,
+        satiricalAlternatives
+      );
+      expect(result.passed).toBe(true);
+      expect(result.isSatiricalBonus).toBe(true);
     });
   });
 
-  describe('checkWordBankAnswer', () => {
-    const accepted = [['stop', 'talking', 'about', 'this', 'in', 'front', 'of', 'everyone']];
+  describe('checkWordBankAnswerAdvanced (Tile Locking & Multi-Sequence)', () => {
+    const acceptedSequences = [
+      ['stop', 'talking', 'about', 'this', 'in', 'front', 'of', 'everyone'],
+      ['stop', 'talking', 'about', 'this', 'now'],
+    ];
     const model = 'Stop talking about this in front of everyone.';
+    const satiricalAlternatives = ['shut up in front of everyone'];
 
-    it('accepts correct tile sequence', () => {
+    it('accepts exact primary sequence', () => {
       const tiles = ['stop', 'talking', 'about', 'this', 'in', 'front', 'of', 'everyone'];
-      expect(checkWordBankAnswer(tiles, accepted, model)).toBe(true);
+      const res = checkWordBankAnswerAdvanced(tiles, acceptedSequences, satiricalAlternatives, model);
+      expect(res.passed).toBe(true);
+      expect(res.isPartial).toBe(false);
+      expect(res.lockedIndices.length).toBe(tiles.length);
     });
 
-    it('rejects scrambled or wrong tiles', () => {
-      const tiles = ['everyone', 'stop', 'talking'];
-      expect(checkWordBankAnswer(tiles, accepted, model)).toBe(false);
+    it('accepts secondary alternative sequence', () => {
+      const tiles = ['stop', 'talking', 'about', 'this', 'now'];
+      const res = checkWordBankAnswerAdvanced(tiles, acceptedSequences, satiricalAlternatives, model);
+      expect(res.passed).toBe(true);
     });
 
-    it('rejects empty selections', () => {
-      expect(checkWordBankAnswer([], accepted, model)).toBe(false);
+    it('accepts alternative satirical answer sequence', () => {
+      const tiles = ['shut', 'up', 'in', 'front', 'of', 'everyone'];
+      const res = checkWordBankAnswerAdvanced(tiles, acceptedSequences, satiricalAlternatives, model);
+      expect(res.passed).toBe(true);
+    });
+
+    it('locks correct prefix and isolates wrong tiles for correction', () => {
+      // First 3 tiles match ('stop talking about'), 4th is wrong ('loudly')
+      const tiles = ['stop', 'talking', 'about', 'loudly'];
+      const res = checkWordBankAnswerAdvanced(tiles, acceptedSequences, satiricalAlternatives, model);
+
+      expect(res.passed).toBe(false);
+      expect(res.isPartial).toBe(true);
+      expect(res.lockedIndices).toEqual([0, 1, 2]); // 'stop', 'talking', 'about' locked!
+      expect(res.wrongIndices).toEqual([3]); // 'loudly' flagged as wrong!
+      expect(res.remainingWordsNeeded).toContain('this');
+    });
+
+    it('identifies completely wrong sequence as not partial', () => {
+      const tiles = ['loudly', 'angry', 'bonus'];
+      const res = checkWordBankAnswerAdvanced(tiles, acceptedSequences, satiricalAlternatives, model);
+      expect(res.passed).toBe(false);
+      expect(res.isPartial).toBe(false);
+      expect(res.lockedIndices.length).toBe(0);
     });
   });
 });

@@ -500,6 +500,155 @@ const TYPED_IDEAS: Record<string, { ideas: string[][]; labels: string[]; needed:
   }
 };
 
+const SATIRICAL_VARIANTS: Record<string, string[]> = {
+  "Let's take this offline": [
+    "stop talking about this in front of everyone",
+    "stop talking about this right now",
+    "stop embarrassing yourself",
+    "shut up in front of everyone",
+    "do not discuss this here",
+    "shut up and talk later"
+  ],
+  "Circle back": [
+    "talk about this again later",
+    "discuss this later",
+    "delay this conversation",
+    "pretend we will follow up",
+    "follow up later"
+  ],
+  "More bandwidth": [
+    "more time or energy",
+    "more time to do this",
+    "have no time",
+    "busy right now",
+    "too much work"
+  ],
+  "Hard stop": [
+    "i have another meeting or i just want to leave",
+    "i want to leave now",
+    "leaving before action items",
+    "must leave right now",
+    "escape this meeting"
+  ],
+  "Put this in the parking lot": [
+    "ignore this idea forever",
+    "bury this idea forever",
+    "never talk about this again",
+    "drop this topic completely",
+    "kill this discussion"
+  ],
+  "Touch base": [
+    "talk briefly",
+    "quick chat",
+    "interrogate you briefly",
+    "unscheduled interrogation"
+  ],
+  "Double click on that": [
+    "examine the details",
+    "look closer at details",
+    "analyze the fine print"
+  ],
+  "Unpack this": [
+    "explain or analyze this complicated mess",
+    "explain this disaster",
+    "break down this complicated mess"
+  ],
+  "Sync up": [
+    "meet to coordinate",
+    "talk to each other",
+    "schedule another meeting"
+  ],
+  "Bio break": [
+    "go to the restroom",
+    "use the bathroom",
+    "pee break",
+    "escape to the bathroom"
+  ],
+  "Per my last email": [
+    "can you not read",
+    "learn how to read your inbox",
+    "read what i sent you",
+    "did you even read my email",
+    "you failed to read"
+  ],
+  "Friendly reminder": [
+    "pay attention to what you ignored",
+    "stop ignoring this task",
+    "do what you promised",
+    "this is not friendly do your job"
+  ],
+  "Bumping this to top of your inbox": [
+    "notice me",
+    "look at this now",
+    "harassing you until you reply"
+  ],
+  "As discussed": [
+    "creating a paper trail so you cannot deny this",
+    "documenting so you cannot lie",
+    "paper trail to blame you"
+  ],
+  "Please advise": [
+    "what on earth do you want me to do",
+    "fix your own problem",
+    "what do you want from me"
+  ],
+  "Thanks in advance": [
+    "you have no choice but to do this",
+    "do this immediately",
+    "forced compliance",
+    "you cannot say no"
+  ],
+  "Attaching for your visibility": [
+    "look at this so you share the blame",
+    "sharing the blame with you",
+    "making sure you are implicated"
+  ],
+  "Opportunity for growth": [
+    "you are bad at this",
+    "you failed",
+    "terrible performance",
+    "you made a huge mistake"
+  ],
+  "Needs to manage up": [
+    "needs to do their boss's job",
+    "babysit your manager",
+    "do executive work without pay",
+    "remind your boss of everything"
+  ],
+  "Demonstrate more ownership": [
+    "work overtime without extra pay",
+    "take the blame for free",
+    "work through the weekend"
+  ],
+  "Wear multiple hats": [
+    "do the work of three people",
+    "severely understaffed team",
+    "three jobs with one salary"
+  ],
+  "Humbled and thrilled": [
+    "arrogant and bragging about my promotion",
+    "boasting about my career",
+    "shameless flex on linkedin",
+    "bragging to my network"
+  ],
+  "Agree?": [
+    "leave comments for the algorithm",
+    "boost my social media reach",
+    "give me likes and comments",
+    "stroke my ego"
+  ],
+  "Open to new opportunities": [
+    "i was laid off or fired",
+    "unemployed and desperate",
+    "looking for work immediately"
+  ],
+  "Unlock synergies": [
+    "lay off overlapping departments",
+    "mass layoffs to cut costs",
+    "firing people for profit"
+  ]
+};
+
 function main() {
   const csvPath = path.resolve(process.cwd(), 'src/data/phrases.csv');
   const bossesPath = path.resolve(process.cwd(), 'src/data/bosses.json');
@@ -623,9 +772,20 @@ function main() {
             distractors[t % distractors.length],
             distractors[(t + 3) % distractors.length],
           ];
-
-          // Combine tiles and shuffle deterministically
           const tiles = [...words, ...pickedDistractors].sort(() => 0.5 - ((t + 1) % 3));
+
+          // Satirical and alternative answers
+          const satVariants = SATIRICAL_VARIANTS[item.phrase] || [];
+          const acceptedSeqs: string[][] = [words];
+
+          // Add variations for word bank if words are subset
+          if (words.length > 4) {
+            // Also accept concise prefix if user stops early or drops articles
+            const withoutArticles = words.filter((w) => !['a', 'an', 'the', 'in', 'of', 'or'].includes(w.toLowerCase()));
+            if (withoutArticles.length >= 3 && withoutArticles.length < words.length) {
+              acceptedSeqs.push(withoutArticles);
+            }
+          }
 
           exercises.push({
             id: `u${config.id}-l${l + 1}-t${t + 1}`,
@@ -638,14 +798,16 @@ function main() {
             model: item.plain,
             snark: item.snark,
             tiles,
-            accepted: [words],
+            accepted: acceptedSeqs,
+            acceptedAlternatives: satVariants,
           } as TranslateExercise);
         } else {
           // Typed Mode: Tuned ideas and synonym groups
+          const satVariants = SATIRICAL_VARIANTS[item.phrase] || [];
           const tuned = TYPED_IDEAS[item.phrase] || {
             ideas: [
               item.plain.toLowerCase().split(/\s+/).slice(0, 3),
-              ['work', 'boss', 'team', 'company', 'problem']
+              ['work', 'boss', 'team', 'company', 'problem', 'bad', 'fail']
             ],
             labels: ['core meaning', 'contextual implication'],
             needed: 1
@@ -664,6 +826,7 @@ function main() {
             ideas: tuned.ideas,
             ideaLabels: tuned.labels,
             needed: tuned.needed,
+            acceptedAlternatives: satVariants,
           } as TranslateExercise);
         }
       }

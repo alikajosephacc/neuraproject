@@ -12,7 +12,7 @@ export const PIPModal: React.FC<PIPModalProps> = ({ isOpen, onStartPIPLesson }) 
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm animate-pop-in">
-      <div className="bg-white rounded-3xl max-w-lg w-full border-4 border-rose-500 shadow-2xl overflow-hidden relative">
+      <div className="bg-white dark:bg-slate-900 rounded-3xl max-w-lg w-full border-4 border-rose-500 shadow-2xl overflow-hidden relative transition-colors">
         {/* Urgent Warning Header Stripe */}
         <div className="bg-rose-600 px-6 py-3 text-white flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -30,17 +30,17 @@ export const PIPModal: React.FC<PIPModalProps> = ({ isOpen, onStartPIPLesson }) 
           <div className="flex items-start gap-4 mb-5">
             <MascotGerald mood="wilting" size="sm" speechText="My leaves... the optics are compromised!" />
             <div>
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-100 text-rose-800 font-black text-xs uppercase tracking-wide mb-1">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-100 dark:bg-rose-950 text-rose-800 dark:text-rose-300 font-black text-xs uppercase tracking-wide mb-1">
                 <AlertTriangle size={14} /> Morale Depleted (0/5)
               </div>
-              <h2 className="text-2xl font-black text-slate-900 leading-tight">
+              <h2 className="text-2xl font-black text-slate-900 dark:text-white leading-tight">
                 Performance Improvement Plan (PIP)
               </h2>
             </div>
           </div>
 
-          <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs text-slate-600 leading-relaxed space-y-2 mb-6 font-mono">
-            <p className="font-bold text-slate-800">
+          <div className="bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-xs text-slate-600 dark:text-slate-300 leading-relaxed space-y-2 mb-6 font-mono">
+            <p className="font-bold text-slate-800 dark:text-slate-100">
               TO: Employee #8942 // FROM: Talent & People Operations
             </p>
             <p>
@@ -49,7 +49,7 @@ export const PIPModal: React.FC<PIPModalProps> = ({ isOpen, onStartPIPLesson }) 
             <p>
               Per corporate policy, keycard privileges and free breakroom cold brew have been temporarily throttled. To restore full morale (5/5), you must pass a remedial <strong>Morale Calibration Exercise</strong>.
             </p>
-            <p className="text-emerald-700 font-bold">
+            <p className="text-emerald-700 dark:text-emerald-400 font-bold">
               ✓ Good news: No morale points can be lost during this calibration session.
             </p>
           </div>

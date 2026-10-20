@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import {
   X,
@@ -8,6 +8,8 @@ import {
   HelpCircle,
   Sparkles,
   ArrowRight,
+  MessageSquare,
+  Lightbulb,
 } from 'lucide-react';
 import { BossExercise } from '../types';
 import { scoreCorporateText, MeterResult } from '../lib/meter';
@@ -30,9 +32,32 @@ export const BossBattleScreen: React.FC<BossBattleScreenProps> = ({
   onExit,
 }) => {
   const [inputText, setInputText] = useState('');
-  const [showHint, setShowHint] = useState(false);
+  const [showHint, setShowHint] = useState(true);
   const [hasEvaluated, setHasEvaluated] = useState(false);
   const [isVictory, setIsVictory] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Extract curated phrases to show as hints and clickable insertion chips
+  const displayPhrases = useMemo(() => {
+    const set = new Set<string>();
+
+    // 1. Add unit target phrases
+    targetPhrases.forEach((p) => {
+      const trimmed = p.trim();
+      if (trimmed.length > 2) set.add(trimmed);
+    });
+
+    // 2. Extract quotes from hint (e.g. 'hard stop', 'bandwidth')
+    const hintMatches = boss.hint.match(/'([^']+)'/g);
+    if (hintMatches) {
+      hintMatches.forEach((m) => {
+        const clean = m.replace(/'/g, '').trim();
+        if (clean.length > 2) set.add(clean);
+      });
+    }
+
+    return Array.from(set).slice(0, 10);
+  }, [targetPhrases, boss.hint]);
 
   // Live Jargon Meter evaluation as user types!
   const meterResult: MeterResult = useMemo(() => {
@@ -45,6 +70,23 @@ export const BossBattleScreen: React.FC<BossBattleScreenProps> = ({
       15
     );
   }, [inputText, targetPhrases, boss]);
+
+  // Insert a corporate phrase into the text area
+  const handleInsertPhrase = (phrase: string) => {
+    sound.playClick();
+    setInputText((prev) => {
+      const trimmed = prev.trim();
+      if (!trimmed) return phrase;
+      // If phrase is not already in the text, append it
+      if (!trimmed.toLowerCase().includes(phrase.toLowerCase())) {
+        return `${trimmed} ${phrase}`;
+      }
+      return trimmed;
+    });
+    setTimeout(() => {
+      textareaRef.current?.focus();
+    }, 50);
+  };
 
   const handleSubmit = () => {
     setHasEvaluated(true);
@@ -146,7 +188,7 @@ export const BossBattleScreen: React.FC<BossBattleScreenProps> = ({
           title="Toggle buzzword hints"
         >
           <HelpCircle size={16} />
-          <span>Hints</span>
+          <span>{showHint ? 'Hide Hints' : 'Show Hints'}</span>
         </button>
       </header>
 
@@ -185,13 +227,24 @@ export const BossBattleScreen: React.FC<BossBattleScreenProps> = ({
           </div>
         </SpotlightCard>
 
-        {/* Hint Sheet */}
+        {/* Strategy & Buzzword Hints Card */}
         {showHint && (
-          <div className="bg-amber-50 dark:bg-amber-950/60 border-2 border-amber-200 dark:border-amber-800 rounded-2xl p-4 text-xs text-amber-900 dark:text-amber-200 space-y-1.5 animate-pop-in">
-            <p className="font-extrabold flex items-center gap-1.5">
-              💡 Corporate Cheat Sheet:
+          <div className="bg-amber-50 dark:bg-amber-950/60 border-2 border-amber-200 dark:border-amber-800 rounded-2xl p-4 text-xs text-amber-900 dark:text-amber-200 space-y-2 animate-pop-in">
+            <div className="flex items-center justify-between">
+              <p className="font-black flex items-center gap-1.5 uppercase tracking-wide">
+                <Lightbulb size={15} className="text-amber-600 dark:text-amber-400 shrink-0" />
+                <span>Executive Cheat Sheet & Strategy Hints:</span>
+              </p>
+              <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-amber-200 dark:bg-amber-900 text-amber-900 dark:text-amber-200 uppercase">
+                Goal: {boss.passScore}+ PTS
+              </span>
+            </div>
+            <p className="leading-relaxed font-medium">
+              {boss.hint}
             </p>
-            <p className="leading-relaxed">{boss.hint}</p>
+            <p className="text-[11px] text-amber-800/80 dark:text-amber-300/80 pt-1 border-t border-amber-200 dark:border-amber-800">
+              💡 <strong>Pro Tip:</strong> Click any phrase from the Arsenal below to automatically drop it into your answer. Use at least <strong>{boss.minPhrases} corporate phrases</strong> and write <strong>15+ words</strong> to power the Jargon Meter past 60!
+            </p>
           </div>
         )}
 
@@ -234,7 +287,7 @@ export const BossBattleScreen: React.FC<BossBattleScreenProps> = ({
 
           {/* Visual Gauge Bar */}
           <div className="w-full bg-slate-100 dark:bg-slate-700 h-4 rounded-full overflow-hidden p-0.5 relative">
-            {/* Target 60% Marker */}
+            {/* Target Marker */}
             <div
               className="absolute top-0 bottom-0 w-0.5 bg-slate-400 dark:bg-slate-300 z-10"
               style={{ left: `${boss.passScore}%` }}
@@ -332,12 +385,61 @@ export const BossBattleScreen: React.FC<BossBattleScreenProps> = ({
           )}
         </SpotlightCard>
 
+        {/* Recommended Phrases Arsenal (Clickable hints & insertion chips) */}
+        {displayPhrases.length > 0 && (
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-xs">
+              <label className="font-black uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                <MessageSquare size={13} className="text-amber-500" />
+                <span>Recommended Jargon Arsenal (Must Use {boss.minPhrases}+):</span>
+              </label>
+              <span className="font-mono font-bold text-slate-500 dark:text-slate-400 text-[11px]">
+                {meterResult.phrasesFound.length} of {boss.minPhrases} included
+              </span>
+            </div>
+
+            <div className="flex flex-wrap gap-2 p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800">
+              {displayPhrases.map((phrase) => {
+                const isUsed = meterResult.phrasesFound.some(
+                  (f) =>
+                    f.toLowerCase() === phrase.toLowerCase() ||
+                    phrase.toLowerCase().includes(f.toLowerCase())
+                );
+                return (
+                  <button
+                    key={phrase}
+                    type="button"
+                    onClick={() => handleInsertPhrase(phrase)}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                      isUsed
+                        ? 'bg-emerald-100 dark:bg-emerald-950/80 text-emerald-900 dark:text-emerald-200 border border-emerald-300 dark:border-emerald-700 shadow-xs'
+                        : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-amber-500 hover:text-amber-600 dark:hover:text-amber-400 hover:shadow-xs'
+                    }`}
+                    title={isUsed ? 'Already included in your corporate response' : `Click to insert "${phrase}"`}
+                  >
+                    {isUsed ? (
+                      <CheckCircle2 size={13} className="text-emerald-600 dark:text-emerald-400 shrink-0" />
+                    ) : (
+                      <span className="text-amber-500 font-black shrink-0">+</span>
+                    )}
+                    <span>{phrase}</span>
+                  </button>
+                );
+              })}
+            </div>
+            <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium">
+              Click any phrase pill with a <span className="text-amber-500 font-bold">+</span> to insert it into your response.
+            </p>
+          </div>
+        )}
+
         {/* Textarea for player to write corporate reply */}
         <div className="space-y-2">
           <label className="block text-xs font-black uppercase tracking-wider text-slate-600 dark:text-slate-400">
             Write your corporate-speak translation:
           </label>
           <textarea
+            ref={textareaRef}
             rows={4}
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}

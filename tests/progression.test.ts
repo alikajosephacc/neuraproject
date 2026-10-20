@@ -15,7 +15,7 @@ describe('Game Progression & Lesson Completion', () => {
   });
 
   it('completes Unit 1 Lesson 1 and marks it completed with XP', () => {
-    const result = store.completeLesson('unit-1-lesson-1', 90);
+    store.completeLesson('unit-1-lesson-1', 90);
     const snap = store.getSnapshot();
 
     expect(snap.completedLessons).toContain('unit-1-lesson-1');

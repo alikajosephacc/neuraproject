@@ -11,10 +11,13 @@ import {
   Sparkles,
   ChevronDown,
   Activity,
+  Palette,
 } from 'lucide-react';
 import { Progress } from '../types';
 import { getRankForXp } from '../lib/ranks';
 import { sound } from '../lib/sound';
+import { MONKEY_THEMES, getThemeById } from '../lib/themes';
+import { store } from '../lib/store';
 
 interface DynamicIslandProps {
   progress: Progress;
@@ -42,6 +45,9 @@ export const DynamicIsland: React.FC<DynamicIslandProps> = ({
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const currentRank = getRankForXp(progress.xp);
+  const activeTheme = getThemeById(progress.themeId);
+  const lightThemes = MONKEY_THEMES.filter((t) => !t.isDark);
+  const darkThemes = MONKEY_THEMES.filter((t) => t.isDark);
 
   const handleReset = () => {
     if (window.confirm('Reset all progress, XP, streak and morale to day 1?')) {
@@ -56,11 +62,14 @@ export const DynamicIsland: React.FC<DynamicIslandProps> = ({
       <div className="max-w-4xl mx-auto flex justify-center">
         {/* Dynamic Island Pill Chassis */}
         <div
-          className={`pointer-events-auto relative overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          className={`pointer-events-auto relative overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] border-2 border-dotted ${
             isExpanded
-              ? 'w-full max-w-2xl rounded-3xl p-5 shadow-2xl'
+              ? 'w-full max-w-2xl rounded-3xl p-5 sm:p-6 shadow-2xl'
               : 'w-auto rounded-full px-4 py-2 shadow-lg hover:shadow-xl'
-          } border border-slate-300/80 dark:border-slate-800 bg-white/95 dark:bg-slate-925/95 dark:bg-slate-900/95 backdrop-blur-xl text-slate-800 dark:text-slate-100 select-none`}
+          } bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl text-slate-800 dark:text-slate-100 select-none`}
+          style={{
+            borderColor: activeTheme.accent,
+          }}
         >
           {/* Collapsed State Bar */}
           {!isExpanded ? (
@@ -181,7 +190,7 @@ export const DynamicIsland: React.FC<DynamicIslandProps> = ({
             /* Expanded Dynamic Island Deck (Teenage Engineering Hardware Surface) */
             <div className="space-y-4 animate-pop-in">
               {/* Header row */}
-              <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+              <div className="flex items-center justify-between border-b-2 border-dotted border-slate-200 dark:border-slate-800 pb-3">
                 <div className="flex items-center gap-2">
                   <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
                   <span className="font-mono text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
@@ -262,8 +271,103 @@ export const DynamicIsland: React.FC<DynamicIslandProps> = ({
                 </div>
               </div>
 
+              {/* Monkeytype Palette Selector (Lighter themes on top) */}
+              <div className="space-y-2 pt-2 border-t-2 border-dotted border-slate-200 dark:border-slate-800">
+                <div className="flex items-center justify-between text-[11px] font-mono">
+                  <div className="flex items-center gap-1.5 font-bold text-slate-500 dark:text-slate-400">
+                    <Palette size={13} style={{ color: activeTheme.accent }} />
+                    <span className="uppercase tracking-wider">Themes & Palettes</span>
+                  </div>
+                  <span
+                    className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase"
+                    style={{
+                      backgroundColor: activeTheme.isDark ? '#374151' : '#f3f4f6',
+                      color: activeTheme.accent,
+                    }}
+                  >
+                    Active: {activeTheme.name}
+                  </span>
+                </div>
+
+                {/* Top / Lighter Themes */}
+                <div className="space-y-1">
+                  <span className="text-[10px] font-mono font-semibold text-slate-400 uppercase tracking-tight">
+                    Light Themes (On Top):
+                  </span>
+                  <div className="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto pr-1">
+                    {lightThemes.map((theme) => {
+                      const isSelected = (progress.themeId || 'serika') === theme.id;
+                      return (
+                        <button
+                          key={theme.id}
+                          onClick={() => {
+                            sound.playClick();
+                            store.setTheme(theme.id);
+                          }}
+                          className={`px-2.5 py-1 rounded-lg text-[11px] font-mono font-bold transition-all cursor-pointer flex items-center gap-1.5 border ${
+                            isSelected
+                              ? 'ring-2 ring-offset-1 shadow-xs scale-102 font-black'
+                              : 'hover:scale-101 opacity-80 hover:opacity-100'
+                          }`}
+                          style={{
+                            backgroundColor: theme.bg,
+                            color: theme.text,
+                            borderColor: isSelected ? theme.accent : theme.border,
+                          }}
+                          title={`Select ${theme.name} palette`}
+                        >
+                          <span
+                            className="w-2 h-2 rounded-full shrink-0"
+                            style={{ backgroundColor: theme.accent }}
+                          />
+                          <span>{theme.name}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Dark Themes */}
+                <div className="space-y-1 pt-1">
+                  <span className="text-[10px] font-mono font-semibold text-slate-400 uppercase tracking-tight">
+                    Dark Themes (Coordinated Palettes):
+                  </span>
+                  <div className="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto pr-1">
+                    {darkThemes.map((theme) => {
+                      const isSelected = (progress.themeId || 'serika') === theme.id;
+                      return (
+                        <button
+                          key={theme.id}
+                          onClick={() => {
+                            sound.playClick();
+                            store.setTheme(theme.id);
+                          }}
+                          className={`px-2.5 py-1 rounded-lg text-[11px] font-mono font-bold transition-all cursor-pointer flex items-center gap-1.5 border ${
+                            isSelected
+                              ? 'ring-2 ring-offset-1 shadow-xs scale-102 font-black'
+                              : 'hover:scale-101 opacity-80 hover:opacity-100'
+                          }`}
+                          style={{
+                            backgroundColor: theme.bg,
+                            color: theme.text,
+                            borderColor: isSelected ? theme.accent : theme.border,
+                          }}
+                          title={`Select ${theme.name} palette`}
+                        >
+                          <span
+                            className="w-2 h-2 rounded-full shrink-0"
+                            style={{ backgroundColor: theme.accent }}
+                          />
+                          <span>{theme.name}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+
               {/* Hardware Deck Controls */}
-              <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+              <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t-2 border-dotted border-slate-200 dark:border-slate-800">
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => {

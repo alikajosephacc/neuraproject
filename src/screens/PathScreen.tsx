@@ -9,6 +9,7 @@ import { BorderBeam } from '../components/BorderBeam';
 import { ClickSpark } from '../components/ClickSpark';
 import { LuminousType } from '../components/LuminousType';
 import { getRankForXp, getNextRank } from '../lib/ranks';
+import { getThemeById } from '../lib/themes';
 import { store } from '../lib/store';
 import { sound } from '../lib/sound';
 
@@ -32,6 +33,8 @@ export const PathScreen: React.FC<PathScreenProps> = ({
   const mascotMood = store.getMascotMood();
   const mascotType = store.getMascotType();
 
+  const activeTheme = getThemeById(progress.themeId);
+
   // Calculate XP progress towards next rank
   let rankProgressPercent = 100;
   let xpRemaining = 0;
@@ -43,12 +46,17 @@ export const PathScreen: React.FC<PathScreenProps> = ({
   }
 
   return (
-    <div className={`transition-colors duration-300 ${!progress.darkMode ? 'bg-[#fbf7ee] text-[#323437]' : ''}`}>
+    <div
+      className="transition-colors duration-300 min-h-screen"
+      style={{
+        backgroundColor: activeTheme.bg,
+        color: activeTheme.text,
+      }}
+    >
       <div className="max-w-5xl mx-auto px-4 py-6 space-y-6">
-        {/* Monkeytype Luminous Type Hero Widget (Interactive Speed-Typing Telemetry) */}
+        {/* Luminous Type Hero Widget with Multi-Theme Palette Lighting */}
         <LuminousType
-          isDayShift={!progress.darkMode}
-          goldenAccent="#e2b714"
+          theme={activeTheme}
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -63,48 +71,63 @@ export const PathScreen: React.FC<PathScreenProps> = ({
               return (
                 <section
                   key={unit.id}
-                  className="bg-[#fffdfa] dark:bg-slate-900 rounded-3xl border-2 border-[#e8dfc8] dark:border-slate-800 shadow-sm overflow-hidden transition-colors"
+                  className="rounded-3xl border-2 shadow-sm overflow-hidden transition-all duration-300"
+                  style={{
+                    backgroundColor: activeTheme.cardBg,
+                    borderColor: activeTheme.border,
+                  }}
                 >
-              {/* Unit Banner Header */}
-              <div
-                className="p-6 text-white relative overflow-hidden"
-                style={{
-                  background: `linear-gradient(135deg, ${unit.color}, ${adjustColorBrightness(unit.color, -25)})`,
-                }}
-              >
-                <div className="flex items-center justify-between gap-4 relative z-10">
-                  <div>
-                    <span className="text-[11px] font-black uppercase tracking-widest bg-black/25 px-2.5 py-1 rounded-full">
-                      Unit {unit.id}
-                    </span>
-                    <h2 className="text-2xl font-black mt-1.5 tracking-tight">{unit.theme}</h2>
-                    <p className="text-xs text-white/90 font-medium max-w-md mt-1">
-                      {unit.description}
-                    </p>
-                  </div>
-                  <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-xs flex items-center justify-center text-2xl shrink-0 shadow-inner">
-                    {unit.id === 1 ? '☕' : unit.id === 2 ? '✉️' : unit.id === 3 ? '📈' : '🚀'}
-                  </div>
-                </div>
+                  {/* Unit Banner Header ("Meeting Survival Tab") in Inter Font */}
+                  <div
+                    className="p-6 relative overflow-hidden font-['Inter',sans-serif] transition-all duration-300"
+                    style={{
+                      background: activeTheme.bannerBg,
+                      color: activeTheme.isDark ? '#ffffff' : activeTheme.text,
+                    }}
+                  >
+                    <div className="flex items-center justify-between gap-4 relative z-10">
+                      <div>
+                        <span
+                          className="text-[11px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full text-white"
+                          style={{ backgroundColor: 'rgba(0, 0, 0, 0.28)' }}
+                        >
+                          Unit {unit.id}
+                        </span>
+                        <h2 className="text-2xl font-black mt-1.5 tracking-tight text-white">{unit.theme}</h2>
+                        <p className="text-xs text-white/90 font-medium max-w-md mt-1">
+                          {unit.description}
+                        </p>
+                      </div>
+                      <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-xs flex items-center justify-center text-2xl shrink-0 shadow-inner text-white">
+                        {unit.id === 1 ? '☕' : unit.id === 2 ? '✉️' : unit.id === 3 ? '📈' : '🚀'}
+                      </div>
+                    </div>
 
-                {/* Subtle progress bar in banner */}
-                <div className="mt-4 flex items-center gap-2">
-                  <div className="flex-1 bg-black/25 h-2 rounded-full overflow-hidden">
-                    <div
-                      className="bg-white h-full transition-all duration-500 rounded-full"
-                      style={{
-                        width: `${Math.round(((unitCompletedLessons + (isBossCompleted ? 1 : 0)) / (unit.lessons.length + 1)) * 100)}%`,
-                      }}
-                    />
+                    {/* Subtle progress bar in banner */}
+                    <div className="mt-4 flex items-center gap-2">
+                      <div className="flex-1 bg-black/25 h-2 rounded-full overflow-hidden">
+                        <div
+                          className="h-full transition-all duration-500 rounded-full"
+                          style={{
+                            backgroundColor: activeTheme.accent,
+                            width: `${Math.round(((unitCompletedLessons + (isBossCompleted ? 1 : 0)) / (unit.lessons.length + 1)) * 100)}%`,
+                          }}
+                        />
+                      </div>
+                      <span className="text-[11px] font-black text-white shrink-0">
+                        {unitCompletedLessons + (isBossCompleted ? 1 : 0)} / {unit.lessons.length + 1}
+                      </span>
+                    </div>
                   </div>
-                  <span className="text-[11px] font-black text-white/90 shrink-0">
-                    {unitCompletedLessons + (isBossCompleted ? 1 : 0)} / {unit.lessons.length + 1}
-                  </span>
-                </div>
-              </div>
 
-              {/* Lesson Path Nodes */}
-              <div className="p-8 flex flex-col items-center space-y-7 relative">
+                  {/* Lesson Path Nodes (Body under Meeting Survival) in the same MONOSPACE font as the Luminous Tab */}
+                  <div
+                    className="p-8 flex flex-col items-center space-y-7 relative font-mono transition-colors duration-300"
+                    style={{
+                      backgroundColor: activeTheme.cardBg,
+                      color: activeTheme.text,
+                    }}
+                  >
                 {/* Winding connector SVG lines */}
                 <div className="absolute inset-0 pointer-events-none flex justify-center">
                   <div className="w-1 h-full bg-slate-100 dark:bg-slate-800 -z-0" />
@@ -218,8 +241,13 @@ export const PathScreen: React.FC<PathScreenProps> = ({
       <aside className="lg:col-span-5 space-y-6 lg:sticky lg:top-20">
         {/* Mascot Widget (Pip the Agile Mushroom or Gerald the Ficus) */}
         <SpotlightCard
-          spotlightColor={mascotType === 'mushroom' ? 'rgba(239, 68, 68, 0.15)' : 'rgba(16, 185, 129, 0.15)'}
-          className="p-6 shadow-xs flex flex-col items-center text-center"
+          spotlightColor={`${activeTheme.accent}20`}
+          className="p-6 shadow-xs flex flex-col items-center text-center transition-all duration-300"
+          style={{
+            backgroundColor: activeTheme.cardBg,
+            borderColor: activeTheme.border,
+            color: activeTheme.text,
+          }}
         >
           {mascotType === 'mushroom' ? (
             <MascotMushroom mood={mascotMood} size="md" />
@@ -257,8 +285,13 @@ export const PathScreen: React.FC<PathScreenProps> = ({
 
         {/* Promotion Progress Card */}
         <SpotlightCard
-          spotlightColor="rgba(59, 130, 246, 0.12)"
-          className="p-5 shadow-xs"
+          spotlightColor={`${activeTheme.accent}20`}
+          className="p-5 shadow-xs transition-all duration-300"
+          style={{
+            backgroundColor: activeTheme.cardBg,
+            borderColor: activeTheme.border,
+            color: activeTheme.text,
+          }}
         >
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Career Track</span>
@@ -309,22 +342,3 @@ export const PathScreen: React.FC<PathScreenProps> = ({
 </div>
   );
 };
-
-function adjustColorBrightness(hex: string, percent: number): string {
-  const num = parseInt(hex.replace('#', ''), 16);
-  const amt = Math.round(2.55 * percent);
-  const R = (num >> 16) + amt;
-  const G = ((num >> 8) & 0x00ff) + amt;
-  const B = (num & 0x0000ff) + amt;
-  return (
-    '#' +
-    (
-      0x1000000 +
-      (R < 255 ? (R < 1 ? 0 : R) : 255) * 0x10000 +
-      (G < 255 ? (G < 1 ? 0 : G) : 255) * 0x100 +
-      (B < 255 ? (B < 1 ? 0 : B) : 255)
-    )
-      .toString(16)
-      .slice(1)
-  );
-}

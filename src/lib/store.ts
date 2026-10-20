@@ -1,6 +1,7 @@
 import { Progress, MascotMood, MascotType } from '../types';
 import { getRankForXp } from './ranks';
 import { sound } from './sound';
+import { getThemeById } from './themes';
 
 const STORAGE_KEY = 'circleback:v1';
 
@@ -31,6 +32,7 @@ const DEFAULT_PROGRESS: Progress = {
   soundEnabled: true,
   darkMode: false,
   mascotType: 'mushroom',
+  themeId: 'serika',
 };
 
 type Listener = () => void;
@@ -44,7 +46,7 @@ class GameStore {
     this.progress = this.load();
     this.checkStreakIntegrity();
     sound.enabled = this.progress.soundEnabled;
-    this.applyTheme(this.progress.darkMode);
+    this.applyTheme(this.progress.darkMode, this.progress.themeId);
   }
 
   private load(): Progress {
@@ -64,13 +66,23 @@ class GameStore {
     return { ...DEFAULT_PROGRESS };
   }
 
-  private applyTheme(isDark: boolean) {
+  private applyTheme(_isDark?: boolean, themeId?: string) {
     if (typeof document !== 'undefined') {
-      if (isDark) {
+      const theme = getThemeById(themeId || this.progress.themeId);
+      if (theme.isDark) {
         document.documentElement.classList.add('dark');
       } else {
         document.documentElement.classList.remove('dark');
       }
+
+      // Inject theme styling onto document root
+      const root = document.documentElement;
+      root.style.setProperty('--theme-bg', theme.bg);
+      root.style.setProperty('--theme-card', theme.cardBg);
+      root.style.setProperty('--theme-text', theme.text);
+      root.style.setProperty('--theme-sub', theme.sub);
+      root.style.setProperty('--theme-accent', theme.accent);
+      root.style.setProperty('--theme-border', theme.border);
     }
   }
 
@@ -138,9 +150,22 @@ class GameStore {
 
   public toggleDarkMode(): boolean {
     this.progress.darkMode = !this.progress.darkMode;
-    this.applyTheme(this.progress.darkMode);
+    if (this.progress.darkMode) {
+      this.progress.themeId = 'serika-dark';
+    } else {
+      this.progress.themeId = 'serika';
+    }
+    this.applyTheme(this.progress.darkMode, this.progress.themeId);
     this.save();
     return this.progress.darkMode;
+  }
+
+  public setTheme(themeId: string) {
+    const theme = getThemeById(themeId);
+    this.progress.themeId = theme.id;
+    this.progress.darkMode = theme.isDark;
+    this.applyTheme(theme.isDark, theme.id);
+    this.save();
   }
 
   public completeLesson(lessonId: string, earnedXp: number): { promotedToRank: number | null } {
@@ -207,7 +232,7 @@ class GameStore {
   public resetProgress() {
     this.progress = { ...DEFAULT_PROGRESS };
     this.newlyPromotedRank = null;
-    this.applyTheme(false);
+    this.applyTheme(false, 'serika');
     this.save();
   }
 }

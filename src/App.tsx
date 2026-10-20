@@ -11,6 +11,7 @@ import { PromotionModal } from './components/PromotionModal';
 import { RankLadderModal } from './components/RankLadderModal';
 import { MascotLabModal } from './components/MascotLabModal';
 import { sound } from './lib/sound';
+import { getThemeById } from './lib/themes';
 
 type ViewMode = 'path' | 'lesson' | 'boss';
 
@@ -157,9 +158,16 @@ export const App: React.FC = () => {
   };
 
   const currentUnit = units.find((u) => u.id === activeUnitId) || units[0];
+  const activeTheme = getThemeById(progress.themeId);
 
   return (
-    <div className="min-h-screen bg-[#fbf7ee] dark:bg-slate-950 text-[#323437] dark:text-slate-100 flex flex-col font-sans transition-colors duration-200">
+    <div
+      className="min-h-screen flex flex-col font-sans transition-colors duration-200"
+      style={{
+        backgroundColor: activeTheme.bg,
+        color: activeTheme.text,
+      }}
+    >
       {/* Hardware Dynamic Island Telemetry Header */}
       <DynamicIsland
         progress={progress}
@@ -235,7 +243,14 @@ export const App: React.FC = () => {
       />
 
       {/* Footer */}
-      <footer className="py-6 border-t border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 text-center text-xs text-slate-500 dark:text-slate-400 transition-colors">
+      <footer
+        className="py-6 border-t border-dotted text-center text-xs transition-colors"
+        style={{
+          borderColor: activeTheme.border,
+          backgroundColor: `${activeTheme.cardBg}cc`,
+          color: activeTheme.sub,
+        }}
+      >
         <div className="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p>
             <strong>Circle Back</strong> — Steal//Remake Hackathon submission. Remixed from Duolingo.

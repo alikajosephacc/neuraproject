@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Keyboard, RotateCcw, Sparkles, Zap } from 'lucide-react';
 import { sound } from '../lib/sound';
+import { MonkeyTheme, getThemeById } from '../lib/themes';
 
 interface LuminousTypeProps {
   phrases?: string[];
   className?: string;
-  goldenAccent?: string;
-  isDayShift?: boolean;
+  themeId?: string;
+  theme?: MonkeyTheme;
 }
 
 const DEFAULT_CORPORATE_QUOTES = [
@@ -19,15 +20,16 @@ const DEFAULT_CORPORATE_QUOTES = [
 
 /**
  * LuminousType (inspired by React Bits Pro @reactbits-starter/luminous-type-tw)
- * Featuring Monkeytype Serika/Honey warm yellow palette & interactive speed-typing telemetry.
+ * Featuring interactive speed-typing telemetry and multi-theme palette lighting.
  * Drifting luminous spotlight illuminates otherwise dimmed monospace glyphs.
  */
 export const LuminousType: React.FC<LuminousTypeProps> = ({
   phrases = DEFAULT_CORPORATE_QUOTES,
   className = '',
-  goldenAccent = '#e2b714',
-  isDayShift = true,
+  themeId,
+  theme,
 }) => {
+  const activeTheme = theme || getThemeById(themeId);
   const [quoteIndex, setQuoteIndex] = useState(0);
   const targetText = phrases[quoteIndex % phrases.length];
 
@@ -124,20 +126,19 @@ export const LuminousType: React.FC<LuminousTypeProps> = ({
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       onClick={() => inputRef.current?.focus()}
-      className={`relative overflow-hidden rounded-3xl border transition-all duration-300 p-5 sm:p-6 shadow-sm select-none cursor-text ${
-        isDayShift
-          ? 'bg-[#fffdf7] border-[#e8dfc8] text-[#323437]'
-          : 'bg-slate-900/90 border-slate-800 text-slate-100'
-      } ${className}`}
+      className={`relative overflow-hidden rounded-3xl border transition-all duration-300 p-5 sm:p-6 shadow-sm select-none cursor-text ${className}`}
       style={{
-        boxShadow: isDayShift ? '0 4px 20px -2px rgba(226, 183, 20, 0.08)' : undefined,
+        backgroundColor: activeTheme.cardBg,
+        borderColor: activeTheme.border,
+        color: activeTheme.text,
+        boxShadow: `0 4px 20px -2px ${activeTheme.accent}1a`,
       }}
     >
       {/* Drifting Luminous Spotlight Glow */}
       <div
         className="pointer-events-none absolute -top-16 w-80 h-40 rounded-full blur-3xl opacity-25 transition-transform"
         style={{
-          background: goldenAccent,
+          background: activeTheme.accent,
           transform: `translateX(${spotlightOffset}px)`,
         }}
       />
@@ -149,40 +150,43 @@ export const LuminousType: React.FC<LuminousTypeProps> = ({
           style={{
             left: mousePos.x,
             top: mousePos.y,
-            background: goldenAccent,
+            background: activeTheme.accent,
           }}
         />
       )}
 
-      {/* Monkeytype Header Telemetry Bar */}
-      <div className="relative z-10 flex flex-wrap items-center justify-between pb-3.5 mb-4 border-b border-[#e8dfc8]/60 dark:border-slate-800 text-[11px] font-mono">
+      {/* Header Telemetry Bar */}
+      <div
+        className="relative z-10 flex flex-wrap items-center justify-between pb-3.5 mb-4 border-b text-[11px] font-mono"
+        style={{ borderColor: activeTheme.border }}
+      >
         <div className="flex items-center gap-2">
-          <Keyboard size={15} style={{ color: goldenAccent }} className="animate-pulse" />
-          <span className="font-bold tracking-wider uppercase text-slate-600 dark:text-slate-300">
-            Luminous Type // Monkeytype Serika Theme
+          <Keyboard size={15} style={{ color: activeTheme.accent }} className="animate-pulse" />
+          <span className="font-bold tracking-wider uppercase" style={{ color: activeTheme.text }}>
+            Luminous Type // Interactive Telemetry
           </span>
           <span
-            className="text-[9px] font-black uppercase px-1.5 py-0.5 rounded"
+            className="text-[9px] font-black uppercase px-2 py-0.5 rounded-full"
             style={{
-              backgroundColor: isDayShift ? '#fef3c7' : '#78350f',
-              color: isDayShift ? '#92400e' : '#fde68a',
+              backgroundColor: activeTheme.border,
+              color: activeTheme.text,
             }}
           >
-            Day Shift Palette
+            {activeTheme.name}
           </span>
         </div>
 
         {/* Real-time stats */}
         <div className="flex items-center gap-3 font-bold">
           <div className="flex items-center gap-1">
-            <span className="text-slate-400">WPM:</span>
-            <span style={{ color: goldenAccent }} className="text-sm">
+            <span style={{ color: activeTheme.sub }}>WPM:</span>
+            <span style={{ color: activeTheme.accent }} className="text-sm">
               {wpm}
             </span>
           </div>
 
           <div className="flex items-center gap-1">
-            <span className="text-slate-400">ACC:</span>
+            <span style={{ color: activeTheme.sub }}>ACC:</span>
             <span className={accuracy >= 90 ? 'text-emerald-600' : 'text-amber-500'}>
               {accuracy}%
             </span>
@@ -193,7 +197,7 @@ export const LuminousType: React.FC<LuminousTypeProps> = ({
               e.stopPropagation();
               handleNextQuote();
             }}
-            className="p-1 rounded-lg hover:bg-slate-200/60 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors cursor-pointer"
+            className="p-1 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors cursor-pointer"
             title="Next corporate quote"
           >
             <RotateCcw size={13} />
@@ -220,17 +224,17 @@ export const LuminousType: React.FC<LuminousTypeProps> = ({
           const isCorrect = isTyped && typedInput[index] === char;
           const isWrong = isTyped && typedInput[index] !== char;
 
-          let charColor = isDayShift ? '#9ca3af' : '#64748b'; // default dimmed
+          let charColor = activeTheme.sub;
           let textShadow = 'none';
 
           if (isCorrect) {
-            charColor = goldenAccent; // Monkeytype golden yellow illumination
-            textShadow = `0 0 10px rgba(226, 183, 20, 0.65)`;
+            charColor = activeTheme.accent;
+            textShadow = `0 0 10px ${activeTheme.accent}aa`;
           } else if (isWrong) {
-            charColor = '#ef4444'; // Red error
+            charColor = '#ef4444';
             textShadow = `0 0 8px rgba(239, 68, 68, 0.5)`;
           } else if (isCurrent) {
-            charColor = isDayShift ? '#1f2937' : '#f8fafc';
+            charColor = activeTheme.text;
           }
 
           return (
@@ -242,7 +246,7 @@ export const LuminousType: React.FC<LuminousTypeProps> = ({
               style={{
                 color: charColor,
                 textShadow,
-                borderColor: goldenAccent,
+                borderColor: activeTheme.accent,
               }}
             >
               {char === ' ' ? '\u00A0' : char}
@@ -252,10 +256,13 @@ export const LuminousType: React.FC<LuminousTypeProps> = ({
       </div>
 
       {/* Subtext info bar */}
-      <div className="relative z-10 mt-3 pt-3 border-t border-[#e8dfc8]/60 dark:border-slate-800 flex flex-wrap items-center justify-between text-[11px] font-mono text-slate-400 dark:text-slate-500">
+      <div
+        className="relative z-10 mt-3 pt-3 border-t flex flex-wrap items-center justify-between text-[11px] font-mono"
+        style={{ borderColor: activeTheme.border, color: activeTheme.sub }}
+      >
         <div className="flex items-center gap-1.5">
-          <Sparkles size={12} style={{ color: goldenAccent }} />
-          <span>Click to type the corporate phrase & test your alignment velocity</span>
+          <Sparkles size={12} style={{ color: activeTheme.accent }} />
+          <span>Click to type the corporate phrase & test your velocity</span>
         </div>
         <div className="flex items-center gap-2">
           {isFinished ? (

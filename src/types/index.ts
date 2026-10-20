@@ -88,6 +88,7 @@ export interface Progress {
   soundEnabled: boolean;
   darkMode: boolean;
   mascotType?: MascotType;
+  themeId?: string;
 }
 
 export interface RankInfo {

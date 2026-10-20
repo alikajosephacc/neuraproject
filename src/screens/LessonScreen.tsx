@@ -24,8 +24,8 @@ import {
 import { store } from '../lib/store';
 import { sound } from '../lib/sound';
 import { SpotlightCard } from '../components/SpotlightCard';
-import { DecryptedText } from '../components/DecryptedText';
 import { ClickSpark } from '../components/ClickSpark';
+import { MascotMushroom } from '../components/MascotMushroom';
 
 interface LessonScreenProps {
   lessonTitle: string;
@@ -34,6 +34,64 @@ interface LessonScreenProps {
   isPIPLesson?: boolean;
   onFinishLesson: (earnedXp: number, mistakes: number) => void;
   onExit: () => void;
+}
+
+const EXTRA_MUSHROOM_QUOTES = [
+  "The higher you climb the org chart, the fewer slides you need to prepare.",
+  "Never underestimate the power of saying 'let's take this offline' when you don't know the answer.",
+  "Your synergy metrics are so high they're visible from our 30,000-foot view.",
+  "If anyone questions your roadmap, just ask: 'Does this move the needle on our North Star metric?'",
+  "Coffee is for closers, but cold brew on tap is for people who know what 'circle back' actually means.",
+  "Treat humans like Ethernet cables—keep the bandwidth high and the latency low!",
+];
+
+function getMushroomMotivationalMessage(isPIP: boolean, mistakes: number): {
+  tagline: string;
+  speech: string;
+  subtext: string;
+} {
+  if (isPIP) {
+    return {
+      tagline: 'HR Remediation Averted',
+      speech:
+        'Mycelial network rebooted! You navigated the paper trail like a C-suite veteran. HR has officially incinerated your PIP warning!',
+      subtext: 'Morale restored to 100%. Organizational synergy back in green status.',
+    };
+  }
+
+  if (mistakes === 0) {
+    const speechOptions = [
+      'Flawless sprint! Zero dropped action items. The C-suite is whisper-networking about your promotion trajectory right now!',
+      '100% velocity, zero revisions! My red cap is literally glowing with unbridled corporate synergy. You are an agile god!',
+      'Impeccable execution! Brad from BizDev tried to poke holes in your deliverable and found literally nothing.',
+      'Surgical precision! You sidestepped every passive-aggressive trap and delivered pure executive presence.',
+    ];
+    return {
+      tagline: 'Flawless Velocity // 100% Accuracy',
+      speech: speechOptions[Math.floor(Math.random() * speechOptions.length)],
+      subtext: 'Flawless deliverable bonus unlocked: +20 XP awarded for immaculate stakeholder alignment.',
+    };
+  }
+
+  if (mistakes <= 2) {
+    const speechOptions = [
+      'High-bandwidth performance! You adapted quickly, pivoted past bottlenecks, and brought cross-functional alignment back to the room.',
+      'Deliverable shipped ahead of quarterly review! A couple of tactical pivots only made your stakeholder buy-in stronger.',
+      'Outstanding iteration! Your corporate mycelium is expanding across departmental silos. Keep this momentum rolling!',
+    ];
+    return {
+      tagline: 'Deliverable Shipped // High Velocity',
+      speech: speechOptions[Math.floor(Math.random() * speechOptions.length)],
+      subtext: 'Tactical pivots handled gracefully. Ready to circle back on the next sprint.',
+    };
+  }
+
+  return {
+    tagline: 'Sprint Completed // Agile Resilience',
+    speech:
+      'Resilience score: 10/10! You absorbed the scope creep, iterated through constructive feedback, and crossed the finish line like an agile champion.',
+    subtext: 'Growth mindset confirmed: Every mistake is just an agile retrospective in disguise.',
+  };
 }
 
 export const LessonScreen: React.FC<LessonScreenProps> = ({
@@ -85,6 +143,7 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
   } | null>(null);
 
   const [isCompleted, setIsCompleted] = useState(false);
+  const [mushroomQuoteIndex, setMushroomQuoteIndex] = useState(0);
   const textInputRef = useRef<HTMLInputElement>(null);
 
   // Initialize state when current question changes
@@ -348,25 +407,41 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
     const basePoints = totalInitial * 10;
     const bonus = mistakes === 0 ? 20 : 0;
     const totalXp = basePoints + bonus;
+    const motivation = getMushroomMotivationalMessage(isPIPLesson, mistakes);
+    const displayedSpeech =
+      mushroomQuoteIndex > 0
+        ? EXTRA_MUSHROOM_QUOTES[(mushroomQuoteIndex - 1) % EXTRA_MUSHROOM_QUOTES.length]
+        : motivation.speech;
 
     return (
-      <div className="min-h-[80vh] flex items-center justify-center p-4">
-        <div className="bg-white dark:bg-slate-800 rounded-3xl border-2 border-slate-200 dark:border-slate-700 max-w-md w-full p-8 text-center shadow-xl space-y-6 animate-pop-in transition-colors">
-          <div className="w-24 h-24 mx-auto rounded-3xl bg-emerald-100 dark:bg-emerald-950 flex items-center justify-center text-5xl shadow-inner animate-bounce-short">
-            🎉
+      <div className="min-h-[85vh] flex items-center justify-center p-4">
+        <div className="bg-white dark:bg-slate-900 rounded-3xl border-2 border-slate-200 dark:border-slate-800 max-w-lg w-full p-6 sm:p-8 text-center shadow-2xl space-y-6 animate-pop-in transition-colors">
+          {/* Tagline Badge */}
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 font-extrabold text-xs uppercase tracking-wider">
+            <Sparkles size={14} className="text-emerald-600 dark:text-emerald-400" />
+            <span>{motivation.tagline}</span>
+          </div>
+
+          {/* Mushroom Mascot with Motivational Speech Bubble */}
+          <div className="py-1 flex justify-center">
+            <MascotMushroom
+              mood="thriving"
+              size="lg"
+              speechText={displayedSpeech}
+              interactive={true}
+              onTap={() => {
+                setMushroomQuoteIndex((i) => i + 1);
+                sound.playClick();
+              }}
+            />
           </div>
 
           <div>
-            <div className="inline-block px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 font-extrabold text-xs uppercase tracking-wider mb-2">
-              Deliverable Shipped
-            </div>
-            <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
               {isPIPLesson ? 'PIP Remediation Passed!' : 'Lesson Complete!'}
             </h2>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 font-medium">
-              {isPIPLesson
-                ? 'Your morale has been successfully restored to 5/5. HR is satisfied.'
-                : 'Your organizational synergy metrics are on the rise.'}
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1.5 font-medium leading-relaxed max-w-sm mx-auto">
+              {motivation.subtext}
             </p>
           </div>
 
@@ -389,17 +464,19 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
 
           {bonus > 0 && (
             <div className="bg-gradient-to-r from-amber-100 to-amber-50 dark:from-amber-950/60 dark:to-amber-900/40 border border-amber-300 dark:border-amber-800 rounded-2xl p-3 text-xs font-bold text-amber-900 dark:text-amber-200 flex items-center justify-center gap-2">
-              <span>🌟 Flawless Lesson Bonus: +20 XP (Zero Action Items Missed!)</span>
+              <span>🌟 Flawless Deliverable Bonus: +20 XP (Zero Action Items Dropped!)</span>
             </div>
           )}
 
-          <button
-            onClick={() => onFinishLesson(totalXp, mistakes)}
-            className="w-full py-4 bg-emerald-600 hover:bg-emerald-500 active:translate-y-0.5 border-b-4 border-emerald-800 text-white font-black text-base rounded-2xl shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2"
-          >
-            <span>Claim XP & Circle Back</span>
-            <ArrowRight size={20} />
-          </button>
+          <ClickSpark sparkColor="#10b981" sparkRadius={36} sparkCount={14} className="w-full">
+            <button
+              onClick={() => onFinishLesson(totalXp, mistakes)}
+              className="w-full py-4 bg-emerald-600 hover:bg-emerald-500 active:translate-y-0.5 border-b-4 border-emerald-800 text-white font-black text-base rounded-2xl shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2"
+            >
+              <span>Claim XP & Circle Back</span>
+              <ArrowRight size={20} />
+            </button>
+          </ClickSpark>
         </div>
       </div>
     );
@@ -466,9 +543,9 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
                     </span>
                   </div>
 
-                  <div className="cursor-pointer group" title="Hover to run telemetry scramble">
-                    <p className="text-xl sm:text-2xl font-black text-slate-800 dark:text-slate-100 leading-snug">
-                      "<DecryptedText text={tr.text} speed={25} maxIterations={8} animateOn="hover" className="font-sans" />"
+                  <div>
+                    <p className="text-xl sm:text-2xl font-black text-slate-900 dark:text-slate-100 leading-snug tracking-tight">
+                      "{tr.text}"
                     </p>
                   </div>
                 </SpotlightCard>

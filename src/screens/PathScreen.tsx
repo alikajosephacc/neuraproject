@@ -7,7 +7,6 @@ import { Leaderboard } from '../components/Leaderboard';
 import { SpotlightCard } from '../components/SpotlightCard';
 import { BorderBeam } from '../components/BorderBeam';
 import { ClickSpark } from '../components/ClickSpark';
-import { TypographicWall } from '../components/TypographicWall';
 import { getRankForXp, getNextRank } from '../lib/ranks';
 import { store } from '../lib/store';
 import { sound } from '../lib/sound';
@@ -43,17 +42,9 @@ export const PathScreen: React.FC<PathScreenProps> = ({
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8 space-y-8">
-      {/* Front Page Hero: Typographic Wall in Light Blue and Yellow */}
-      <TypographicWall
-        lightBlueColor="#38bdf8"
-        yellowColor="#facc15"
-        onWordClick={(_word) => sound.playClick()}
-      />
-
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left Column: Learning Path Units */}
-        <main className="lg:col-span-7 space-y-12">
+    <div className="max-w-5xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      {/* Left Column: Learning Path Units */}
+      <main className="lg:col-span-7 space-y-12">
         {units.map((unit) => {
           const unitCompletedLessons = unit.lessons.filter((l) =>
             progress.completedLessons.includes(l.id)
@@ -305,7 +296,6 @@ export const PathScreen: React.FC<PathScreenProps> = ({
         <Leaderboard playerXp={progress.xp} />
       </aside>
     </div>
-  </div>
   );
 };
 

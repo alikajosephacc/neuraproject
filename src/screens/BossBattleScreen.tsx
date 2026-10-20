@@ -14,7 +14,6 @@ import { scoreCorporateText, MeterResult } from '../lib/meter';
 import { sound } from '../lib/sound';
 import { SpotlightCard } from '../components/SpotlightCard';
 import { BorderBeam } from '../components/BorderBeam';
-import { DecryptedText } from '../components/DecryptedText';
 import { ClickSpark } from '../components/ClickSpark';
 
 interface BossBattleScreenProps {
@@ -165,8 +164,8 @@ export const BossBattleScreen: React.FC<BossBattleScreenProps> = ({
             <span className="text-xs font-bold text-slate-400 dark:text-slate-500">Target Score: {boss.passScore}+</span>
           </div>
 
-          <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white leading-snug cursor-pointer group" title="Hover to scramble telemetry">
-            <DecryptedText text={boss.title} speed={25} maxIterations={8} animateOn="hover" className="font-sans" />
+          <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white leading-snug">
+            {boss.title}
           </h3>
           <p className="text-sm sm:text-base font-medium text-slate-700 dark:text-slate-200 leading-relaxed bg-slate-50 dark:bg-slate-900/60 p-4 rounded-2xl border border-slate-100 dark:border-slate-700">
             {boss.prompt}

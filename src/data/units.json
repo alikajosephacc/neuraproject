@@ -193,24 +193,89 @@
             ]
           },
           {
+            "id": "u1-l1-t5",
+            "type": "translate",
+            "mode": "wordbank",
+            "channel": "meeting",
+            "sender": "Derek (Scrum Master)",
+            "senderRole": "Agile Evangelist",
+            "text": "Put this in the parking lot",
+            "model": "Ignore this idea forever",
+            "snark": "The corporate graveyard where awkward suggestions go to die peacefully.",
+            "tiles": [
+              "Ignore",
+              "this",
+              "idea",
+              "forever",
+              "urgent",
+              "delete",
+              "asap"
+            ],
+            "accepted": [
+              [
+                "Ignore",
+                "this",
+                "idea",
+                "forever"
+              ]
+            ],
+            "acceptedAlternatives": [
+              "ignore this idea forever",
+              "forget about this forever",
+              "corporate graveyard for bad ideas",
+              "never speak of this again"
+            ]
+          },
+          {
+            "id": "u1-l1-t6",
+            "type": "translate",
+            "mode": "wordbank",
+            "channel": "slack",
+            "sender": "Megan (Account Exec)",
+            "senderRole": "Client Success",
+            "text": "Touch base",
+            "model": "Talk briefly",
+            "snark": "Sounds like baseball, feels like an unscheduled ambush interrogation.",
+            "tiles": [
+              "Talk",
+              "briefly",
+              "yell",
+              "all",
+              "day",
+              "loudly"
+            ],
+            "accepted": [
+              [
+                "Talk",
+                "briefly"
+              ]
+            ],
+            "acceptedAlternatives": [
+              "talk briefly",
+              "speak for a few minutes",
+              "brief check in",
+              "unscheduled interrogation"
+            ]
+          },
+          {
             "id": "u1-l1-match",
             "type": "match",
             "pairs": [
               [
-                "Let's take this offline",
-                "Stop talking about this in front of everyone"
+                "Double click on that",
+                "Examine the details"
               ],
               [
-                "Circle back",
-                "Talk about this again later"
+                "Put this in the parking lot",
+                "Ignore this idea forever"
               ],
               [
-                "More bandwidth",
-                "More time or energy"
+                "Touch base",
+                "Talk briefly"
               ],
               [
                 "Hard stop",
-                "I have another meeting or I just want to leave"
+                "I want to escape this call before someone assigns work"
               ]
             ]
           },
@@ -229,6 +294,22 @@
             ],
             "answer": 1,
             "why": "'Table' and 'parking lot' are corporate graveyard terms to shut down complex engineering work."
+          },
+          {
+            "id": "ctx-1-1-b",
+            "type": "context",
+            "channel": "slack",
+            "sender": "Chadwick (VP)",
+            "senderRole": "SVP of Synergies",
+            "email": "Hey! Quick question when you have a second, no rush at all! 👀",
+            "options": [
+              "It is a quick 10-second casual question that can easily wait until next week.",
+              "It is an urgent, multi-hour dumpster fire sent at 4:58 PM that will ruin your weekend.",
+              "He wants to offer you an impromptu stock option grant.",
+              "He sent the message to the wrong employee."
+            ],
+            "answer": 1,
+            "why": "'Quick question' sent late afternoon with 'no rush' is universal executive camouflage for a high-severity crisis."
           }
         ]
       },
@@ -250,14 +331,14 @@
             "model": "Explain or analyze this complicated mess",
             "snark": "Borrowing moving-day terminology for a slide deck with too many bullet points.",
             "tiles": [
-              "angry",
-              "immediately",
-              "mess",
-              "complicated",
-              "this",
-              "analyze",
+              "Explain",
               "or",
-              "Explain"
+              "analyze",
+              "this",
+              "complicated",
+              "mess",
+              "simple",
+              "lunch"
             ],
             "accepted": [
               [
@@ -270,7 +351,6 @@
               ],
               [
                 "Explain",
-                "analyze",
                 "this",
                 "complicated",
                 "mess"
@@ -278,8 +358,9 @@
             ],
             "acceptedAlternatives": [
               "explain or analyze this complicated mess",
-              "explain this disaster",
-              "break down this complicated mess"
+              "analyze this complicated mess",
+              "figure out this disaster",
+              "explain this confusing slide"
             ]
           },
           {
@@ -293,11 +374,12 @@
             "model": "Meet to coordinate",
             "snark": "Because 'talk to each other' doesn't sound expensive enough on a timesheet.",
             "tiles": [
-              "bonus",
-              "never",
               "coordinate",
               "to",
-              "Meet"
+              "Meet",
+              "fire",
+              "everyone",
+              "nap"
             ],
             "accepted": [
               [
@@ -309,16 +391,17 @@
             "acceptedAlternatives": [
               "meet to coordinate",
               "talk to each other",
-              "schedule another meeting"
+              "have an unnecessary meeting",
+              "coordinate schedules"
             ]
           },
           {
             "id": "u1-l2-t3",
             "type": "translate",
             "mode": "wordbank",
-            "channel": "email",
-            "sender": "Todd (Strategy)",
-            "senderRole": "Managing Director",
+            "channel": "meeting",
+            "sender": "Brad from BizDev",
+            "senderRole": "Head of Partnerships",
             "text": "Bio break",
             "model": "Go to the restroom",
             "snark": "Reframing basic human biology as an enterprise-grade maintenance window.",
@@ -327,8 +410,9 @@
               "to",
               "the",
               "restroom",
-              "secretly",
-              "loudly"
+              "run",
+              "away",
+              "forever"
             ],
             "accepted": [
               [
@@ -341,8 +425,8 @@
             "acceptedAlternatives": [
               "go to the restroom",
               "use the bathroom",
-              "pee break",
-              "escape to the bathroom"
+              "human maintenance window",
+              "take a bathroom break"
             ]
           },
           {
@@ -350,21 +434,21 @@
             "type": "translate",
             "mode": "wordbank",
             "channel": "meeting",
-            "sender": "Brenda (Client Success)",
-            "senderRole": "Principal Escalations",
+            "sender": "Linda from HR",
+            "senderRole": "Chief Culture Officer",
             "text": "Boil the ocean",
             "model": "Try to do an impossibly large task",
             "snark": "Good advice, but usually said by someone whose only job is attending the meeting.",
             "tiles": [
-              "fire",
-              "angry",
-              "task",
-              "large",
-              "impossibly",
-              "an",
-              "do",
+              "Try",
               "to",
-              "Try"
+              "do",
+              "an",
+              "impossibly",
+              "large",
+              "task",
+              "small",
+              "cup"
             ],
             "accepted": [
               [
@@ -375,56 +459,142 @@
                 "impossibly",
                 "large",
                 "task"
-              ],
-              [
-                "Try",
-                "to",
-                "do",
-                "impossibly",
-                "large",
-                "task"
               ]
             ],
-            "acceptedAlternatives": []
+            "acceptedAlternatives": [
+              "try to do an impossibly large task",
+              "attempt the impossible",
+              "overcomplicate everything",
+              "take on too much work"
+            ]
+          },
+          {
+            "id": "u1-l2-t5",
+            "type": "translate",
+            "mode": "wordbank",
+            "channel": "meeting",
+            "sender": "Derek (Scrum Master)",
+            "senderRole": "Agile Evangelist",
+            "text": "Peel the onion",
+            "model": "Look deeper into the problem",
+            "snark": "Metaphor chosen specifically because the deeper you go, the more everyone in the room cries.",
+            "tiles": [
+              "Look",
+              "deeper",
+              "into",
+              "the",
+              "problem",
+              "cry",
+              "lunch",
+              "salad"
+            ],
+            "accepted": [
+              [
+                "Look",
+                "deeper",
+                "into",
+                "the",
+                "problem"
+              ]
+            ],
+            "acceptedAlternatives": [
+              "look deeper into the problem",
+              "investigate the mess",
+              "make everyone cry looking at data",
+              "dig into the disaster"
+            ]
+          },
+          {
+            "id": "u1-l2-t6",
+            "type": "translate",
+            "mode": "wordbank",
+            "channel": "slack",
+            "sender": "Megan (Account Exec)",
+            "senderRole": "Client Success",
+            "text": "Run it up the flagpole",
+            "model": "See if the bosses approve",
+            "snark": "Throwing ideas into the wind to see which executives salute or shoot them down.",
+            "tiles": [
+              "See",
+              "if",
+              "the",
+              "bosses",
+              "approve",
+              "salute",
+              "flag",
+              "banner"
+            ],
+            "accepted": [
+              [
+                "See",
+                "if",
+                "the",
+                "bosses",
+                "approve"
+              ]
+            ],
+            "acceptedAlternatives": [
+              "see if the bosses approve",
+              "ask senior leadership",
+              "test executive appetite",
+              "seek management blessing"
+            ]
           },
           {
             "id": "u1-l2-match",
             "type": "match",
             "pairs": [
               [
-                "Unpack this",
-                "Explain or analyze this complicated mess"
+                "Peel the onion",
+                "Look deeper into the problem until everyone cries"
               ],
               [
-                "Sync up",
-                "Meet to coordinate"
-              ],
-              [
-                "Bio break",
-                "Go to the restroom"
+                "Run it up the flagpole",
+                "See if the bosses approve"
               ],
               [
                 "Boil the ocean",
                 "Try to do an impossibly large task"
+              ],
+              [
+                "Bio break",
+                "Go to the restroom disguised as maintenance"
               ]
             ]
           },
           {
             "id": "ctx-1-2",
             "type": "context",
-            "channel": "email",
-            "sender": "Chadwick (VP of Strategy)",
-            "senderRole": "SVP of Global Synergies",
+            "channel": "meeting",
+            "sender": "Linda from HR",
+            "senderRole": "Chief Culture Officer",
             "subject": "Urgent: High-Altitude Alignment",
-            "email": "Team, I have a hard stop at 2:00 PM for a bio break, but net-net we need a 30,000-foot view of why the pipeline is stalled. Who has bandwidth to drive this?",
+            "email": "Team, let's take a quick bio break, and when we reconvene, we will unpack the slide deck and avoid boiling the ocean on minor details.",
             "options": [
-              "He is volunteering to do the deep technical investigation himself.",
-              "He wants someone else to do the work while he leaves in 5 minutes.",
-              "He is inviting everyone on an airplane ride at 30,000 feet.",
-              "He is extending the meeting by two hours."
+              "Linda wants everyone to swim in the ocean after a water break.",
+              "Linda is granting a 3-minute bathroom pause before dissecting a 90-slide PowerPoint.",
+              "Linda is canceling all remaining slides to let everyone go home early.",
+              "Linda wants the engineering team to deploy hotfixes during the meeting."
             ],
             "answer": 1,
-            "why": "A 'hard stop' combined with 'who has bandwidth' means 'assign someone else before I escape.'"
+            "why": "A bio break is corporate parlance for a bathroom trip, followed immediately by slide-deck endurance trials."
+          },
+          {
+            "id": "ctx-1-2-b",
+            "type": "context",
+            "channel": "email",
+            "sender": "Derek (Scrum Master)",
+            "senderRole": "Agile Evangelist",
+            "subject": "Giving you 5 minutes back!",
+            "email": "Great sync team! Since we finished at 10:55 instead of 11:00, I am giving everyone 5 minutes of their lives back. Enjoy the windfall!",
+            "options": [
+              "Derek is a generous benefactor who genuinely restored your free time.",
+              "Derek is presenting 300 seconds of transition time between back-to-back Zoom calls as a charitable donation.",
+              "Derek expects everyone to log off and take the rest of the day off.",
+              "Derek deducted 5 minutes from your paid vacation balance."
+            ],
+            "answer": 1,
+            "why": "'Giving you time back' frames meeting over-runs that ended slightly early as benevolent executive philanthropy."
           }
         ]
       },
@@ -439,18 +609,19 @@
             "id": "u1-l3-t1",
             "type": "translate",
             "mode": "wordbank",
-            "channel": "email",
-            "sender": "Todd (Strategy)",
-            "senderRole": "Managing Director",
+            "channel": "meeting",
+            "sender": "Chadwick (VP)",
+            "senderRole": "SVP of Synergies",
             "text": "Move the needle",
             "model": "Make noticeable progress",
-            "snark": "Mechanical metaphor for slightly altering a graph during an All-Hands.",
+            "snark": "Mechanical metaphor for slightly altering a graph during an All-Hands presentation.",
             "tiles": [
-              "angry",
-              "immediately",
-              "progress",
+              "Make",
               "noticeable",
-              "Make"
+              "progress",
+              "break",
+              "everything",
+              "needle"
             ],
             "accepted": [
               [
@@ -459,26 +630,31 @@
                 "progress"
               ]
             ],
-            "acceptedAlternatives": []
+            "acceptedAlternatives": [
+              "make noticeable progress",
+              "show measurable results",
+              "alter the quarterly graph",
+              "produce real impact"
+            ]
           },
           {
             "id": "u1-l3-t2",
             "type": "translate",
             "mode": "wordbank",
-            "channel": "meeting",
-            "sender": "Brenda (Client Success)",
-            "senderRole": "Principal Escalations",
+            "channel": "slack",
+            "sender": "Chloe (Product Lead)",
+            "senderRole": "Senior PM",
             "text": "Low-hanging fruit",
             "model": "Easy wins requiring minimal effort",
-            "snark": "If it was truly low-hanging, an intern would have already plucked it.",
+            "snark": "If it was truly low-hanging, an unpaid intern would have already plucked it six months ago.",
             "tiles": [
-              "bonus",
-              "never",
-              "effort",
-              "minimal",
-              "requiring",
+              "Easy",
               "wins",
-              "Easy"
+              "requiring",
+              "minimal",
+              "effort",
+              "apples",
+              "tree"
             ],
             "accepted": [
               [
@@ -489,35 +665,46 @@
                 "effort"
               ]
             ],
-            "acceptedAlternatives": []
+            "acceptedAlternatives": [
+              "easy wins requiring minimal effort",
+              "simple tasks anyone can do",
+              "quick easy wins",
+              "obvious low effort tasks"
+            ]
           },
           {
             "id": "u1-l3-t3",
             "type": "translate",
             "mode": "wordbank",
-            "channel": "slack",
+            "channel": "meeting",
             "sender": "Brad from BizDev",
             "senderRole": "Head of Partnerships",
             "text": "30,000-foot view",
             "model": "High-level overview without details",
-            "snark": "The perspective from which all of your disastrous planning looks smooth.",
+            "snark": "The altitude from which all of your disastrous planning looks smooth and competent.",
             "tiles": [
-              "Highlevel",
+              "High-level",
               "overview",
               "without",
               "details",
-              "secretly",
-              "loudly"
+              "airplane",
+              "clouds",
+              "sky"
             ],
             "accepted": [
               [
-                "Highlevel",
+                "High-level",
                 "overview",
                 "without",
                 "details"
               ]
             ],
-            "acceptedAlternatives": []
+            "acceptedAlternatives": [
+              "high-level overview without details",
+              "vague summary hiding bad news",
+              "overview ignoring specifics",
+              "bird eye perspective"
+            ]
           },
           {
             "id": "u1-l3-t4",
@@ -530,14 +717,14 @@
             "model": "The final conclusion or bottom line",
             "snark": "When regular 'net' wasn't emphatic enough to describe your net loss.",
             "tiles": [
-              "fire",
-              "angry",
-              "line",
-              "bottom",
-              "or",
-              "conclusion",
+              "The",
               "final",
-              "The"
+              "conclusion",
+              "or",
+              "bottom",
+              "line",
+              "tennis",
+              "ball"
             ],
             "accepted": [
               [
@@ -549,51 +736,140 @@
                 "line"
               ],
               [
-                "final",
-                "conclusion",
+                "The",
                 "bottom",
                 "line"
               ]
             ],
-            "acceptedAlternatives": []
+            "acceptedAlternatives": [
+              "the final conclusion or bottom line",
+              "the bottom line",
+              "the ultimate summary",
+              "final takeaway"
+            ]
+          },
+          {
+            "id": "u1-l3-t5",
+            "type": "translate",
+            "mode": "wordbank",
+            "channel": "meeting",
+            "sender": "Chadwick (VP)",
+            "senderRole": "SVP of Synergies",
+            "text": "Drink our own champagne",
+            "model": "Use our own product",
+            "snark": "A luxury rebrand of 'eat your own dog food' invented for venture-backed founders with fragile egos.",
+            "tiles": [
+              "Use",
+              "our",
+              "own",
+              "product",
+              "glass",
+              "wine",
+              "party"
+            ],
+            "accepted": [
+              [
+                "Use",
+                "our",
+                "own",
+                "product"
+              ]
+            ],
+            "acceptedAlternatives": [
+              "use our own product",
+              "dogfood our software",
+              "test our buggy app ourselves",
+              "suffer through our own tools"
+            ]
+          },
+          {
+            "id": "u1-l3-t6",
+            "type": "translate",
+            "mode": "wordbank",
+            "channel": "slack",
+            "sender": "Derek (Scrum Master)",
+            "senderRole": "Agile Evangelist",
+            "text": "Action item",
+            "model": "Task assigned to someone",
+            "snark": "A to-do item, except monitored by four different managers asking for status updates hourly.",
+            "tiles": [
+              "Task",
+              "assigned",
+              "to",
+              "someone",
+              "chore",
+              "work",
+              "list"
+            ],
+            "accepted": [
+              [
+                "Task",
+                "assigned",
+                "to",
+                "someone"
+              ]
+            ],
+            "acceptedAlternatives": [
+              "task assigned to someone",
+              "unwanted chore to do",
+              "deliverable assigned to you",
+              "to-do item monitored by managers"
+            ]
           },
           {
             "id": "u1-l3-match",
             "type": "match",
             "pairs": [
               [
-                "Move the needle",
-                "Make noticeable progress"
+                "Drink our own champagne",
+                "Use our own product to pretend it works"
               ],
               [
-                "Low-hanging fruit",
-                "Easy wins requiring minimal effort"
+                "Action item",
+                "Task assigned to someone while managers monitor"
               ],
               [
                 "30,000-foot view",
-                "High-level overview without details"
+                "High-level overview without messy details"
               ],
               [
-                "Net-net",
-                "The final conclusion or bottom line"
+                "Move the needle",
+                "Make noticeable progress on executive charts"
               ]
             ]
           },
           {
             "id": "ctx-1-3",
             "type": "context",
-            "channel": "meeting",
-            "sender": "Brenda (Operations)",
-            "senderRole": "Director of Process",
-            "email": "Let's not boil the ocean here. What is the low-hanging fruit we can pluck before the board meeting so we can show we moved the needle?",
+            "channel": "slack",
+            "sender": "Chadwick (VP)",
+            "senderRole": "SVP of Synergies",
+            "email": "Let's not boil the ocean here. What is the low-hanging fruit that will move the needle on our 30,000-foot view before Friday's board deck?",
             "options": [
-              "She wants to solve the most difficult systemic problems first.",
-              "She wants quick cosmetic fixes that look good on a slide deck.",
-              "She wants to buy fresh fruit for the board members.",
-              "She is advocating for ocean conservation."
+              "Chadwick wants the team to harvest orchard fruits for an organic company smoothie bar.",
+              "Chadwick wants fast, effortless cosmetic improvements to make executive charts look impressive.",
+              "Chadwick wants deep engineering rewrites of the legacy authentication database.",
+              "Chadwick is canceling the Friday board meeting to focus on team wellness."
             ],
             "answer": 1,
-            "why": "'Low-hanging fruit' means doing whatever takes 10 minutes so executives can brag to the board."
+            "why": "Combines three classic clichés to request superficial wins without doing real groundwork."
+          },
+          {
+            "id": "ctx-1-3-b",
+            "type": "context",
+            "channel": "email",
+            "sender": "Megan (Account Exec)",
+            "senderRole": "Client Success",
+            "subject": "Quick feedback on the dashboard",
+            "email": "Team, net-net: the client loves the concept, but wants us to pivot the entire color scheme and rebuild the database architecture by tomorrow morning.",
+            "options": [
+              "The client is completely satisfied and no further changes are required.",
+              "The client rejected the entire deliverable while using polite introductory flattery.",
+              "The client purchased additional enterprise licenses.",
+              "The client wants to invite the engineering team to lunch."
+            ],
+            "answer": 1,
+            "why": "'Net-net' prefaces the devastating reality after a meaningless corporate compliment."
           }
         ]
       }
@@ -637,34 +913,40 @@
             "id": "u2-l1-t1",
             "type": "translate",
             "mode": "wordbank",
-            "channel": "slack",
-            "sender": "Brad from BizDev",
-            "senderRole": "Head of Partnerships",
+            "channel": "email",
+            "sender": "Gillian (Finance)",
+            "senderRole": "Senior Comptroller",
             "text": "Per my last email",
-            "model": "Can you not read?",
+            "model": "Can you not read",
             "snark": "The sharpest, most legally permissible dagger in corporate correspondence.",
             "tiles": [
-              "forever",
-              "carefully",
-              "read?",
               "not",
+              "read",
+              "Can",
               "you",
-              "Can"
+              "money",
+              "check",
+              "yesterday"
             ],
             "accepted": [
               [
                 "Can",
                 "you",
                 "not",
-                "read?"
+                "read"
+              ],
+              [
+                "Can",
+                "you",
+                "read"
               ]
             ],
             "acceptedAlternatives": [
               "can you not read",
-              "learn how to read your inbox",
-              "read what i sent you",
-              "did you even read my email",
-              "you failed to read"
+              "i already told you this",
+              "read what i wrote before",
+              "learn to read",
+              "as i already stated"
             ]
           },
           {
@@ -672,23 +954,20 @@
             "type": "translate",
             "mode": "wordbank",
             "channel": "email",
-            "sender": "Linda from HR",
-            "senderRole": "Chief Culture Officer",
+            "sender": "Brad from BizDev",
+            "senderRole": "Head of Partnerships",
             "text": "Friendly reminder",
-            "model": "Pay attention to what you ignored 4 days ago",
+            "model": "Pay attention to what you ignored",
             "snark": "Neither friendly, nor a gentle reminder. A ticking corporate countdown.",
             "tiles": [
-              "coffee",
-              "yelled",
-              "ago",
-              "days",
-              "4",
-              "ignored",
-              "you",
-              "what",
-              "to",
+              "Pay",
               "attention",
-              "Pay"
+              "to",
+              "what",
+              "you",
+              "ignored",
+              "smile",
+              "love"
             ],
             "accepted": [
               [
@@ -697,34 +976,33 @@
                 "to",
                 "what",
                 "you",
-                "ignored",
-                "4",
-                "days",
-                "ago"
+                "ignored"
               ]
             ],
             "acceptedAlternatives": [
               "pay attention to what you ignored",
-              "stop ignoring this task",
-              "do what you promised",
-              "this is not friendly do your job"
+              "do what i asked days ago",
+              "stop ignoring my email",
+              "not friendly at all"
             ]
           },
           {
             "id": "u2-l1-t3",
             "type": "translate",
             "mode": "wordbank",
-            "channel": "meeting",
-            "sender": "Chadwick (VP)",
-            "senderRole": "SVP of Synergies",
+            "channel": "slack",
+            "sender": "Chloe (Product Lead)",
+            "senderRole": "Senior PM",
             "text": "Bumping this to top of your inbox",
             "model": "Notice me",
-            "snark": "I am actively cluttering your inbox to satisfy my anxiety.",
+            "snark": "I am actively cluttering your inbox to satisfy my personal anxiety.",
             "tiles": [
               "Notice",
               "me",
-              "regret",
-              "manager"
+              "inbox",
+              "mail",
+              "desk",
+              "loud"
             ],
             "accepted": [
               [
@@ -734,32 +1012,32 @@
             ],
             "acceptedAlternatives": [
               "notice me",
-              "look at this now",
-              "harassing you until you reply"
+              "pay attention to me now",
+              "read this immediately",
+              "cluttering your inbox"
             ]
           },
           {
             "id": "u2-l1-t4",
             "type": "translate",
             "mode": "wordbank",
-            "channel": "slack",
-            "sender": "Chloe (Product Lead)",
-            "senderRole": "Senior PM",
+            "channel": "email",
+            "sender": "Linda from HR",
+            "senderRole": "Chief Culture Officer",
             "text": "As discussed",
             "model": "Creating a paper trail so you cannot deny this",
-            "snark": "Weaponized recap designed to prevent future amnesia.",
+            "snark": "Weaponized recap designed to prevent future amnesia during performance reviews.",
             "tiles": [
-              "ignored",
-              "forever",
-              "this",
-              "deny",
-              "cannot",
-              "you",
-              "so",
-              "trail",
-              "paper",
+              "Creating",
               "a",
-              "Creating"
+              "paper",
+              "trail",
+              "so",
+              "you",
+              "cannot",
+              "deny",
+              "this",
+              "fun"
             ],
             "accepted": [
               [
@@ -775,19 +1053,100 @@
               ],
               [
                 "Creating",
+                "a",
                 "paper",
-                "trail",
-                "so",
-                "you",
-                "cannot",
-                "deny",
-                "this"
+                "trail"
               ]
             ],
             "acceptedAlternatives": [
               "creating a paper trail so you cannot deny this",
-              "documenting so you cannot lie",
-              "paper trail to blame you"
+              "documenting this so you cannot lie",
+              "written proof of verbal agreement",
+              "preventing future corporate amnesia"
+            ]
+          },
+          {
+            "id": "u2-l1-t5",
+            "type": "translate",
+            "mode": "wordbank",
+            "channel": "email",
+            "sender": "Gillian (Finance)",
+            "senderRole": "Senior Comptroller",
+            "text": "Please advise",
+            "model": "What on earth do you want me to do",
+            "snark": "Subtext: 'This disaster is entirely your fault, fix it before I am forced to blame you.'",
+            "tiles": [
+              "What",
+              "on",
+              "earth",
+              "do",
+              "you",
+              "want",
+              "me",
+              "to",
+              "do",
+              "help"
+            ],
+            "accepted": [
+              [
+                "What",
+                "on",
+                "earth",
+                "do",
+                "you",
+                "want",
+                "me",
+                "to",
+                "do"
+              ]
+            ],
+            "acceptedAlternatives": [
+              "what on earth do you want me to do",
+              "fix your own problem",
+              "this mess is your fault",
+              "tell me what to do now"
+            ]
+          },
+          {
+            "id": "u2-l1-t6",
+            "type": "translate",
+            "mode": "wordbank",
+            "channel": "email",
+            "sender": "Megan (Account Exec)",
+            "senderRole": "Client Success",
+            "text": "Thanks in advance",
+            "model": "You have no choice but to do this now",
+            "snark": "Presumptive compliance disguised as gratitude before you even read the request.",
+            "tiles": [
+              "You",
+              "have",
+              "no",
+              "choice",
+              "but",
+              "to",
+              "do",
+              "this",
+              "now",
+              "gift"
+            ],
+            "accepted": [
+              [
+                "You",
+                "have",
+                "no",
+                "choice",
+                "but",
+                "to",
+                "do",
+                "this",
+                "now"
+              ]
+            ],
+            "acceptedAlternatives": [
+              "you have no choice but to do this now",
+              "presumptive compliance disguised as thanks",
+              "do this without arguing",
+              "you are doing this whether you like it or not"
             ]
           },
           {
@@ -796,19 +1155,19 @@
             "pairs": [
               [
                 "Per my last email",
-                "Can you not read?"
+                "Can you not read plain text?"
               ],
               [
-                "Friendly reminder",
-                "Pay attention to what you ignored 4 days ago"
+                "Please advise",
+                "What on earth do you want me to do with this mess?"
+              ],
+              [
+                "Thanks in advance",
+                "You have no choice but to comply now"
               ],
               [
                 "Bumping this to top of your inbox",
-                "Notice me"
-              ],
-              [
-                "As discussed",
-                "Creating a paper trail so you cannot deny this"
+                "Notice me and soothe my anxiety"
               ]
             ]
           },
@@ -816,18 +1175,34 @@
             "id": "ctx-2-1",
             "type": "context",
             "channel": "email",
-            "sender": "Todd (Client Relations)",
-            "senderRole": "Account Manager",
+            "sender": "Gillian (Finance)",
+            "senderRole": "Senior Comptroller",
             "subject": "Re: Project Timeline Delay",
-            "email": "Per my last email, the revised milestone deck was attached on Tuesday. Bumping this to the top of your inbox. Please advise on how you wish to proceed.",
+            "email": "As discussed per my last email, friendly reminder that quarterly receipts are due today. Bumping this to the top of your inbox.",
             "options": [
-              "Todd is politely asking if you are having a nice week.",
-              "Todd is furious that you ignored his email and is creating a paper trail to blame you.",
-              "Todd accidentally deleted the milestone deck and needs a new copy.",
-              "Todd wants to collaborate in person over coffee."
+              "Gillian is offering warm encouragement and reminding you that you are doing great.",
+              "Gillian has built a legally binding audit trail and is 10 minutes away from CCing the CEO.",
+              "Gillian accidentally forwarded an automated system reminder.",
+              "Gillian wants to treat you to lunch once receipts are filed."
             ],
             "answer": 1,
-            "why": "'Per my last email' + 'bumping this' is the corporate equivalent of slapping you with a glove."
+            "why": "Stacking 'Per my last email' with 'friendly reminder' and 'as discussed' constitutes DEFCON 1 email aggression."
+          },
+          {
+            "id": "ctx-2-1-b",
+            "type": "context",
+            "channel": "slack",
+            "sender": "Brad from BizDev",
+            "senderRole": "Head of Partnerships",
+            "email": "Any update on this? Just bumping since it has been 42 minutes since my previous message. Thanks in advance!",
+            "options": [
+              "Brad is relaxed and checking in whenever you have free bandwidth.",
+              "Brad expects immediate submissive compliance and treats his anxiety as your emergency.",
+              "Brad wants to collaborate on drafting the response together.",
+              "Brad is thanking you for completing the task already."
+            ],
+            "answer": 1,
+            "why": "Follow-ups sent within an hour paired with 'Thanks in advance' enforce presumptive obedience."
           }
         ]
       },
@@ -842,26 +1217,25 @@
             "id": "u2-l2-t1",
             "type": "translate",
             "mode": "wordbank",
-            "channel": "meeting",
-            "sender": "Chadwick (VP)",
-            "senderRole": "SVP of Synergies",
+            "channel": "email",
+            "sender": "Chloe (Product Lead)",
+            "senderRole": "Senior PM",
             "text": "Attaching for your visibility",
             "model": "Look at this so you share the blame if it fails",
             "snark": "Spreading culpability like peanut butter across the org chart.",
             "tiles": [
-              "forever",
-              "carefully",
-              "fails",
-              "it",
-              "if",
-              "blame",
-              "the",
-              "share",
-              "you",
-              "so",
-              "this",
+              "Look",
               "at",
-              "Look"
+              "this",
+              "so",
+              "you",
+              "share",
+              "the",
+              "blame",
+              "if",
+              "it",
+              "fails",
+              "file"
             ],
             "accepted": [
               [
@@ -878,12 +1252,8 @@
                 "fails"
               ],
               [
-                "Look",
-                "at",
-                "this",
-                "so",
-                "you",
                 "share",
+                "the",
                 "blame",
                 "if",
                 "it",
@@ -891,31 +1261,32 @@
               ]
             ],
             "acceptedAlternatives": [
-              "look at this so you share the blame",
-              "sharing the blame with you",
-              "making sure you are implicated"
+              "look at this so you share the blame if it fails",
+              "spreading blame across the team",
+              "making you culpable if this goes wrong",
+              "sharing culpability"
             ]
           },
           {
             "id": "u2-l2-t2",
             "type": "translate",
             "mode": "wordbank",
-            "channel": "slack",
-            "sender": "Chloe (Product Lead)",
-            "senderRole": "Senior PM",
+            "channel": "email",
+            "sender": "Chadwick (VP)",
+            "senderRole": "SVP of Synergies",
             "text": "Correct me if I'm wrong",
-            "model": "You are wrong, and I brought receipts",
-            "snark": "Pretending to invite feedback while delivering a lethal checkmate.",
+            "model": "You are wrong and I brought receipts",
+            "snark": "Pretending to invite feedback while delivering a lethal checkmate with timestamped screenshots.",
             "tiles": [
-              "coffee",
-              "yelled",
-              "receipts",
-              "brought",
-              "I",
-              "and",
-              "wrong",
+              "You",
               "are",
-              "You"
+              "wrong",
+              "and",
+              "I",
+              "brought",
+              "receipts",
+              "error",
+              "sorry"
             ],
             "accepted": [
               [
@@ -928,25 +1299,31 @@
                 "receipts"
               ]
             ],
-            "acceptedAlternatives": []
+            "acceptedAlternatives": [
+              "you are wrong and i brought receipts",
+              "you are totally wrong",
+              "i have proof you failed",
+              "lethal corporate checkmate"
+            ]
           },
           {
             "id": "u2-l2-t3",
             "type": "translate",
             "mode": "wordbank",
             "channel": "email",
-            "sender": "Todd (Strategy)",
-            "senderRole": "Managing Director",
+            "sender": "Brad from BizDev",
+            "senderRole": "Head of Partnerships",
             "text": "Looping in my team",
             "model": "Summoning witnesses and backup",
-            "snark": "Bringing the cavalry because this email chain has escalated to a standoff.",
+            "snark": "Bringing the cavalry because this email chain has escalated to an armed standoff.",
             "tiles": [
               "Summoning",
               "witnesses",
               "and",
               "backup",
-              "regret",
-              "manager"
+              "friends",
+              "party",
+              "help"
             ],
             "accepted": [
               [
@@ -956,29 +1333,34 @@
                 "backup"
               ]
             ],
-            "acceptedAlternatives": []
+            "acceptedAlternatives": [
+              "summoning witnesses and backup",
+              "calling in corporate backup",
+              "adding witnesses to the fight",
+              "escalating to an armed email standoff"
+            ]
           },
           {
             "id": "u2-l2-t4",
             "type": "translate",
             "mode": "wordbank",
-            "channel": "meeting",
-            "sender": "Brenda (Client Success)",
-            "senderRole": "Principal Escalations",
+            "channel": "email",
+            "sender": "Linda from HR",
+            "senderRole": "Chief Culture Officer",
             "text": "Resending in case this got buried",
             "model": "I know you saw it and chose peace",
-            "snark": "Politely calling out your deliberate evasion tactics.",
+            "snark": "Politely calling out your deliberate evasion tactics with maximum passive aggression.",
             "tiles": [
-              "ignored",
-              "forever",
-              "peace",
-              "chose",
-              "and",
-              "it",
-              "saw",
-              "you",
+              "I",
               "know",
-              "I"
+              "you",
+              "saw",
+              "it",
+              "and",
+              "chose",
+              "peace",
+              "dig",
+              "ground"
             ],
             "accepted": [
               [
@@ -992,27 +1374,107 @@
                 "peace"
               ]
             ],
-            "acceptedAlternatives": []
+            "acceptedAlternatives": [
+              "i know you saw it and chose peace",
+              "you ignored me intentionally",
+              "calling out your deliberate evasion",
+              "stop hiding from my emails"
+            ]
+          },
+          {
+            "id": "u2-l2-t5",
+            "type": "translate",
+            "mode": "wordbank",
+            "channel": "email",
+            "sender": "Gillian (Finance)",
+            "senderRole": "Senior Comptroller",
+            "text": "Taking myself off this thread",
+            "model": "Unsubscribe from your chaotic disaster",
+            "snark": "I have calculated that this dumpster fire does not threaten my quarterly bonus.",
+            "tiles": [
+              "Unsubscribe",
+              "from",
+              "your",
+              "chaotic",
+              "disaster",
+              "leave",
+              "fire",
+              "bye"
+            ],
+            "accepted": [
+              [
+                "Unsubscribe",
+                "from",
+                "your",
+                "chaotic",
+                "disaster"
+              ]
+            ],
+            "acceptedAlternatives": [
+              "unsubscribe from your chaotic disaster",
+              "removing myself from this mess",
+              "leaving before blame is assigned",
+              "this is not my problem anymore"
+            ]
+          },
+          {
+            "id": "u2-l2-t6",
+            "type": "translate",
+            "mode": "wordbank",
+            "channel": "slack",
+            "sender": "Derek (Scrum Master)",
+            "senderRole": "Agile Evangelist",
+            "text": "Happy to discuss live",
+            "model": "I refuse to create more written evidence",
+            "snark": "We need an unscheduled phone call before someone accidentally types something legally actionable.",
+            "tiles": [
+              "I",
+              "refuse",
+              "to",
+              "create",
+              "more",
+              "written",
+              "evidence",
+              "talk",
+              "phone"
+            ],
+            "accepted": [
+              [
+                "I",
+                "refuse",
+                "to",
+                "create",
+                "more",
+                "written",
+                "evidence"
+              ]
+            ],
+            "acceptedAlternatives": [
+              "i refuse to create more written evidence",
+              "let us talk so there is no paper trail",
+              "avoiding written evidence",
+              "stop typing incriminating messages"
+            ]
           },
           {
             "id": "u2-l2-match",
             "type": "match",
             "pairs": [
               [
+                "Taking myself off this thread",
+                "Unsubscribe from your chaotic disaster"
+              ],
+              [
+                "Happy to discuss live",
+                "I refuse to create more written evidence"
+              ],
+              [
                 "Attaching for your visibility",
-                "Look at this so you share the blame if it fails"
+                "Look at this so you share the blame"
               ],
               [
                 "Correct me if I'm wrong",
-                "You are wrong, and I brought receipts"
-              ],
-              [
-                "Looping in my team",
-                "Summoning witnesses and backup"
-              ],
-              [
-                "Resending in case this got buried",
-                "I know you saw it and chose peace"
+                "You are wrong and I brought receipts"
               ]
             ]
           },
@@ -1020,18 +1482,35 @@
             "id": "ctx-2-2",
             "type": "context",
             "channel": "email",
-            "sender": "Linda (Legal & Compliance)",
-            "senderRole": "Head of Legal",
-            "subject": "FWD: Vendor Contract Liability",
-            "email": "Attaching for your visibility. I am looping in Dave from procurement, and per our offline conversation, taking myself off this thread. Thanks in advance!",
+            "sender": "Brad from BizDev",
+            "senderRole": "VP of Partnerships",
+            "subject": "FWD: Vendor Contract Liability Issue",
+            "email": "Correct me if I’m wrong, but attaching the revised vendor agreement for your visibility. Looping in my team and resending in case this got buried in your inbox.",
             "options": [
-              "Linda is deeply committed to managing this project personally.",
-              "Linda sees a liability disaster, dumped it on Dave, and is running away.",
-              "Linda forgot Dave’s email address.",
-              "Linda is taking the whole team out for lunch."
+              "Brad wants to ensure you don't miss an exciting partnership opportunity.",
+              "Brad is building an airtight blame fortress and pulling 6 witnesses into the line of fire.",
+              "Brad lost the original attachment and needs you to resend it.",
+              "Brad is inviting everyone to an offsite team celebration."
             ],
             "answer": 1,
-            "why": "'Taking myself off this thread' after dumping a contract means 'this bomb will not detonate near me.'"
+            "why": "Every single phrase here is weaponized to establish undeniable culpability."
+          },
+          {
+            "id": "ctx-2-2-b",
+            "type": "context",
+            "channel": "email",
+            "sender": "Chloe (Product Lead)",
+            "senderRole": "Senior PM",
+            "subject": "Re: Scope Creep Escalation [+5 CCs]",
+            "email": "+CC VP of Engineering, Head of HR, Chief Product Officer, General Counsel. Just ensuring everyone is in the loop on this minor wording tweak!",
+            "options": [
+              "Chloe is keeping the executive suite informed about harmless product updates.",
+              "Chloe has launched a nuclear escalation protocol because she did not like your Slack reply.",
+              "Chloe clicked CC All by complete accident.",
+              "The executives requested daily updates on punctuation choices."
+            ],
+            "answer": 1,
+            "why": "Mass CCing department heads over minor disputes is the corporate equivalent of pressing the nuclear launch button."
           }
         ]
       },
@@ -1047,25 +1526,24 @@
             "type": "translate",
             "mode": "wordbank",
             "channel": "email",
-            "sender": "Todd (Strategy)",
-            "senderRole": "Managing Director",
+            "sender": "Chloe (Product Lead)",
+            "senderRole": "Senior PM",
             "text": "Re-attaching with track changes",
             "model": "Look at how much of your work I had to rewrite",
             "snark": "A bloody red-lined crime scene attached as a Word document.",
             "tiles": [
-              "forever",
-              "carefully",
-              "rewrite",
-              "to",
-              "had",
-              "I",
-              "work",
-              "your",
-              "of",
-              "much",
-              "how",
+              "Look",
               "at",
-              "Look"
+              "how",
+              "much",
+              "of",
+              "your",
+              "work",
+              "I",
+              "had",
+              "to",
+              "rewrite",
+              "red"
             ],
             "accepted": [
               [
@@ -1080,51 +1558,52 @@
                 "had",
                 "to",
                 "rewrite"
-              ],
-              [
-                "Look",
-                "at",
-                "how",
-                "much",
-                "your",
-                "work",
-                "I",
-                "had",
-                "to",
-                "rewrite"
               ]
             ],
-            "acceptedAlternatives": []
+            "acceptedAlternatives": [
+              "look at how much of your work i had to rewrite",
+              "red-lined crime scene document",
+              "i rewrote everything you did",
+              "your draft was completely unusable"
+            ]
           },
           {
             "id": "u2-l3-t2",
             "type": "translate",
             "mode": "wordbank",
-            "channel": "meeting",
-            "sender": "Brenda (Client Success)",
-            "senderRole": "Principal Escalations",
+            "channel": "email",
+            "sender": "Gillian (Finance)",
+            "senderRole": "Senior Comptroller",
             "text": "Apologies for the delay",
-            "model": "I didn't care until today",
-            "snark": "Standard email opener when a message has marinated for two weeks.",
+            "model": "I did not care until today",
+            "snark": "Standard email opener when a message has marinated in the inbox for two weeks.",
             "tiles": [
-              "coffee",
-              "yelled",
-              "today",
-              "until",
+              "I",
+              "did",
+              "not",
               "care",
-              "didn't",
-              "I"
+              "until",
+              "today",
+              "sorry",
+              "late",
+              "busy"
             ],
             "accepted": [
               [
                 "I",
-                "didn't",
+                "did",
+                "not",
                 "care",
                 "until",
                 "today"
               ]
             ],
-            "acceptedAlternatives": []
+            "acceptedAlternatives": [
+              "i did not care until today",
+              "i ignored this for two weeks",
+              "it was not important until now",
+              "only responding because you nagged"
+            ]
           },
           {
             "id": "u2-l3-t3",
@@ -1135,15 +1614,16 @@
             "senderRole": "Head of Partnerships",
             "text": "Just circling back on this",
             "model": "I am harassing you again",
-            "snark": "The polite reminder that will never let you rest.",
+            "snark": "The polite reminder that will relentlessly hunt you down across every platform.",
             "tiles": [
               "I",
               "am",
               "harassing",
               "you",
               "again",
-              "regret",
-              "manager"
+              "circle",
+              "back",
+              "call"
             ],
             "accepted": [
               [
@@ -1154,26 +1634,32 @@
                 "again"
               ]
             ],
-            "acceptedAlternatives": []
+            "acceptedAlternatives": [
+              "i am harassing you again",
+              "bothering you once more",
+              "nagging you about the same thing",
+              "hunting you down for an answer"
+            ]
           },
           {
             "id": "u2-l3-t4",
             "type": "translate",
             "mode": "wordbank",
             "channel": "email",
-            "sender": "Linda from HR",
-            "senderRole": "Chief Culture Officer",
+            "sender": "Chadwick (VP)",
+            "senderRole": "SVP of Synergies",
             "text": "Let me know your thoughts",
             "model": "Please approve this without changes",
             "snark": "You are expected to say 'Looks great!' and nothing else.",
             "tiles": [
-              "ignored",
-              "forever",
-              "changes",
-              "without",
-              "this",
+              "Please",
               "approve",
-              "Please"
+              "this",
+              "without",
+              "changes",
+              "think",
+              "mind",
+              "idea"
             ],
             "accepted": [
               [
@@ -1184,45 +1670,139 @@
                 "changes"
               ]
             ],
-            "acceptedAlternatives": []
+            "acceptedAlternatives": [
+              "please approve this without changes",
+              "rubber stamp this immediately",
+              "do not dare critique this",
+              "just say looks great"
+            ]
+          },
+          {
+            "id": "u2-l3-t5",
+            "type": "translate",
+            "mode": "wordbank",
+            "channel": "email",
+            "sender": "Chadwick (VP)",
+            "senderRole": "SVP of Synergies",
+            "text": "Forwarding with no context",
+            "model": "Figure this disaster out yourself",
+            "snark": "An executive tradition: forwarding a 40-message email chain with a single 'FYI'.",
+            "tiles": [
+              "Figure",
+              "this",
+              "disaster",
+              "out",
+              "yourself",
+              "read",
+              "email",
+              "fyi"
+            ],
+            "accepted": [
+              [
+                "Figure",
+                "this",
+                "disaster",
+                "out",
+                "yourself"
+              ]
+            ],
+            "acceptedAlternatives": [
+              "figure this disaster out yourself",
+              "solve this mess on your own",
+              "forwarding 40 emails with no explanation",
+              "deal with this yourself"
+            ]
+          },
+          {
+            "id": "u2-l3-t6",
+            "type": "translate",
+            "mode": "wordbank",
+            "channel": "meeting",
+            "sender": "Linda from HR",
+            "senderRole": "Chief Culture Officer",
+            "text": "All hands on deck",
+            "model": "Cancel your weekend plans",
+            "snark": "A maritime emergency signal indicating middle management failed to schedule resources properly.",
+            "tiles": [
+              "Cancel",
+              "your",
+              "weekend",
+              "plans",
+              "boat",
+              "ship",
+              "water",
+              "help"
+            ],
+            "accepted": [
+              [
+                "Cancel",
+                "your",
+                "weekend",
+                "plans"
+              ]
+            ],
+            "acceptedAlternatives": [
+              "cancel your weekend plans",
+              "unpaid weekend emergency work",
+              "poor management becomes your crisis",
+              "work all night"
+            ]
           },
           {
             "id": "u2-l3-match",
             "type": "match",
             "pairs": [
               [
-                "Re-attaching with track changes",
-                "Look at how much of your work I had to rewrite"
+                "Forwarding with no context",
+                "Figure this disaster out yourself"
               ],
               [
-                "Apologies for the delay",
-                "I didn't care until today"
-              ],
-              [
-                "Just circling back on this",
-                "I am harassing you again"
+                "All hands on deck",
+                "Cancel your weekend plans for our crisis"
               ],
               [
                 "Let me know your thoughts",
-                "Please approve this without changes"
+                "Approve this without any changes"
+              ],
+              [
+                "Re-attaching with track changes",
+                "Look at how much work I had to rewrite"
               ]
             ]
           },
           {
             "id": "ctx-2-3",
             "type": "context",
-            "channel": "slack",
-            "sender": "Chloe (Product)",
-            "senderRole": "Group Product Manager",
-            "email": "Happy to discuss live! Correct me if I'm wrong, but wasn't the API contract signed off in Q1? Re-attaching with track changes for visibility.",
+            "channel": "email",
+            "sender": "Chloe (Product Lead)",
+            "senderRole": "Senior PM",
+            "subject": "Final deck v9_final_FINAL2",
+            "email": "Happy to discuss live! Correct me if I'm wrong, but re-attaching with track changes so you can see where we pivoted. Let me know your thoughts!",
             "options": [
-              "Chloe is seeking feedback because she genuinely doubts her memory.",
-              "Chloe is about to destroy your argument with timestamped evidence in a live call.",
-              "Chloe wants to cancel the API contract entirely.",
-              "Chloe is praising your thoughtful code design."
+              "Chloe would love an open debate about the project trajectory.",
+              "Chloe has rewritten your entire slide deck and demands you rubber-stamp it immediately.",
+              "Chloe deleted the presentation by accident.",
+              "Chloe wants to postpone the deck review until next quarter."
             ],
             "answer": 1,
-            "why": "'Correct me if I'm wrong' accompanied by track changes is a fatal checkmate."
+            "why": "'Let me know your thoughts' paired with 're-attaching with track changes' is an executive rubber-stamp demand."
+          },
+          {
+            "id": "ctx-2-3-b",
+            "type": "context",
+            "channel": "email",
+            "sender": "Chadwick (VP)",
+            "senderRole": "SVP of Synergies",
+            "subject": "FWD: Client Contract Redline",
+            "email": "FYI. Thoughts? (Forwarded thread contains 47 angry vendor emails spanning 6 months)",
+            "options": [
+              "Chadwick wrote a thoughtful executive summary of the vendor dispute.",
+              "Chadwick dumped a toxic corporate catastrophe on your plate and expects you to fix it by lunch.",
+              "Chadwick is testing your ability to read chronological timestamps.",
+              "Chadwick sent the forward by mistake."
+            ],
+            "answer": 1,
+            "why": "The two-letter forward 'FYI' over a gigantic chain is the ultimate executive abdication of responsibility."
           }
         ]
       }
@@ -1266,81 +1846,84 @@
             "id": "u3-l1-t1",
             "type": "translate",
             "mode": "typed",
-            "channel": "slack",
-            "sender": "Brad from BizDev",
-            "senderRole": "Head of Partnerships",
+            "channel": "meeting",
+            "sender": "Linda from HR",
+            "senderRole": "Chief Culture Officer",
             "text": "Opportunity for growth",
             "model": "You are bad at this",
-            "snark": "HR translation: you failed, but we must frame it as an expansive horizon.",
+            "snark": "HR translation: you failed, but legal says we must frame it as an expansive horizon.",
             "ideas": [
               [
                 "bad",
                 "terrible",
                 "failed",
-                "suck",
                 "poor",
-                "not good",
-                "mistake",
-                "flaw",
-                "weakness"
+                "deficit",
+                "weak",
+                "incompetent",
+                "lacking",
+                "fail"
               ],
               [
-                "improve",
-                "better",
-                "fix",
-                "learn",
-                "work on"
+                "at",
+                "this",
+                "skill",
+                "job",
+                "work",
+                "performance",
+                "deliverable"
               ]
             ],
             "ideaLabels": [
-              "acknowledging failure/poor performance",
-              "need for improvement"
+              "Incompetence / Failure",
+              "Job skill / Performance"
             ],
             "needed": 1,
             "acceptedAlternatives": [
               "you are bad at this",
-              "you failed",
-              "terrible performance",
-              "you made a huge mistake"
+              "you failed at this",
+              "your performance is poor",
+              "you did a terrible job",
+              "you need serious improvement"
             ]
           },
           {
             "id": "u3-l1-t2",
             "type": "translate",
             "mode": "typed",
-            "channel": "email",
-            "sender": "Linda from HR",
-            "senderRole": "Chief Culture Officer",
+            "channel": "meeting",
+            "sender": "Chadwick (VP)",
+            "senderRole": "SVP of Synergies",
             "text": "Needs to manage up",
             "model": "Needs to do their boss's job for them",
-            "snark": "Expected to babysit an executive who forgets to review slides.",
+            "snark": "Expected to babysit an executive who forgets to review slide decks until 5 minutes before the meeting.",
             "ideas": [
+              [
+                "do",
+                "manage",
+                "babysit",
+                "cover",
+                "perform",
+                "handle"
+              ],
               [
                 "boss",
                 "manager",
                 "executive",
-                "supervisor"
-              ],
-              [
-                "job",
-                "work",
-                "babysit",
-                "help",
-                "do their job",
-                "manage",
-                "remind"
+                "supervisor",
+                "leadership"
               ]
             ],
             "ideaLabels": [
-              "referencing the boss/manager",
-              "doing their work or babysitting them"
+              "Babysit / Do the job",
+              "Boss / Manager"
             ],
             "needed": 2,
             "acceptedAlternatives": [
-              "needs to do their boss's job",
-              "babysit your manager",
-              "do executive work without pay",
-              "remind your boss of everything"
+              "needs to do their boss's job for them",
+              "do your manager's job",
+              "babysit your executive",
+              "remind your boss to do their job"
             ]
           },
           {
@@ -1348,94 +1931,182 @@
             "type": "translate",
             "mode": "typed",
             "channel": "meeting",
-            "sender": "Chadwick (VP)",
-            "senderRole": "SVP of Synergies",
+            "sender": "Brad from BizDev",
+            "senderRole": "Head of Partnerships",
             "text": "Demonstrate more ownership",
             "model": "Work overtime without extra pay",
-            "snark": "Taking total accountability for things you have zero authority to change.",
+            "snark": "Taking total accountability for outcomes you have zero authority to influence.",
             "ideas": [
               [
-                "work overtime",
+                "work",
                 "overtime",
-                "extra hours",
                 "unpaid",
-                "weekend",
-                "more work",
-                "responsibility",
-                "blame"
+                "free",
+                "hours",
+                "late",
+                "nights",
+                "extra"
               ],
               [
-                "no pay",
-                "without extra pay",
-                "no raise",
-                "no authority",
-                "take blame"
+                "pay",
+                "money",
+                "salary",
+                "compensation",
+                "bonus",
+                "reward"
               ]
             ],
             "ideaLabels": [
-              "working more/overtime",
-              "without compensation or authority"
+              "Unpaid overtime / Late hours",
+              "Zero compensation / No extra pay"
             ],
             "needed": 1,
             "acceptedAlternatives": [
               "work overtime without extra pay",
-              "take the blame for free",
-              "work through the weekend"
+              "take blame without authority",
+              "work free overtime",
+              "sacrifice your evenings for free",
+              "work late without compensation"
             ]
           },
           {
             "id": "u3-l1-t4",
             "type": "translate",
             "mode": "typed",
-            "channel": "slack",
+            "channel": "meeting",
             "sender": "Chloe (Product Lead)",
             "senderRole": "Senior PM",
             "text": "Needs more executive presence",
-            "model": "Dress better and speak with unearned confidence",
-            "snark": "A vague, unfalsifiable critique given when they can't find real flaws.",
+            "model": "Speak with unearned confidence",
+            "snark": "A vague, unfalsifiable critique given when management cannot find any actual flaws in your work.",
             "ideas": [
               [
+                "speak",
+                "talk",
                 "dress",
-                "clothes",
-                "suit",
-                "appearance",
-                "look better"
+                "act",
+                "appear",
+                "look"
               ],
               [
-                "speak",
-                "confidence",
                 "unearned",
-                "sound confident",
-                "act confident",
-                "pretend"
+                "fake",
+                "arrogant",
+                "confidence",
+                "loud",
+                "suits"
               ]
             ],
             "ideaLabels": [
-              "dressing better/appearance",
-              "speaking with confidence/acting important"
+              "Speak / Dress / Act",
+              "Unearned confidence / Fake presence"
             ],
             "needed": 1,
-            "acceptedAlternatives": []
+            "acceptedAlternatives": [
+              "speak with unearned confidence",
+              "dress better and pretend to be important",
+              "fake confidence in meetings",
+              "act arrogant like an executive",
+              "unfalsifiable subjective critique"
+            ]
+          },
+          {
+            "id": "u3-l1-t5",
+            "type": "translate",
+            "mode": "typed",
+            "channel": "meeting",
+            "sender": "Linda from HR",
+            "senderRole": "Chief Culture Officer",
+            "text": "Growth mindset",
+            "model": "Accept unreasonable demands cheerfully",
+            "snark": "Translates to: 'Do not complain when your workload triples with zero salary increase.'",
+            "ideas": [
+              [
+                "accept",
+                "tolerate",
+                "take",
+                "endure",
+                "cheerfully",
+                "smile"
+              ],
+              [
+                "unreasonable",
+                "demands",
+                "overwork",
+                "workload",
+                "exploitation",
+                "pressure"
+              ]
+            ],
+            "ideaLabels": [
+              "Accept cheerfully",
+              "Unreasonable workload / Exploitation"
+            ],
+            "needed": 1,
+            "acceptedAlternatives": [
+              "accept unreasonable demands cheerfully",
+              "never complain about overwork",
+              "cheerfully accept scope creep",
+              "smile through exploitation"
+            ]
+          },
+          {
+            "id": "u3-l1-t6",
+            "type": "translate",
+            "mode": "typed",
+            "channel": "meeting",
+            "sender": "Derek (Scrum Master)",
+            "senderRole": "Agile Evangelist",
+            "text": "Wear multiple hats",
+            "model": "Do the work of three understaffed roles",
+            "snark": "Why hire a backend engineer, designer, and PM when one junior employee has a laptop?",
+            "ideas": [
+              [
+                "work",
+                "jobs",
+                "roles",
+                "tasks",
+                "duties"
+              ],
+              [
+                "three",
+                "multiple",
+                "understaffed",
+                "several",
+                "people"
+              ]
+            ],
+            "ideaLabels": [
+              "Work multiple roles",
+              "Understaffed company"
+            ],
+            "needed": 1,
+            "acceptedAlternatives": [
+              "do the work of three understaffed roles",
+              "work three jobs for one salary",
+              "understaffed company exploiting employees",
+              "do multiple jobs alone"
+            ]
           },
           {
             "id": "u3-l1-match",
             "type": "match",
             "pairs": [
               [
+                "Growth mindset",
+                "Accept unreasonable demands cheerfully"
+              ],
+              [
+                "Wear multiple hats",
+                "Do the work of three roles for one salary"
+              ],
+              [
                 "Opportunity for growth",
-                "You are bad at this"
-              ],
-              [
-                "Needs to manage up",
-                "Needs to do their boss's job for them"
-              ],
-              [
-                "Demonstrate more ownership",
-                "Work overtime without extra pay"
+                "You failed, but legal won't let us say it"
               ],
               [
                 "Needs more executive presence",
-                "Dress better and speak with unearned confidence"
+                "Speak with unearned arrogant confidence"
               ]
             ]
           },
@@ -1443,17 +2114,35 @@
             "id": "ctx-3-1",
             "type": "context",
             "channel": "meeting",
-            "sender": "Dave (Engineering Director)",
-            "senderRole": "Director of Engineering",
-            "email": "In Q4, we have a real opportunity for growth. You've done well, but we need you to demonstrate more ownership, manage up, and be comfortable with ambiguity.",
+            "sender": "Linda from HR",
+            "senderRole": "Chief Culture Officer",
+            "subject": "Annual Review Feedback",
+            "email": "In Q4, we noticed an opportunity for growth in your cross-functional visibility. We would love to see you manage up more and demonstrate extreme ownership across projects.",
             "options": [
-              "You are getting a massive raise and a promotion next week.",
-              "You will be doing your manager’s job with no instructions and no additional pay.",
-              "The company has well-defined roadmaps and clear documentation.",
-              "Your manager wants to teach you how to write code."
+              "Linda is promoting you to Chief Executive Officer next Monday.",
+              "Linda thinks your boss is incompetent and expects you to cover their mistakes on nights and weekends.",
+              "Linda wants you to attend more virtual cocktail hours.",
+              "Linda is awarding you an all-expenses-paid training seminar."
             ],
             "answer": 1,
-            "why": "'Comfortable with ambiguity' means management has no plan, and 'ownership' means you carry the burden."
+            "why": "'Manage up' plus 'ownership' is code for doing your manager's duties without a title change."
+          },
+          {
+            "id": "ctx-3-1-b",
+            "type": "context",
+            "channel": "email",
+            "sender": "Chadwick (VP)",
+            "senderRole": "SVP of Synergies",
+            "subject": "Mid-Year Reflection",
+            "email": "Your technical deliverables are mathematically perfect, but the committee felt you lacked executive presence in our 8 AM Monday syncs.",
+            "options": [
+              "Chadwick thinks you should run for public office.",
+              "Chadwick has no legitimate performance critique, so he is using a subjective buzzword to deny your raise.",
+              "Chadwick wants you to lead the engineering department.",
+              "Chadwick wants you to turn your camera off."
+            ],
+            "answer": 1,
+            "why": "'Executive presence' is corporate code for an unfalsifiable refusal of promotion or compensation."
           }
         ]
       },
@@ -1468,160 +2157,255 @@
             "id": "u3-l2-t1",
             "type": "translate",
             "mode": "typed",
-            "channel": "meeting",
-            "sender": "Chadwick (VP)",
-            "senderRole": "SVP of Synergies",
+            "channel": "email",
+            "sender": "Linda from HR",
+            "senderRole": "Chief Culture Officer",
             "text": "Self-starter",
             "model": "No one is going to train or help you",
-            "snark": "Sink or swim in our undocumented legacy codebase.",
+            "snark": "Sink or swim in our completely undocumented, five-year-old legacy codebase.",
             "ideas": [
               [
-                "no training",
-                "no help",
-                "figure it out",
-                "alone",
-                "on your own",
-                "nobody will help",
-                "sink or swim"
+                "train",
+                "help",
+                "guide",
+                "onboard",
+                "support",
+                "assist"
               ],
               [
-                "help",
-                "train",
-                "guide",
-                "support",
-                "documentation"
+                "no one",
+                "nobody",
+                "alone",
+                "unassisted",
+                "zero"
               ]
             ],
             "ideaLabels": [
-              "lack of training/support",
-              "working completely alone"
+              "No training / Help",
+              "Left completely alone"
             ],
             "needed": 1,
-            "acceptedAlternatives": []
+            "acceptedAlternatives": [
+              "no one is going to train or help you",
+              "zero onboarding or training",
+              "figure it out alone with no documentation",
+              "sink or swim on your own"
+            ]
           },
           {
             "id": "u3-l2-t2",
             "type": "translate",
             "mode": "typed",
-            "channel": "slack",
-            "sender": "Chloe (Product Lead)",
-            "senderRole": "Senior PM",
+            "channel": "meeting",
+            "sender": "Brad from BizDev",
+            "senderRole": "Head of Partnerships",
             "text": "Culture fit",
-            "model": "Do we want to drink warm beer with you on Fridays?",
-            "snark": "The subjective barrier that keeps corporate demographics remarkably homogeneous.",
+            "model": "Do we want to drink beer with you",
+            "snark": "The subjective demographic barrier that keeps corporate environments remarkably homogeneous.",
             "ideas": [
               [
-                "beer",
                 "drink",
-                "like you",
                 "hang out",
+                "beer",
                 "friends",
-                "homogeneous",
-                "same",
-                "club"
+                "like",
+                "vibe"
               ],
               [
-                "friday",
                 "social",
-                "party"
+                "happy hour",
+                "club",
+                "demographic",
+                "group"
               ]
             ],
             "ideaLabels": [
-              "social conformity or drinking beer",
-              "arbitrary subjective likeness"
+              "Social drinking / Vibes",
+              "Demographic conformity"
             ],
             "needed": 1,
-            "acceptedAlternatives": []
+            "acceptedAlternatives": [
+              "do we want to drink beer with you",
+              "subjective vibe check",
+              "homogeneous demographic matching",
+              "do you fit into our clique"
+            ]
           },
           {
             "id": "u3-l2-t3",
             "type": "translate",
             "mode": "typed",
-            "channel": "email",
-            "sender": "Todd (Strategy)",
-            "senderRole": "Managing Director",
+            "channel": "slack",
+            "sender": "Chloe (Product Lead)",
+            "senderRole": "Senior PM",
             "text": "Thought leadership",
-            "model": "Posting platitudes on the internet",
-            "snark": "Saying obvious things with extreme conviction and high production value.",
+            "model": "Posting obvious platitudes online",
+            "snark": "Saying completely obvious things with theatrical conviction and high production value.",
             "ideas": [
               [
                 "posting",
-                "platitudes",
-                "obvious",
-                "cliches",
-                "talk",
-                "linkedin",
-                "social media",
-                "hot air"
+                "writing",
+                "saying",
+                "sharing",
+                "articles"
               ],
               [
-                "internet",
-                "online",
-                "pointless",
-                "pretentious"
+                "platitudes",
+                "obvious",
+                "generic",
+                "clichés",
+                "buzzwords",
+                "meaningless"
               ]
             ],
             "ideaLabels": [
-              "posting obvious platitudes",
-              "online corporate posturing"
+              "Posting / Writing online",
+              "Obvious platitudes / Meaningless cliches"
             ],
             "needed": 1,
-            "acceptedAlternatives": []
+            "acceptedAlternatives": [
+              "posting obvious platitudes online",
+              "posting buzzwords on linkedin",
+              "saying obvious things with conviction",
+              "pretentious corporate blogging"
+            ]
           },
           {
             "id": "u3-l2-t4",
             "type": "translate",
             "mode": "typed",
             "channel": "meeting",
-            "sender": "Brenda (Client Success)",
-            "senderRole": "Principal Escalations",
+            "sender": "Derek (Scrum Master)",
+            "senderRole": "Agile Evangelist",
             "text": "Agile pivot",
             "model": "The original plan failed catastrophically",
-            "snark": "Scrapping six months of roadmap and calling the panic 'iterative flexibility.'",
+            "snark": "Scrapping six months of roadmap and rebranding the absolute panic as 'iterative flexibility'.",
             "ideas": [
               [
                 "failed",
                 "disaster",
-                "scrapped",
-                "gave up",
-                "plan failed",
+                "catastrophe",
+                "broken",
                 "ruined",
-                "broke",
-                "didn't work"
+                "collapsed"
               ],
               [
-                "panic",
-                "start over",
-                "change direction",
-                "sudden change"
+                "plan",
+                "roadmap",
+                "strategy",
+                "project",
+                "product"
               ]
             ],
             "ideaLabels": [
-              "failure of the original plan",
-              "panicked sudden change"
+              "Catastrophic failure",
+              "Scrapped roadmap / Plan"
             ],
             "needed": 1,
-            "acceptedAlternatives": []
+            "acceptedAlternatives": [
+              "the original plan failed catastrophically",
+              "everything we built was a disaster",
+              "rebranding panic as flexibility",
+              "scrapping the entire product roadmap"
+            ]
+          },
+          {
+            "id": "u3-l2-t5",
+            "type": "translate",
+            "mode": "typed",
+            "channel": "meeting",
+            "sender": "Chadwick (VP)",
+            "senderRole": "SVP of Synergies",
+            "text": "Comfortable with ambiguity",
+            "model": "Management has no idea what they are doing",
+            "snark": "Senior leadership has no strategic direction, so please invent one before our quarterly presentation.",
+            "ideas": [
+              [
+                "management",
+                "leadership",
+                "executives",
+                "nobody",
+                "bosses"
+              ],
+              [
+                "no idea",
+                "clueless",
+                "no strategy",
+                "chaotic",
+                "confused",
+                "direction"
+              ]
+            ],
+            "ideaLabels": [
+              "Leadership / Management",
+              "No direction / Clueless"
+            ],
+            "needed": 1,
+            "acceptedAlternatives": [
+              "management has no idea what they are doing",
+              "complete chaos with zero strategy",
+              "leadership is completely clueless",
+              "nobody knows what is happening"
+            ]
+          },
+          {
+            "id": "u3-l2-t6",
+            "type": "translate",
+            "mode": "typed",
+            "channel": "slack",
+            "sender": "Megan (Account Exec)",
+            "senderRole": "Client Success",
+            "text": "Critical path",
+            "model": "If this is late everyone gets fired",
+            "snark": "The single dependency chain keeping the entire fragile project from tumbling off a cliff.",
+            "ideas": [
+              [
+                "fired",
+                "yelled at",
+                "trouble",
+                "blamed",
+                "crisis",
+                "disaster"
+              ],
+              [
+                "late",
+                "delayed",
+                "fails",
+                "missed",
+                "bottleneck"
+              ]
+            ],
+            "ideaLabels": [
+              "High consequence / Getting blamed",
+              "Late / Delayed milestone"
+            ],
+            "needed": 1,
+            "acceptedAlternatives": [
+              "if this is late everyone gets fired",
+              "if this fails everyone gets yelled at",
+              "catastrophic bottleneck dependency",
+              "single point of total project failure"
+            ]
           },
           {
             "id": "u3-l2-match",
             "type": "match",
             "pairs": [
               [
-                "Self-starter",
-                "No one is going to train or help you"
+                "Comfortable with ambiguity",
+                "Management has no strategy or direction"
               ],
               [
-                "Culture fit",
-                "Do we want to drink warm beer with you on Fridays?"
-              ],
-              [
-                "Thought leadership",
-                "Posting platitudes on the internet"
+                "Critical path",
+                "If this is late everyone gets yelled at"
               ],
               [
                 "Agile pivot",
-                "The original plan failed catastrophically"
+                "Rebranding total failure as iterative flexibility"
+              ],
+              [
+                "Self-starter",
+                "Sink or swim with zero documentation or training"
               ]
             ]
           },
@@ -1629,18 +2413,34 @@
             "id": "ctx-3-2",
             "type": "context",
             "channel": "email",
-            "sender": "Sarah (VP of People)",
-            "senderRole": "VP of HR",
+            "sender": "Chadwick (VP)",
+            "senderRole": "SVP of Synergies",
             "subject": "Annual Review Follow-up",
-            "email": "We value self-starters who wear multiple hats and lean in. To raise the bar on executive presence, let’s see you do more heavy lifting on the critical path.",
+            "email": "We love your passion, but moving into senior band requires being a true self-starter, elevating our thought leadership, and aligning with team culture fit.",
             "options": [
-              "You will get a personal assistant and an executive wardrobe allowance.",
-              "You are expected to work unpaid overtime doing the tasks of three vacant positions.",
-              "You need to hit the corporate gym and lift heavier weights.",
-              "Your workload will be reduced by 50% to maintain work-life balance."
+              "Chadwick wants you to publish research papers in academic journals.",
+              "Chadwick expects you to work with zero onboarding, post platitudes on LinkedIn, and conform to the after-work drinking clique.",
+              "Chadwick is paying for your executive MBA.",
+              "Chadwick is laying off the entire leadership tier."
             ],
             "answer": 1,
-            "why": "'Wear multiple hats' is hiring code for 'we understaffed this team by 60%.'"
+            "why": "Combines three gatekeeping phrases to justify withholding promotion without offering objective standards."
+          },
+          {
+            "id": "ctx-3-2-b",
+            "type": "context",
+            "channel": "slack",
+            "sender": "Linda from HR",
+            "senderRole": "Chief Culture Officer",
+            "email": "Hiring update: We are seeking a rockstar self-starter comfortable with ambiguity who thrives wearing 12 different hats in a fast-paced environment!",
+            "options": [
+              "A well-structured corporate environment with clear division of labor.",
+              "An underfunded chaotic dumpster fire where you will do the work of an entire department alone.",
+              "A hat manufacturing company seeking runway models.",
+              "An executive search for a Fortune 500 board member."
+            ],
+            "answer": 1,
+            "why": "'Wearing many hats' and 'comfortable with ambiguity' in a job description signals massive understaffing and no strategy."
           }
         ]
       },
@@ -1655,172 +2455,285 @@
             "id": "u3-l3-t1",
             "type": "translate",
             "mode": "typed",
-            "channel": "email",
-            "sender": "Todd (Strategy)",
-            "senderRole": "Managing Director",
+            "channel": "meeting",
+            "sender": "Chadwick (VP)",
+            "senderRole": "SVP of Synergies",
             "text": "Synergistic alignment",
-            "model": "Agreeing with the highest paid person's opinion",
-            "snark": "The corporate equivalent of synchronised nodding.",
+            "model": "Nodding in agreement with the highest paid person",
+            "snark": "The corporate equivalent of synchronised bobbleheading during an All-Hands.",
             "ideas": [
               [
                 "agreeing",
                 "nodding",
-                "yes",
-                "concur",
-                "obeying",
-                "sucking up"
+                "submitting",
+                "concurring",
+                "yes"
               ],
               [
-                "boss",
-                "executive",
                 "highest paid",
-                "hippo",
-                "manager"
+                "executive",
+                "boss",
+                "vp",
+                "ceo",
+                "hippo"
               ]
             ],
             "ideaLabels": [
-              "blindly agreeing/nodding",
-              "deferring to the highest paid boss"
+              "Nodding / Agreeing",
+              "Highest paid executive"
             ],
             "needed": 1,
-            "acceptedAlternatives": []
+            "acceptedAlternatives": [
+              "nodding in agreement with the highest paid person",
+              "agreeing with whatever the boss says",
+              "synchronized nodding during all-hands",
+              "executive agreement"
+            ]
           },
           {
             "id": "u3-l3-t2",
             "type": "translate",
             "mode": "typed",
             "channel": "meeting",
-            "sender": "Brenda (Client Success)",
-            "senderRole": "Principal Escalations",
+            "sender": "Chloe (Product Lead)",
+            "senderRole": "Senior PM",
             "text": "Value add",
             "model": "Actually useful for once",
-            "snark": "The elusive metric every PowerPoint deck swears it delivers.",
+            "snark": "The mythical business metric that every slide deck promises but nobody can quantify.",
             "ideas": [
               [
                 "useful",
                 "helpful",
-                "worthwhile",
-                "good",
-                "effective",
-                "works"
+                "beneficial",
+                "valuable",
+                "effective"
               ],
               [
-                "actually",
+                "once",
                 "finally",
-                "for once",
-                "real"
+                "actually",
+                "for real"
               ]
             ],
             "ideaLabels": [
-              "actually being useful",
-              "delivering genuine value"
+              "Useful / Helpful",
+              "Actually / For once"
             ],
             "needed": 1,
-            "acceptedAlternatives": []
+            "acceptedAlternatives": [
+              "actually useful for once",
+              "useful for once",
+              "finally doing something beneficial",
+              "mythical metric that cannot be measured"
+            ]
           },
           {
             "id": "u3-l3-t3",
             "type": "translate",
             "mode": "typed",
-            "channel": "slack",
+            "channel": "meeting",
             "sender": "Brad from BizDev",
             "senderRole": "Head of Partnerships",
             "text": "Core competency",
-            "model": "The one thing we haven't outsourced yet",
-            "snark": "What the company still knows how to do without hiring McKinsey.",
+            "model": "The only thing we have not outsourced yet",
+            "snark": "What the company still knows how to produce without hiring an expensive consulting firm.",
             "ideas": [
               [
-                "the",
-                "one",
-                "thing"
+                "thing",
+                "skill",
+                "service",
+                "product",
+                "function"
               ],
               [
-                "work",
-                "boss",
-                "team",
-                "company",
-                "problem",
-                "bad",
-                "fail"
+                "outsourced",
+                "automated",
+                "delegated",
+                "consulting",
+                "retained"
               ]
             ],
             "ideaLabels": [
-              "core meaning",
-              "contextual implication"
+              "Thing / Skill",
+              "Not outsourced yet"
             ],
             "needed": 1,
-            "acceptedAlternatives": []
+            "acceptedAlternatives": [
+              "the only thing we have not outsourced yet",
+              "what we still know how to do",
+              "the single skill we haven't given to mckinsey",
+              "our only actual product"
+            ]
           },
           {
             "id": "u3-l3-t4",
             "type": "translate",
             "mode": "typed",
-            "channel": "email",
+            "channel": "meeting",
             "sender": "Linda from HR",
             "senderRole": "Chief Culture Officer",
             "text": "Radical candor",
             "model": "Being rude under the guise of feedback",
-            "snark": "Treating basic interpersonal tact as a barrier to velocity.",
+            "snark": "Treating basic professional tact as an obstacle to velocity.",
             "ideas": [
               [
-                "being",
                 "rude",
-                "under"
+                "mean",
+                "insulting",
+                "cruel",
+                "harsh",
+                "blunt"
               ],
               [
-                "work",
-                "boss",
-                "team",
-                "company",
-                "problem",
-                "bad",
-                "fail"
+                "feedback",
+                "guise",
+                "excuse",
+                "honesty",
+                "candor"
               ]
             ],
             "ideaLabels": [
-              "core meaning",
-              "contextual implication"
+              "Rude / Mean behavior",
+              "Disguised as feedback"
             ],
             "needed": 1,
-            "acceptedAlternatives": []
+            "acceptedAlternatives": [
+              "being rude under the guise of feedback",
+              "insulting people and calling it honest",
+              "being mean under the guise of honesty",
+              "excuse for poor interpersonal skills"
+            ]
+          },
+          {
+            "id": "u3-l3-t5",
+            "type": "translate",
+            "mode": "typed",
+            "channel": "meeting",
+            "sender": "Chadwick (VP)",
+            "senderRole": "SVP of Synergies",
+            "text": "High leverage",
+            "model": "Getting credit for other people's automation",
+            "snark": "Silicon Valley shorthand for taking executive credit when an engineer writes a script.",
+            "ideas": [
+              [
+                "credit",
+                "praise",
+                "glory",
+                "promotion"
+              ],
+              [
+                "automation",
+                "other people",
+                "engineers",
+                "scripts",
+                "work"
+              ]
+            ],
+            "ideaLabels": [
+              "Taking credit",
+              "Other people's work / Automation"
+            ],
+            "needed": 1,
+            "acceptedAlternatives": [
+              "getting credit for other people's automation",
+              "taking credit for someone else's code",
+              "maximum glory with minimum personal effort",
+              "delegating all real labor"
+            ]
+          },
+          {
+            "id": "u3-l3-t6",
+            "type": "translate",
+            "mode": "typed",
+            "channel": "slack",
+            "sender": "Derek (Scrum Master)",
+            "senderRole": "Agile Evangelist",
+            "text": "Stretching yourself",
+            "model": "Working beyond your pay grade for free",
+            "snark": "Performing senior staff duties for 18 months before HR graciously awards a 3% title change.",
+            "ideas": [
+              [
+                "working",
+                "performing",
+                "acting",
+                "labor"
+              ],
+              [
+                "pay grade",
+                "unpaid",
+                "free",
+                "senior",
+                "cheap",
+                "no raise"
+              ]
+            ],
+            "ideaLabels": [
+              "Working above your pay grade",
+              "Without compensation or raise"
+            ],
+            "needed": 1,
+            "acceptedAlternatives": [
+              "working beyond your pay grade for free",
+              "senior duties with junior salary",
+              "unpaid auditions for promotion",
+              "working above your title without pay"
+            ]
           },
           {
             "id": "u3-l3-match",
             "type": "match",
             "pairs": [
               [
-                "Synergistic alignment",
-                "Agreeing with the highest paid person's opinion"
+                "Radical candor",
+                "Being rude under the guise of honesty"
               ],
               [
-                "Value add",
-                "Actually useful for once"
+                "Stretching yourself",
+                "Working beyond your pay grade with no raise"
+              ],
+              [
+                "High leverage",
+                "Taking credit for other people's automation"
               ],
               [
                 "Core competency",
-                "The one thing we haven't outsourced yet"
-              ],
-              [
-                "Radical candor",
-                "Being rude under the guise of feedback"
+                "The only thing we haven't outsourced yet"
               ]
             ]
           },
           {
             "id": "ctx-3-3",
             "type": "context",
-            "channel": "slack",
-            "sender": "Marcus (Chief Architect)",
-            "senderRole": "Staff Architect",
-            "email": "The previous microservice architecture hit bandwidth limits. We need an agile pivot to demonstrate synergistic alignment with our core competencies.",
+            "channel": "meeting",
+            "sender": "Chadwick (VP)",
+            "senderRole": "SVP of Synergies",
+            "subject": "Strategic Roadmap Pivot",
+            "email": "The previous microservice architecture delivered zero value add. Through radical candor and synergistic alignment, we will pivot to our core competencies.",
             "options": [
-              "The architecture worked perfectly according to plan.",
-              "The system collapsed and they are abandoning it while using buzzwords to save face.",
-              "The team is going on a synchronized gymnastics retreat.",
-              "Customers asked for fewer features."
+              "Chadwick is complimenting the engineering team on their architectural achievements.",
+              "Chadwick is aggressively blaming engineers for management decisions while demanding uncritical agreement.",
+              "Chadwick is personally writing code to fix the database.",
+              "Chadwick wants to purchase additional enterprise microservices."
             ],
             "answer": 1,
-            "why": "'Agile pivot' when infrastructure crashes is euphemistic surrender wrapped in consultants' jargon."
+            "why": "'Radical candor' is executive permission to insult technical teams, followed by demands for 'synergistic alignment' (silence)."
+          },
+          {
+            "id": "ctx-3-3-b",
+            "type": "context",
+            "channel": "meeting",
+            "sender": "Linda from HR",
+            "senderRole": "Chief Culture Officer",
+            "subject": "Promotion Calibration",
+            "email": "To qualify for Senior Level 2, we want to see you stretching yourself into high-leverage cross-team initiatives over the next 4 to 6 quarters.",
+            "options": [
+              "You are receiving a promotion immediately.",
+              "You are being invited to do 18 months of unpaid senior-level labor with no guarantee of a raise.",
+              "You are being transferred to the company gym.",
+              "The promotion process has been streamlined."
+            ],
+            "answer": 1,
+            "why": "'Stretching yourself' over multiple quarters is a standard corporate delay tactic for withholding earned compensation."
           }
         ]
       }
@@ -1869,145 +2782,225 @@
             "senderRole": "Head of Partnerships",
             "text": "Humbled and thrilled",
             "model": "Arrogant and bragging",
-            "snark": "The mandatory opening ritual for announcing a standard mid-level job hop.",
+            "snark": "The mandatory opening ritual for announcing a standard lateral job hop.",
             "ideas": [
               [
-                "bragging",
                 "arrogant",
-                "proud",
-                "showing off",
-                "flexing",
+                "bragging",
                 "boasting",
-                "not humble"
+                "proud",
+                "narcissistic",
+                "smug"
               ],
               [
-                "job",
-                "promotion",
-                "announcement",
-                "career",
-                "move"
+                "brag",
+                "boast",
+                "show off",
+                "ego"
               ]
             ],
             "ideaLabels": [
-              "shameless bragging/boasting",
-              "new job/career announcement"
+              "Arrogant / Smug",
+              "Bragging / Showing off"
             ],
             "needed": 1,
             "acceptedAlternatives": [
-              "arrogant and bragging about my promotion",
-              "boasting about my career",
-              "shameless flex on linkedin",
-              "bragging to my network"
+              "arrogant and bragging",
+              "bragging on the internet",
+              "showing off my lateral job hop",
+              "narcissistic corporate flexing",
+              "smug humblebragging"
             ]
           },
           {
             "id": "u4-l1-t2",
             "type": "translate",
             "mode": "typed",
-            "channel": "email",
-            "sender": "Linda from HR",
-            "senderRole": "Chief Culture Officer",
+            "channel": "slack",
+            "sender": "Chloe (Product Lead)",
+            "senderRole": "Senior PM",
             "text": "Excited to share my next chapter",
             "model": "I got hired somewhere else for slightly more money",
-            "snark": "Dramatizing a corporate transfer as a hero's epic literary voyage.",
+            "snark": "Dramatizing a routine corporate transfer as a hero's epic literary voyage.",
             "ideas": [
               [
-                "new job",
                 "hired",
-                "quit",
-                "switched",
-                "moved",
+                "job",
                 "money",
-                "different company"
+                "salary",
+                "pay",
+                "raise"
               ],
               [
-                "slightly more money",
-                "salary",
-                "better pay"
+                "somewhere else",
+                "new company",
+                "different job",
+                "leaving"
               ]
             ],
             "ideaLabels": [
-              "standard job change",
-              "leaving for more money"
+              "Hired for more money",
+              "New company / Job hop"
             ],
             "needed": 1,
-            "acceptedAlternatives": []
+            "acceptedAlternatives": [
+              "i got hired somewhere else for slightly more money",
+              "got a job for more money",
+              "leaving for a minor pay raise",
+              "dramatizing a basic job switch"
+            ]
           },
           {
             "id": "u4-l1-t3",
             "type": "translate",
             "mode": "typed",
-            "channel": "meeting",
+            "channel": "slack",
             "sender": "Chadwick (VP)",
             "senderRole": "SVP of Synergies",
             "text": "Agree?",
-            "model": "Please leave comments to boost my engagement algorithm",
-            "snark": "Ending an irrelevant anecdote with a single-word engagement trap.",
+            "model": "Please comment to boost my algorithmic engagement",
+            "snark": "Ending an irrelevant, fabricated anecdote with a single-word engagement trap.",
             "ideas": [
               [
                 "comment",
-                "comments",
                 "engagement",
                 "algorithm",
                 "likes",
-                "boost",
-                "attention"
+                "reach",
+                "boost"
               ],
               [
+                "please",
                 "trap",
-                "bait",
-                "reach",
-                "traffic"
+                "feed",
+                "traffic",
+                "attention"
               ]
             ],
             "ideaLabels": [
-              "soliciting comments/engagement",
-              "manipulating social media algorithm"
+              "Algorithmic engagement / Comments",
+              "Attention trap"
             ],
             "needed": 1,
             "acceptedAlternatives": [
-              "leave comments for the algorithm",
-              "boost my social media reach",
-              "give me likes and comments",
-              "stroke my ego"
+              "please comment to boost my algorithmic engagement",
+              "boost my linkedin algorithm",
+              "comment for engagement reach",
+              "desperate plea for internet attention"
             ]
           },
           {
             "id": "u4-l1-t4",
             "type": "translate",
             "mode": "typed",
-            "channel": "slack",
-            "sender": "Chloe (Product Lead)",
-            "senderRole": "Senior PM",
+            "channel": "email",
+            "sender": "Linda from HR",
+            "senderRole": "Chief Culture Officer",
             "text": "Open to new opportunities",
             "model": "I was laid off or quit in rage",
-            "snark": "The green banner that translates to 'available for recruiters immediately.'",
+            "snark": "The green banner that translates to: 'Available for recruiters immediately.'",
             "ideas": [
               [
                 "laid off",
                 "fired",
-                "unemployed",
                 "quit",
-                "lost job",
-                "rage",
-                "let go"
+                "unemployed",
+                "jobless",
+                "terminated"
               ],
               [
-                "looking",
-                "hire me",
-                "available",
-                "desperate"
+                "rage",
+                "desperate",
+                "immediately",
+                "available"
               ]
             ],
             "ideaLabels": [
-              "laid off or unemployed",
-              "actively seeking employment"
+              "Laid off / Unemployed",
+              "Available immediately"
             ],
             "needed": 1,
             "acceptedAlternatives": [
-              "i was laid off or fired",
-              "unemployed and desperate",
-              "looking for work immediately"
+              "i was laid off or quit in rage",
+              "i was laid off",
+              "unemployed and looking for work",
+              "green banner of desperation"
+            ]
+          },
+          {
+            "id": "u4-l1-t5",
+            "type": "translate",
+            "mode": "typed",
+            "channel": "slack",
+            "sender": "Megan (Account Exec)",
+            "senderRole": "Client Success",
+            "text": "Thought partner",
+            "model": "Person I bounce buzzwords off of",
+            "snark": "Someone who nods enthusiastically during expensive, tax-deductible sushi lunches.",
+            "ideas": [
+              [
+                "bounce",
+                "talk",
+                "buzzwords",
+                "nodding",
+                "listen"
+              ],
+              [
+                "partner",
+                "friend",
+                "coworker",
+                "person",
+                "lunch"
+              ]
+            ],
+            "ideaLabels": [
+              "Bouncing buzzwords",
+              "Corporate lunch buddy"
+            ],
+            "needed": 1,
+            "acceptedAlternatives": [
+              "person i bounce buzzwords off of",
+              "someone who nods at my buzzwords",
+              "corporate sounding sounding board",
+              "lunch buddy to validate platitudes"
+            ]
+          },
+          {
+            "id": "u4-l1-t6",
+            "type": "translate",
+            "mode": "typed",
+            "channel": "slack",
+            "sender": "Derek (Scrum Master)",
+            "senderRole": "Agile Evangelist",
+            "text": "Visionary catalyst",
+            "model": "Unemployed consultant with a Canva account",
+            "snark": "A self-assigned LinkedIn headline that conveys galactic grandeur with zero legal liability.",
+            "ideas": [
+              [
+                "unemployed",
+                "consultant",
+                "freelancer",
+                "canva",
+                "fake"
+              ],
+              [
+                "title",
+                "headline",
+                "job",
+                "guru",
+                "coach"
+              ]
+            ],
+            "ideaLabels": [
+              "Unemployed consultant",
+              "Made up grandiose title"
+            ],
+            "needed": 1,
+            "acceptedAlternatives": [
+              "unemployed consultant with a canva account",
+              "unemployed person making up titles",
+              "fake linkedin guru headline",
+              "freelance consultant with no clients"
             ]
           },
           {
@@ -2015,20 +3008,20 @@
             "type": "match",
             "pairs": [
               [
-                "Humbled and thrilled",
-                "Arrogant and bragging"
-              ],
-              [
-                "Excited to share my next chapter",
-                "I got hired somewhere else for slightly more money"
+                "Visionary catalyst",
+                "Unemployed consultant with a Canva account"
               ],
               [
                 "Agree?",
-                "Please leave comments to boost my engagement algorithm"
+                "Desperate plea to boost LinkedIn algorithm reach"
               ],
               [
-                "Open to new opportunities",
-                "I was laid off or quit in rage"
+                "Humbled and thrilled",
+                "Smug narcissistic bragging about a job hop"
+              ],
+              [
+                "Thought partner",
+                "Person I bounce buzzwords off of during lunch"
               ]
             ]
           },
@@ -2036,17 +3029,34 @@
             "id": "ctx-4-1",
             "type": "context",
             "channel": "slack",
-            "sender": "Preston (Founder & Visionary)",
-            "senderRole": "Founder / CEO",
-            "email": "Humbled and thrilled to announce our game-changing milestone! We disrupted the paradigm and supercharged growth to unlock unprecedented synergies. Agree?",
+            "sender": "Brad from BizDev",
+            "senderRole": "VP of Partnerships",
+            "email": "Humbled and thrilled to announce my next chapter as Senior Vice Principal of Agile Solutions. Grateful to my thought partners who made this journey possible. Agree?",
             "options": [
-              "The company cured a disease or accomplished something historic.",
-              "They changed a button color from blue to indigo and need social media engagement.",
-              "Preston is feeling humble and quiet about the accomplishment.",
-              "The company is going bankrupt tomorrow."
+              "Brad wrote an honest, heartfelt tribute to his coworkers.",
+              "Brad generated a standard LinkedIn flex post designed to trigger notifications and harvest vanity likes.",
+              "Brad is resigning from the corporate world to become an author.",
+              "Brad was demoted and is coping publicly."
             ],
             "answer": 1,
-            "why": "'Humbled and thrilled' combined with 'Agree?' is classic LinkedIn engagement bait for trivial updates."
+            "why": "The holy trinity of LinkedIn: 'humbled and thrilled', 'next chapter', and the single-word engagement bait 'Agree?'"
+          },
+          {
+            "id": "ctx-4-1-b",
+            "type": "context",
+            "channel": "email",
+            "sender": "Chloe (Product Lead)",
+            "senderRole": "Senior PM",
+            "subject": "LinkedIn Feed Post",
+            "email": "Today, a barista dropped my latte. Instead of getting upset, I used agile retrospective frameworks to optimize our sprint velocity. Here are 7 lessons on B2B SaaS architecture...",
+            "options": [
+              "A valuable engineering masterclass derived from real-world physics.",
+              "A completely fabricated LinkedIn story turning an ordinary minor inconvenience into unsolicited career advice.",
+              "A Yelp review of a local coffee shop.",
+              "A complaint filed with the department of labor."
+            ],
+            "answer": 1,
+            "why": "The LinkedIn classic: turning a mundane everyday event into 7 bullet points of fabricated B2B wisdom."
           }
         ]
       },
@@ -2066,29 +3076,35 @@
             "senderRole": "SVP of Synergies",
             "text": "Disrupt the paradigm",
             "model": "Sell the exact same software with a subscription fee",
-            "snark": "Rebranding ordinary business concepts with revolutionary fervor.",
+            "snark": "Rebranding ordinary business concepts with revolutionary Silicon Valley fervor.",
             "ideas": [
               [
-                "same",
-                "copy",
+                "sell",
+                "charge",
                 "subscription",
-                "rebrand",
-                "ordinary",
-                "nothing new"
+                "software",
+                "product",
+                "same"
               ],
               [
+                "fee",
+                "monthly",
+                "rebranding",
                 "expensive",
-                "software",
-                "saas",
-                "monthly fee"
+                "saas"
               ]
             ],
             "ideaLabels": [
-              "selling the same thing with a subscription",
-              "rebranding mundane concepts"
+              "Same software / Subscription fee",
+              "Rebranding basic SaaS"
             ],
             "needed": 1,
-            "acceptedAlternatives": []
+            "acceptedAlternatives": [
+              "sell the exact same software with a subscription fee",
+              "charge a subscription for existing software",
+              "rebrand ordinary software as disruptive",
+              "slap a saas subscription on old tech"
+            ]
           },
           {
             "id": "u4-l2-t2",
@@ -2099,119 +3115,212 @@
             "senderRole": "Senior PM",
             "text": "Game-changing milestone",
             "model": "We shipped a minor patch",
-            "snark": "Celebrating a dropdown menu redesign as humanity's moon landing.",
+            "snark": "Celebrating a dropdown menu redesign as humanity's historic moon landing.",
             "ideas": [
               [
+                "shipped",
+                "released",
                 "minor",
                 "small",
-                "tiny",
                 "patch",
-                "tweak",
-                "insignificant",
-                "dropdown",
-                "button"
+                "bug fix",
+                "update"
               ],
               [
-                "celebrating",
-                "hyped",
-                "exaggerating",
-                "overblown",
-                "nothing"
+                "dropdown",
+                "button",
+                "tweak",
+                "tiny",
+                "insignificant"
               ]
             ],
             "ideaLabels": [
-              "hyping a minor update",
-              "celebrating trivial changes"
+              "Minor patch / Small update",
+              "Exaggerated celebration"
             ],
             "needed": 1,
-            "acceptedAlternatives": []
+            "acceptedAlternatives": [
+              "we shipped a minor patch",
+              "shipped a small bug fix",
+              "minor UI update celebrated as a moon landing",
+              "trivial dropdown menu redesign"
+            ]
           },
           {
             "id": "u4-l2-t3",
             "type": "translate",
             "mode": "typed",
-            "channel": "email",
-            "sender": "Todd (Strategy)",
-            "senderRole": "Managing Director",
+            "channel": "meeting",
+            "sender": "Brad from BizDev",
+            "senderRole": "Head of Partnerships",
             "text": "Lessons from failure",
-            "model": "Here is how my huge mistake actually proved I am a genius",
-            "snark": "The humblebrag post dissecting an obvious failure into 7 bullet points.",
+            "model": "How my huge mistake proved I am actually a genius",
+            "snark": "The humblebrag post dissecting an obvious blunder into seven bullet points of wisdom.",
             "ideas": [
               [
                 "mistake",
-                "screwed up",
-                "genius",
-                "humblebrag",
-                "bragging",
-                "failure",
-                "justifying"
+                "blunder",
+                "disaster",
+                "fail",
+                "error"
               ],
               [
-                "bullet points",
-                "post",
-                "pretending"
+                "genius",
+                "smart",
+                "clever",
+                "wisdom",
+                "humblebrag",
+                "hero"
               ]
             ],
             "ideaLabels": [
-              "reframing a blunder into a genius lesson",
-              "humblebragging"
+              "Mistake / Failure",
+              "Proving genius / Humblebrag"
             ],
             "needed": 1,
-            "acceptedAlternatives": []
+            "acceptedAlternatives": [
+              "how my huge mistake proved i am actually a genius",
+              "pretending a huge mistake makes me smart",
+              "humblebragging about an obvious blunder",
+              "framing catastrophic failure as visionary wisdom"
+            ]
           },
           {
             "id": "u4-l2-t4",
             "type": "translate",
             "mode": "typed",
-            "channel": "meeting",
-            "sender": "Brenda (Client Success)",
-            "senderRole": "Principal Escalations",
+            "channel": "email",
+            "sender": "Linda from HR",
+            "senderRole": "Chief Culture Officer",
             "text": "Supercharge growth",
-            "model": "Spend venture capital on ads recklessly",
-            "snark": "Burning runway at maximum velocity to generate impressive top-line charts.",
+            "model": "Burn venture capital on ads recklessly",
+            "snark": "Burning investor runway at maximum velocity to generate impressive top-line vanity charts.",
             "ideas": [
               [
-                "spend",
                 "burn",
+                "spend",
                 "waste",
-                "ads",
                 "venture capital",
-                "reckless",
-                "money"
+                "money",
+                "runway",
+                "ads"
               ],
               [
-                "runway",
-                "charts",
-                "top line",
-                "growth at all costs"
+                "recklessly",
+                "fast",
+                "unprofitably",
+                "vanity",
+                "growth"
               ]
             ],
             "ideaLabels": [
-              "burning venture capital on ads",
-              "reckless runway consumption"
+              "Burning venture capital / Ads",
+              "Reckless unsustainable growth"
             ],
             "needed": 1,
-            "acceptedAlternatives": []
+            "acceptedAlternatives": [
+              "burn venture capital on ads recklessly",
+              "waste investor runway on ads",
+              "recklessly burn capital for vanity metrics",
+              "buy users at a massive loss"
+            ]
+          },
+          {
+            "id": "u4-l2-t5",
+            "type": "translate",
+            "mode": "typed",
+            "channel": "slack",
+            "sender": "Derek (Scrum Master)",
+            "senderRole": "Agile Evangelist",
+            "text": "Ecosystem play",
+            "model": "We want a cut of everyone else's transactions",
+            "snark": "Trying to build an App Store toll booth when you sell ergonomic desk accessories.",
+            "ideas": [
+              [
+                "cut",
+                "percentage",
+                "toll",
+                "fee",
+                "tax",
+                "money"
+              ],
+              [
+                "transactions",
+                "everyone else",
+                "marketplace",
+                "app store"
+              ]
+            ],
+            "ideaLabels": [
+              "Take a cut / Fee",
+              "Other people's transactions"
+            ],
+            "needed": 1,
+            "acceptedAlternatives": [
+              "we want a cut of everyone else's transactions",
+              "building a toll booth on other people's work",
+              "wanting a 30% cut of everything",
+              "delusions of becoming the next app store"
+            ]
+          },
+          {
+            "id": "u4-l2-t6",
+            "type": "translate",
+            "mode": "typed",
+            "channel": "meeting",
+            "sender": "Megan (Account Exec)",
+            "senderRole": "Client Success",
+            "text": "Future-proof the business",
+            "model": "Buy unnecessary enterprise AI software",
+            "snark": "Spending six figures on SaaS to show the board of directors that we are modern visionaries.",
+            "ideas": [
+              [
+                "buy",
+                "spend",
+                "waste",
+                "purchase",
+                "software",
+                "saas"
+              ],
+              [
+                "unnecessary",
+                "enterprise",
+                "ai",
+                "board",
+                "useless"
+              ]
+            ],
+            "ideaLabels": [
+              "Buying unnecessary software",
+              "Enterprise AI / Impressing the board"
+            ],
+            "needed": 1,
+            "acceptedAlternatives": [
+              "buy unnecessary enterprise ai software",
+              "spend six figures on useless ai tools",
+              "waste money to impress the board",
+              "buy expensive enterprise software"
+            ]
           },
           {
             "id": "u4-l2-match",
             "type": "match",
             "pairs": [
               [
-                "Disrupt the paradigm",
-                "Sell the exact same software with a subscription fee"
+                "Ecosystem play",
+                "We want a toll cut of everyone else's transactions"
+              ],
+              [
+                "Future-proof the business",
+                "Buy unnecessary enterprise AI software"
               ],
               [
                 "Game-changing milestone",
-                "We shipped a minor patch"
+                "We shipped a minor patch and celebrated"
               ],
               [
-                "Lessons from failure",
-                "Here is how my huge mistake actually proved I am a genius"
-              ],
-              [
-                "Supercharge growth",
-                "Spend venture capital on ads recklessly"
+                "Disrupt the paradigm",
+                "Sell the same software with a subscription fee"
               ]
             ]
           },
@@ -2219,18 +3328,34 @@
             "id": "ctx-4-2",
             "type": "context",
             "channel": "email",
-            "sender": "Elena (VP of Synergy)",
-            "senderRole": "Executive VP",
+            "sender": "Chadwick (VP)",
+            "senderRole": "SVP of Synergies",
             "subject": "Strategic Transformation & Next Chapter",
-            "email": "As part of our commitment to future-proof the business and optimize our north star metric, we are unlocking synergies by empowering team members to explore new external horizons.",
+            "email": "Our latest ecosystem play will disrupt the paradigm and supercharge growth across all quadrants. Here are 5 lessons from failure along our game-changing journey.",
             "options": [
-              "Everyone is receiving an annual bonus and stock options.",
-              "The company is laying off a large percentage of the workforce today.",
-              "The company is launching an astronomy research telescope.",
-              "Employees are being sent to Hawaii on a corporate retreat."
+              "The company has invented cold fusion.",
+              "The company raised prices 20% and Chadwick wrote a self-aggrandizing LinkedIn essay about it.",
+              "The company is shutting down operations immediately.",
+              "The company is giving 100% of profits to charity."
             ],
             "answer": 1,
-            "why": "'Unlocking synergies' and 'exploring new external horizons' are the ultimate corporate euphemisms for layoffs."
+            "why": "Heavy buzzword density masks mundane price hikes or minor feature updates."
+          },
+          {
+            "id": "ctx-4-2-b",
+            "type": "context",
+            "channel": "slack",
+            "sender": "Linda from HR",
+            "senderRole": "Chief Culture Officer",
+            "email": "Press Release: We are thrilled to unlock synergies by realigning operational headcount with our core strategic future-proofing roadmap!",
+            "options": [
+              "The company is hiring 500 new engineers with generous bonuses.",
+              "The company just conducted massive layoffs and framed it as futuristic efficiency.",
+              "The company purchased new office chairs for everyone.",
+              "The company won an award for employee satisfaction."
+            ],
+            "answer": 1,
+            "why": "'Realigning operational headcount' and 'unlocking synergies' are corporate euphemisms for mass layoffs."
           }
         ]
       },
@@ -2245,67 +3370,77 @@
             "id": "u4-l3-t1",
             "type": "translate",
             "mode": "typed",
-            "channel": "email",
-            "sender": "Todd (Strategy)",
-            "senderRole": "Managing Director",
+            "channel": "meeting",
+            "sender": "Chadwick (VP)",
+            "senderRole": "SVP of Synergies",
             "text": "Paradigm shift",
             "model": "Things changed slightly",
-            "snark": "Elevating mundane market fluctuations to epochal historical events.",
+            "snark": "Elevating mundane quarterly market fluctuations to epochal, world-historical events.",
             "ideas": [
               [
-                "things",
                 "changed",
-                "slightly"
+                "altered",
+                "shifted",
+                "moved",
+                "different"
               ],
               [
-                "work",
-                "boss",
-                "team",
-                "company",
-                "problem",
-                "bad",
-                "fail"
+                "slightly",
+                "minor",
+                "small",
+                "barely",
+                "mundane"
               ]
             ],
             "ideaLabels": [
-              "core meaning",
-              "contextual implication"
+              "Things changed",
+              "Slight / Minor change"
             ],
             "needed": 1,
-            "acceptedAlternatives": []
+            "acceptedAlternatives": [
+              "things changed slightly",
+              "minor market fluctuation",
+              "small change exaggerated as historic",
+              "barely anything changed"
+            ]
           },
           {
             "id": "u4-l3-t2",
             "type": "translate",
             "mode": "typed",
             "channel": "meeting",
-            "sender": "Brenda (Client Success)",
-            "senderRole": "Principal Escalations",
+            "sender": "Chloe (Product Lead)",
+            "senderRole": "Senior PM",
             "text": "North star metric",
             "model": "The single number we manipulate to get funded",
-            "snark": "A chosen metric designed to always go up and to the right.",
+            "snark": "A selectively chosen graph designed to always slope up and to the right regardless of reality.",
             "ideas": [
               [
-                "the",
-                "single",
-                "number"
+                "number",
+                "metric",
+                "graph",
+                "stat",
+                "data"
               ],
               [
-                "work",
-                "boss",
-                "team",
-                "company",
-                "problem",
-                "bad",
-                "fail"
+                "manipulate",
+                "funded",
+                "investors",
+                "vc",
+                "cherry pick"
               ]
             ],
             "ideaLabels": [
-              "core meaning",
-              "contextual implication"
+              "Manipulated number / Metric",
+              "Getting funded / Impressing investors"
             ],
             "needed": 1,
-            "acceptedAlternatives": []
+            "acceptedAlternatives": [
+              "the single number we manipulate to get funded",
+              "cherry picked metric that always goes up",
+              "vanity metric for venture capital",
+              "manipulated investor graph"
+            ]
           },
           {
             "id": "u4-l3-t3",
@@ -2316,102 +3451,204 @@
             "senderRole": "Head of Partnerships",
             "text": "Deep dive",
             "model": "Looking at more than two rows of data",
-            "snark": "Taking 20 minutes to read the spreadsheet you should have read last week.",
+            "snark": "Taking 15 minutes to skim the spreadsheet you should have read last Thursday.",
             "ideas": [
               [
                 "looking",
-                "at",
-                "more"
+                "reading",
+                "skimming",
+                "analyzing",
+                "examining"
               ],
               [
-                "work",
-                "boss",
-                "team",
-                "company",
-                "problem",
-                "bad",
-                "fail"
+                "data",
+                "spreadsheet",
+                "two rows",
+                "numbers",
+                "briefly"
               ]
             ],
             "ideaLabels": [
-              "core meaning",
-              "contextual implication"
+              "Skimming / Looking at data",
+              "More than two spreadsheet rows"
             ],
             "needed": 1,
-            "acceptedAlternatives": []
+            "acceptedAlternatives": [
+              "looking at more than two rows of data",
+              "skimming the spreadsheet for 15 minutes",
+              "reading the document you ignored",
+              "basic data examination"
+            ]
           },
           {
             "id": "u4-l3-t4",
             "type": "translate",
             "mode": "typed",
-            "channel": "email",
-            "sender": "Linda from HR",
-            "senderRole": "Chief Culture Officer",
+            "channel": "meeting",
+            "sender": "Derek (Scrum Master)",
+            "senderRole": "Agile Evangelist",
             "text": "Move fast and break things",
-            "model": "Ship buggy code and let support handle the fallout",
-            "snark": "Glorifying carelessness until a security audit happens.",
+            "model": "Ship buggy code and let customer support suffer",
+            "snark": "Glorifying architectural recklessness until a major enterprise security audit occurs.",
             "ideas": [
               [
                 "buggy",
-                "bugs",
                 "broken",
-                "careless",
                 "sloppy",
-                "mess",
-                "support"
+                "reckless",
+                "code",
+                "software"
               ],
               [
-                "ship",
-                "code",
-                "rush",
-                "audit"
+                "support",
+                "suffer",
+                "users",
+                "customers",
+                "mess",
+                "pain"
               ]
             ],
             "ideaLabels": [
-              "shipping buggy broken code",
-              "glorified carelessness"
+              "Buggy / Sloppy code",
+              "Customer support suffers / Total mess"
             ],
             "needed": 1,
-            "acceptedAlternatives": []
+            "acceptedAlternatives": [
+              "ship buggy code and let customer support suffer",
+              "ship broken code recklessly",
+              "let support deal with our terrible bugs",
+              "reckless engineering glorified as agility"
+            ]
+          },
+          {
+            "id": "u4-l3-t5",
+            "type": "translate",
+            "mode": "typed",
+            "channel": "meeting",
+            "sender": "Chadwick (VP)",
+            "senderRole": "SVP of Synergies",
+            "text": "Zero to one",
+            "model": "Starting from scratch with zero paying users",
+            "snark": "Quoting Peter Thiel's book title to justify having zero revenue after eighteen months.",
+            "ideas": [
+              [
+                "starting",
+                "scratch",
+                "beginning",
+                "zero"
+              ],
+              [
+                "users",
+                "revenue",
+                "paying",
+                "customers",
+                "traction"
+              ]
+            ],
+            "ideaLabels": [
+              "Starting from scratch",
+              "Zero paying users / No revenue"
+            ],
+            "needed": 1,
+            "acceptedAlternatives": [
+              "starting from scratch with zero paying users",
+              "zero revenue after 18 months",
+              "quoting thiel to hide having no users",
+              "starting from scratch"
+            ]
+          },
+          {
+            "id": "u4-l3-t6",
+            "type": "translate",
+            "mode": "typed",
+            "channel": "slack",
+            "sender": "Linda from HR",
+            "senderRole": "Chief Culture Officer",
+            "text": "Seat at the table",
+            "model": "Inclusion in meetings where people say circle back",
+            "snark": "Fighting for years to finally sit in conference rooms where executives say buzzwords for an hour.",
+            "ideas": [
+              [
+                "meetings",
+                "rooms",
+                "calls",
+                "conference"
+              ],
+              [
+                "circle back",
+                "buzzwords",
+                "useless",
+                "boredom",
+                "synergy"
+              ]
+            ],
+            "ideaLabels": [
+              "Inclusion in executive meetings",
+              "Listening to buzzwords for an hour"
+            ],
+            "needed": 1,
+            "acceptedAlternatives": [
+              "inclusion in meetings where people say circle back",
+              "sitting in boring executive meetings",
+              "listening to people say circle back for 60 minutes",
+              "attending pointless leadership syncs"
+            ]
           },
           {
             "id": "u4-l3-match",
             "type": "match",
             "pairs": [
               [
-                "Paradigm shift",
-                "Things changed slightly"
-              ],
-              [
                 "North star metric",
-                "The single number we manipulate to get funded"
-              ],
-              [
-                "Deep dive",
-                "Looking at more than two rows of data"
+                "The single number we manipulate for funding"
               ],
               [
                 "Move fast and break things",
-                "Ship buggy code and let support handle the fallout"
+                "Ship buggy code and let support suffer"
+              ],
+              [
+                "Zero to one",
+                "Starting from scratch with zero revenue"
+              ],
+              [
+                "Seat at the table",
+                "Inclusion in meetings where people say circle back"
               ]
             ]
           },
           {
             "id": "ctx-4-3",
             "type": "context",
-            "channel": "email",
-            "sender": "Harrison (Angel Investor)",
-            "senderRole": "Catalyst & Thought Partner",
-            "subject": "Disrupting the Ecosystem from Zero to One",
-            "email": "I had coffee with a 10x engineer this morning. Here are 5 lessons from failure on why having a seat at the table will supercharge your holistic flywheel. Agree?",
+            "channel": "meeting",
+            "sender": "Chadwick (VP)",
+            "senderRole": "SVP of Synergies",
+            "subject": "Ecosystem Deep Dive",
+            "email": "Disrupting the ecosystem from Zero to One requires a fundamental paradigm shift. We must move fast and break things while ruthlessly executing on our North Star metric.",
             "options": [
-              "Harrison has valuable proprietary business secrets to share.",
-              "Harrison is reciting hollow Silicon Valley clichés to harvest likes from strangers.",
-              "Harrison bought a literal table and flywheel for his garage.",
-              "Harrison is offering free engineering consulting."
+              "Chadwick has an actionable, engineering-grounded technical spec.",
+              "Chadwick compressed 5 Silicon Valley clichés into two sentences to avoid sharing any actual strategy.",
+              "Chadwick is quitting his job to start a venture capital fund.",
+              "Chadwick wants the servers unplugged to break things literally."
             ],
             "answer": 1,
-            "why": "A post listing '5 lessons from failure' ending with 'Agree?' is pure algorithm optimization with zero substance."
+            "why": "A masterclass in buzzword salad: combining 'Zero to One', 'paradigm shift', 'move fast and break things', and 'North Star metric'."
+          },
+          {
+            "id": "ctx-4-3-b",
+            "type": "context",
+            "channel": "email",
+            "sender": "Brad from BizDev",
+            "senderRole": "VP of Partnerships",
+            "subject": "Founder Retrospective",
+            "email": "Why I wake up at 3:45 AM, drink cold-pressed celery juice, take an ice bath, and deep dive into our North Star metric before my family wakes up. Agree?",
+            "options": [
+              "A healthy, balanced wellness lifestyle recommended by medical professionals.",
+              "Unregulated LinkedIn hustle-porn designed to induce toxic productivity guilt. Agree?",
+              "An advertisement for celery farmers.",
+              "A company-wide calendar invite for morning meditation."
+            ],
+            "answer": 1,
+            "why": "The archetype of LinkedIn performative hustle culture ending in the mandatory 'Agree?'"
           }
         ]
       }

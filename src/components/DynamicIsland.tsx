@@ -11,13 +11,10 @@ import {
   Sparkles,
   ChevronDown,
   Activity,
-  Palette,
 } from 'lucide-react';
 import { Progress } from '../types';
 import { getRankForXp } from '../lib/ranks';
 import { sound } from '../lib/sound';
-import { MONKEY_THEMES, getThemeById } from '../lib/themes';
-import { store } from '../lib/store';
 
 interface DynamicIslandProps {
   progress: Progress;
@@ -30,10 +27,9 @@ interface DynamicIslandProps {
 
 /**
  * Hardware Dynamic Island (Apple Dynamic Island + Teenage Engineering OP-1 Telemetry)
- * - Matte ceramic chassis with precision 1px border
- * - Monospace telemetry telemetry signals with LED indicators
- * - Expandable status deck with physical spring physics
- * - Strict Anti-Slop guidelines: no emojis in system telemetry, high semantic contrast
+ * - Clean matte ceramic chassis with precision border
+ * - Monospace telemetry signals with LED status indicators
+ * - Expandable status deck with sleek native Light and Dark theme controls
  */
 export const DynamicIsland: React.FC<DynamicIslandProps> = ({
   progress,
@@ -45,9 +41,6 @@ export const DynamicIsland: React.FC<DynamicIslandProps> = ({
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const currentRank = getRankForXp(progress.xp);
-  const activeTheme = getThemeById(progress.themeId);
-  const lightThemes = MONKEY_THEMES.filter((t) => !t.isDark);
-  const darkThemes = MONKEY_THEMES.filter((t) => t.isDark);
 
   const handleReset = () => {
     if (window.confirm('Reset all progress, XP, streak and morale to day 1?')) {
@@ -62,14 +55,11 @@ export const DynamicIsland: React.FC<DynamicIslandProps> = ({
       <div className="max-w-4xl mx-auto flex justify-center">
         {/* Dynamic Island Pill Chassis */}
         <div
-          className={`pointer-events-auto relative overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] border-2 border-dotted ${
+          className={`pointer-events-auto relative overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isExpanded
-              ? 'w-full max-w-2xl rounded-3xl p-5 sm:p-6 shadow-2xl'
-              : 'w-auto rounded-full px-4 py-2 shadow-lg hover:shadow-xl'
+              ? 'w-full max-w-2xl rounded-3xl p-5 sm:p-6 shadow-2xl border border-slate-200/90 dark:border-slate-800'
+              : 'w-auto rounded-full px-4 py-2 shadow-lg hover:shadow-xl border border-slate-200/90 dark:border-slate-800'
           } bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl text-slate-800 dark:text-slate-100 select-none`}
-          style={{
-            borderColor: activeTheme.accent,
-          }}
         >
           {/* Collapsed State Bar */}
           {!isExpanded ? (
@@ -143,28 +133,24 @@ export const DynamicIsland: React.FC<DynamicIslandProps> = ({
                     if (onOpenMascotLab) onOpenMascotLab();
                   }}
                   className="p-1 rounded-md text-slate-500 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
-                  title="Mascot Studio (Pip the Mushroom)"
+                  title="Mascot Lab (Pip the Mushroom)"
                 >
                   <Sparkles size={14} />
                 </button>
 
-                {/* Dark Mode */}
+                {/* Day / Night Shift */}
                 <button
                   onClick={() => {
                     sound.playClick();
                     onToggleDarkMode();
                   }}
                   className="p-1 rounded-md text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
-                  title={progress.darkMode ? 'Day Shift' : 'Overtime Crunch'}
+                  title={progress.darkMode ? 'Switch to Day Shift' : 'Switch to Crunch Mode'}
                 >
-                  {progress.darkMode ? (
-                    <Sun size={14} className="text-amber-400" />
-                  ) : (
-                    <Moon size={14} />
-                  )}
+                  {progress.darkMode ? <Sun size={14} /> : <Moon size={14} />}
                 </button>
 
-                {/* Sound */}
+                {/* Sound Toggle */}
                 <button
                   onClick={() => {
                     sound.playClick();
@@ -190,11 +176,11 @@ export const DynamicIsland: React.FC<DynamicIslandProps> = ({
             /* Expanded Dynamic Island Deck (Teenage Engineering Hardware Surface) */
             <div className="space-y-4 animate-pop-in">
               {/* Header row */}
-              <div className="flex items-center justify-between border-b-2 border-dotted border-slate-200 dark:border-slate-800 pb-3">
+              <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
                 <div className="flex items-center gap-2">
                   <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
                   <span className="font-mono text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
-                    TELEMETRY DECK // OP-1 MODE
+                    TELEMETRY DECK // HARDWARE OP-1
                   </span>
                 </div>
 
@@ -271,103 +257,8 @@ export const DynamicIsland: React.FC<DynamicIslandProps> = ({
                 </div>
               </div>
 
-              {/* Monkeytype Palette Selector (Lighter themes on top) */}
-              <div className="space-y-2 pt-2 border-t-2 border-dotted border-slate-200 dark:border-slate-800">
-                <div className="flex items-center justify-between text-[11px] font-mono">
-                  <div className="flex items-center gap-1.5 font-bold text-slate-500 dark:text-slate-400">
-                    <Palette size={13} style={{ color: activeTheme.accent }} />
-                    <span className="uppercase tracking-wider">Themes & Palettes</span>
-                  </div>
-                  <span
-                    className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase"
-                    style={{
-                      backgroundColor: activeTheme.isDark ? '#374151' : '#f3f4f6',
-                      color: activeTheme.accent,
-                    }}
-                  >
-                    Active: {activeTheme.name}
-                  </span>
-                </div>
-
-                {/* Top / Lighter Themes */}
-                <div className="space-y-1">
-                  <span className="text-[10px] font-mono font-semibold text-slate-400 uppercase tracking-tight">
-                    Light Themes (On Top):
-                  </span>
-                  <div className="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto pr-1">
-                    {lightThemes.map((theme) => {
-                      const isSelected = (progress.themeId || 'serika') === theme.id;
-                      return (
-                        <button
-                          key={theme.id}
-                          onClick={() => {
-                            sound.playClick();
-                            store.setTheme(theme.id);
-                          }}
-                          className={`px-2.5 py-1 rounded-lg text-[11px] font-mono font-bold transition-all cursor-pointer flex items-center gap-1.5 border ${
-                            isSelected
-                              ? 'ring-2 ring-offset-1 shadow-xs scale-102 font-black'
-                              : 'hover:scale-101 opacity-80 hover:opacity-100'
-                          }`}
-                          style={{
-                            backgroundColor: theme.bg,
-                            color: theme.text,
-                            borderColor: isSelected ? theme.accent : theme.border,
-                          }}
-                          title={`Select ${theme.name} palette`}
-                        >
-                          <span
-                            className="w-2 h-2 rounded-full shrink-0"
-                            style={{ backgroundColor: theme.accent }}
-                          />
-                          <span>{theme.name}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Dark Themes */}
-                <div className="space-y-1 pt-1">
-                  <span className="text-[10px] font-mono font-semibold text-slate-400 uppercase tracking-tight">
-                    Dark Themes (Coordinated Palettes):
-                  </span>
-                  <div className="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto pr-1">
-                    {darkThemes.map((theme) => {
-                      const isSelected = (progress.themeId || 'serika') === theme.id;
-                      return (
-                        <button
-                          key={theme.id}
-                          onClick={() => {
-                            sound.playClick();
-                            store.setTheme(theme.id);
-                          }}
-                          className={`px-2.5 py-1 rounded-lg text-[11px] font-mono font-bold transition-all cursor-pointer flex items-center gap-1.5 border ${
-                            isSelected
-                              ? 'ring-2 ring-offset-1 shadow-xs scale-102 font-black'
-                              : 'hover:scale-101 opacity-80 hover:opacity-100'
-                          }`}
-                          style={{
-                            backgroundColor: theme.bg,
-                            color: theme.text,
-                            borderColor: isSelected ? theme.accent : theme.border,
-                          }}
-                          title={`Select ${theme.name} palette`}
-                        >
-                          <span
-                            className="w-2 h-2 rounded-full shrink-0"
-                            style={{ backgroundColor: theme.accent }}
-                          />
-                          <span>{theme.name}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-
               {/* Hardware Deck Controls */}
-              <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t-2 border-dotted border-slate-200 dark:border-slate-800">
+              <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => {
@@ -385,7 +276,7 @@ export const DynamicIsland: React.FC<DynamicIslandProps> = ({
                       sound.playClick();
                       onToggleDarkMode();
                     }}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-mono text-xs font-bold hover:bg-slate-200 transition-colors cursor-pointer"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-mono text-xs font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer"
                   >
                     {progress.darkMode ? <Sun size={14} /> : <Moon size={14} />}
                     <span>{progress.darkMode ? 'Day Shift' : 'Crunch Mode'}</span>
@@ -396,20 +287,19 @@ export const DynamicIsland: React.FC<DynamicIslandProps> = ({
                       sound.playClick();
                       onToggleSound();
                     }}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-mono text-xs font-bold hover:bg-slate-200 transition-colors cursor-pointer"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-mono text-xs font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer"
                   >
                     {progress.soundEnabled ? <Volume2 size={14} /> : <VolumeX size={14} />}
-                    <span>{progress.soundEnabled ? 'Audio: ON' : 'Audio: OFF'}</span>
+                    <span>{progress.soundEnabled ? 'Audio ON' : 'Muted'}</span>
                   </button>
                 </div>
 
                 <button
                   onClick={handleReset}
-                  className="flex items-center gap-1 text-slate-400 hover:text-rose-600 font-mono text-xs transition-colors cursor-pointer p-1"
-                  title="Hard Reset State"
+                  className="text-xs font-mono text-rose-500 hover:text-rose-600 dark:text-rose-400 flex items-center gap-1 px-2.5 py-1.5 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors cursor-pointer"
                 >
-                  <RotateCcw size={13} />
-                  <span>RESET STATE</span>
+                  <RotateCcw size={12} />
+                  <span>Reset Progress</span>
                 </button>
               </div>
             </div>

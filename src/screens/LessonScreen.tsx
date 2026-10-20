@@ -32,7 +32,10 @@ interface LessonScreenProps {
   unitTheme: string;
   initialExercises: Exercise[];
   isPIPLesson?: boolean;
+  unitId?: number;
+  lessonIndex?: number;
   onFinishLesson: (earnedXp: number, mistakes: number) => void;
+  onNextStage?: (earnedXp: number, mistakes: number) => void;
   onExit: () => void;
 }
 
@@ -99,7 +102,10 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
   unitTheme,
   initialExercises,
   isPIPLesson = false,
+  unitId,
+  lessonIndex,
   onFinishLesson,
+  onNextStage,
   onExit,
 }) => {
   // Queue of remaining exercises (re-queues on mistake)
@@ -465,6 +471,14 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
     } catch {
       // ignore
     }
+
+    // Persist completion immediately so progress is never lost even on refresh
+    if (!isPIPLesson && unitId && lessonIndex) {
+      const lessonId = `unit-${unitId}-lesson-${lessonIndex}`;
+      const basePoints = totalInitial * 10;
+      const bonus = mistakes === 0 ? 20 : 0;
+      store.completeLesson(lessonId, basePoints + bonus);
+    }
   };
 
   // Progress percentage calculation
@@ -539,15 +553,30 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
             </div>
           )}
 
-          <ClickSpark sparkColor="#10b981" sparkRadius={36} sparkCount={14} className="w-full">
+          <div className="flex flex-col sm:flex-row items-center gap-3 w-full">
+            <ClickSpark sparkColor="#10b981" sparkRadius={36} sparkCount={14} className="w-full sm:flex-1">
+              <button
+                onClick={() => {
+                  if (onNextStage) {
+                    onNextStage(totalXp, mistakes);
+                  } else {
+                    onFinishLesson(totalXp, mistakes);
+                  }
+                }}
+                className="w-full py-4 bg-emerald-600 hover:bg-emerald-500 active:translate-y-0.5 border-b-4 border-emerald-800 text-white font-black text-base rounded-2xl shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2"
+              >
+                <span>Next Stage</span>
+                <ArrowRight size={20} />
+              </button>
+            </ClickSpark>
+
             <button
               onClick={() => onFinishLesson(totalXp, mistakes)}
-              className="w-full py-4 bg-emerald-600 hover:bg-emerald-500 active:translate-y-0.5 border-b-4 border-emerald-800 text-white font-black text-base rounded-2xl shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-5 py-4 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 font-bold text-sm text-slate-700 dark:text-slate-300 transition-colors cursor-pointer shrink-0"
             >
-              <span>Claim XP & Circle Back</span>
-              <ArrowRight size={20} />
+              Career Path
             </button>
-          </ClickSpark>
+          </div>
         </div>
       </div>
     );

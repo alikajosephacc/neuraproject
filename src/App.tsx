@@ -11,7 +11,6 @@ import { PromotionModal } from './components/PromotionModal';
 import { RankLadderModal } from './components/RankLadderModal';
 import { MascotLabModal } from './components/MascotLabModal';
 import { sound } from './lib/sound';
-import { getThemeById } from './lib/themes';
 
 type ViewMode = 'path' | 'lesson' | 'boss';
 
@@ -138,7 +137,7 @@ export const App: React.FC = () => {
     setView('lesson');
   };
 
-  // Handle finishing lesson
+  // Handle finishing lesson and returning to path
   const handleFinishLesson = (earnedXp: number) => {
     if (isPIPLesson) {
       store.restoreMorale();
@@ -150,6 +149,44 @@ export const App: React.FC = () => {
     setView('path');
   };
 
+  // Handle progressing directly to the next stage (next lesson or boss battle)
+  const handleNextStage = (earnedXp: number) => {
+    if (isPIPLesson) {
+      store.restoreMorale();
+      sound.playFanfare();
+      setView('path');
+      return;
+    }
+
+    const lessonId = `unit-${activeUnitId}-lesson-${activeLessonIndex}`;
+    store.completeLesson(lessonId, earnedXp);
+
+    const unit = units.find((u) => u.id === activeUnitId);
+    if (!unit) {
+      setView('path');
+      return;
+    }
+
+    if (activeLessonIndex < unit.lessons.length) {
+      // Advance to next lesson in current unit
+      const nextIndex = activeLessonIndex + 1;
+      const nextLesson = unit.lessons.find((l) => l.lessonIndex === nextIndex);
+      if (nextLesson) {
+        setActiveLessonIndex(nextIndex);
+        setActiveExercises(nextLesson.exercises);
+        setIsPIPLesson(false);
+        setView('lesson');
+        return;
+      }
+    } else {
+      // Unit lessons cleared! Advance directly to the Unit Boss battle
+      setView('boss');
+      return;
+    }
+
+    setView('path');
+  };
+
   // Handle finishing boss battle
   const handleFinishBoss = (earnedXp: number) => {
     const bossId = `boss-unit-${activeUnitId}`;
@@ -158,16 +195,9 @@ export const App: React.FC = () => {
   };
 
   const currentUnit = units.find((u) => u.id === activeUnitId) || units[0];
-  const activeTheme = getThemeById(progress.themeId);
 
   return (
-    <div
-      className="min-h-screen flex flex-col font-sans transition-colors duration-200"
-      style={{
-        backgroundColor: activeTheme.bg,
-        color: activeTheme.text,
-      }}
-    >
+    <div className="min-h-screen flex flex-col font-sans transition-colors duration-200 bg-[#fbf7ee] dark:bg-slate-950 text-[#323437] dark:text-slate-100">
       {/* Hardware Dynamic Island Telemetry Header */}
       <DynamicIsland
         progress={progress}
@@ -198,7 +228,10 @@ export const App: React.FC = () => {
             unitTheme={currentUnit.theme}
             initialExercises={activeExercises}
             isPIPLesson={isPIPLesson}
+            unitId={activeUnitId}
+            lessonIndex={activeLessonIndex}
             onFinishLesson={handleFinishLesson}
+            onNextStage={handleNextStage}
             onExit={() => setView('path')}
           />
         )}
@@ -243,14 +276,7 @@ export const App: React.FC = () => {
       />
 
       {/* Footer */}
-      <footer
-        className="py-6 border-t border-dotted text-center text-xs transition-colors"
-        style={{
-          borderColor: activeTheme.border,
-          backgroundColor: `${activeTheme.cardBg}cc`,
-          color: activeTheme.sub,
-        }}
-      >
+      <footer className="py-6 border-t border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 text-center text-xs text-slate-500 dark:text-slate-400 transition-colors">
         <div className="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p>
             <strong>Circle Back</strong> — Steal//Remake Hackathon submission. Remixed from Duolingo.

@@ -1,7 +1,6 @@
 import { Progress, MascotMood, MascotType } from '../types';
 import { getRankForXp } from './ranks';
 import { sound } from './sound';
-import { getThemeById } from './themes';
 
 const STORAGE_KEY = 'circleback:v1';
 
@@ -46,7 +45,7 @@ class GameStore {
     this.progress = this.load();
     this.checkStreakIntegrity();
     sound.enabled = this.progress.soundEnabled;
-    this.applyTheme(this.progress.darkMode, this.progress.themeId);
+    this.applyTheme(this.progress.darkMode);
   }
 
   private load(): Progress {
@@ -66,23 +65,13 @@ class GameStore {
     return { ...DEFAULT_PROGRESS };
   }
 
-  private applyTheme(_isDark?: boolean, themeId?: string) {
+  private applyTheme(isDark: boolean) {
     if (typeof document !== 'undefined') {
-      const theme = getThemeById(themeId || this.progress.themeId);
-      if (theme.isDark) {
+      if (isDark) {
         document.documentElement.classList.add('dark');
       } else {
         document.documentElement.classList.remove('dark');
       }
-
-      // Inject theme styling onto document root
-      const root = document.documentElement;
-      root.style.setProperty('--theme-bg', theme.bg);
-      root.style.setProperty('--theme-card', theme.cardBg);
-      root.style.setProperty('--theme-text', theme.text);
-      root.style.setProperty('--theme-sub', theme.sub);
-      root.style.setProperty('--theme-accent', theme.accent);
-      root.style.setProperty('--theme-border', theme.border);
     }
   }
 
@@ -109,7 +98,10 @@ class GameStore {
   }
 
   public getSnapshot(): Progress {
-    return this.progress;
+    return {
+      ...this.progress,
+      completedLessons: [...this.progress.completedLessons],
+    };
   }
 
   /**
@@ -123,7 +115,10 @@ class GameStore {
 
     if (streak > 0 && lastActiveDate && lastActiveDate !== today && lastActiveDate !== yesterday) {
       // Missed at least one calendar day!
-      this.progress.streak = 0;
+      this.progress = {
+        ...this.progress,
+        streak: 0,
+      };
       this.save();
     }
   }
@@ -131,71 +126,77 @@ class GameStore {
   public deductMorale(): number {
     const prev = this.progress.morale;
     const next = Math.max(0, prev - 1);
-    this.progress.morale = next;
+    this.progress = {
+      ...this.progress,
+      morale: next,
+    };
     this.save();
     return next;
   }
 
   public restoreMorale(): void {
-    this.progress.morale = 5;
+    this.progress = {
+      ...this.progress,
+      morale: 5,
+    };
     this.save();
   }
 
   public toggleSound(): boolean {
-    this.progress.soundEnabled = !this.progress.soundEnabled;
-    sound.enabled = this.progress.soundEnabled;
+    const next = !this.progress.soundEnabled;
+    this.progress = {
+      ...this.progress,
+      soundEnabled: next,
+    };
+    sound.enabled = next;
     this.save();
-    return this.progress.soundEnabled;
+    return next;
   }
 
   public toggleDarkMode(): boolean {
-    this.progress.darkMode = !this.progress.darkMode;
-    if (this.progress.darkMode) {
-      this.progress.themeId = 'serika-dark';
-    } else {
-      this.progress.themeId = 'serika';
-    }
-    this.applyTheme(this.progress.darkMode, this.progress.themeId);
+    const next = !this.progress.darkMode;
+    this.progress = {
+      ...this.progress,
+      darkMode: next,
+    };
+    this.applyTheme(next);
     this.save();
-    return this.progress.darkMode;
-  }
-
-  public setTheme(themeId: string) {
-    const theme = getThemeById(themeId);
-    this.progress.themeId = theme.id;
-    this.progress.darkMode = theme.isDark;
-    this.applyTheme(theme.isDark, theme.id);
-    this.save();
+    return next;
   }
 
   public completeLesson(lessonId: string, earnedXp: number): { promotedToRank: number | null } {
     const today = getTodayString();
     const yesterday = getYesterdayString();
 
-    // 1. Update streak
+    let newStreak = this.progress.streak;
     if (this.progress.lastActiveDate === yesterday) {
-      this.progress.streak += 1;
+      newStreak += 1;
     } else if (this.progress.lastActiveDate !== today) {
-      this.progress.streak = 1;
-    }
-    this.progress.lastActiveDate = today;
-
-    // 2. Mark lesson complete if not already
-    if (!this.progress.completedLessons.includes(lessonId)) {
-      this.progress.completedLessons.push(lessonId);
+      newStreak = 1;
     }
 
-    // 3. Add XP and check rank promotion
+    const nextCompleted = this.progress.completedLessons.includes(lessonId)
+      ? [...this.progress.completedLessons]
+      : [...this.progress.completedLessons, lessonId];
+
     const oldRank = getRankForXp(this.progress.xp).index;
-    this.progress.xp += earnedXp;
-    const newRank = getRankForXp(this.progress.xp).index;
+    const newXp = this.progress.xp + earnedXp;
+    const newRank = getRankForXp(newXp).index;
 
     let promotedToRank: number | null = null;
     if (newRank > oldRank) {
       promotedToRank = newRank;
-      this.progress.rank = newRank;
       this.newlyPromotedRank = newRank;
     }
+
+    this.progress = {
+      ...this.progress,
+      streak: newStreak,
+      lastActiveDate: today,
+      completedLessons: nextCompleted,
+      xp: newXp,
+      rank: newRank,
+    };
 
     this.save();
     return { promotedToRank };
@@ -232,7 +233,7 @@ class GameStore {
   public resetProgress() {
     this.progress = { ...DEFAULT_PROGRESS };
     this.newlyPromotedRank = null;
-    this.applyTheme(false, 'serika');
+    this.applyTheme(false);
     this.save();
   }
 }

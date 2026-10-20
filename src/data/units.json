@@ -887,8 +887,8 @@
         "weekend",
         "stop"
       ],
-      "minPhrases": 3,
-      "passScore": 60,
+      "minPhrases": 1,
+      "passScore": 35,
       "hint": "Try using phrases like: 'hard stop', 'bandwidth', 'circle back', 'take this offline', 'touch base', or 'parking lot'.",
       "id": "boss-unit-1",
       "type": "boss"
@@ -1820,8 +1820,8 @@
         "told you",
         "again"
       ],
-      "minPhrases": 3,
-      "passScore": 60,
+      "minPhrases": 1,
+      "passScore": 35,
       "hint": "Try using phrases like: 'per my last email', 'friendly reminder', 'attaching for your visibility', 'as discussed', or 'looping in'.",
       "id": "boss-unit-2",
       "type": "boss"
@@ -2751,8 +2751,8 @@
         "fault",
         "sorry"
       ],
-      "minPhrases": 3,
-      "passScore": 60,
+      "minPhrases": 1,
+      "passScore": 35,
       "hint": "Try using phrases like: 'agile pivot', 'opportunity for growth', 'growth mindset', 'comfortable with ambiguity', 'wear multiple hats', or 'critical path'.",
       "id": "boss-unit-3",
       "type": "boss"
@@ -3666,8 +3666,8 @@
         "hated",
         "unfair"
       ],
-      "minPhrases": 3,
-      "passScore": 60,
+      "minPhrases": 1,
+      "passScore": 35,
       "hint": "Try using phrases like: 'humbled and thrilled', 'next chapter', 'agree?', 'open to new opportunities', 'paradigm shift', or 'game-changing milestone'.",
       "id": "boss-unit-4",
       "type": "boss"

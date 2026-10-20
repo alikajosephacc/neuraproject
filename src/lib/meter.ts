@@ -114,9 +114,9 @@ export function scoreCorporateText(
   text: string,
   targetPhrases: string[] = [],
   bannedWords: string[] = [],
-  minPhrases = 3,
-  passScore = 60,
-  minWords = 15
+  minPhrases = 1,
+  passScore = 35,
+  minWords = 8
 ): MeterResult {
   const normText = normalizeText(text);
 
@@ -150,13 +150,18 @@ export function scoreCorporateText(
     }
   }
 
-  // Base scoring calculation
-  // +10 per phrase found, up to 60 base (plus +5 per extra phrase up to 80)
+  // Base scoring calculation:
+  // +15 per phrase found, plus base word length points
   let phraseScore = 0;
-  if (phrasesFound.length <= 6) {
-    phraseScore = phrasesFound.length * 10;
+  if (phrasesFound.length <= 2) {
+    phraseScore = phrasesFound.length * 15;
   } else {
-    phraseScore = 60 + Math.min(20, (phrasesFound.length - 6) * 5);
+    phraseScore = 30 + Math.min(50, (phrasesFound.length - 2) * 12);
+  }
+
+  // Length bonus: if word count meets target, add +10 points
+  if (wordCount >= minWords) {
+    phraseScore += 10;
   }
 
   // -15 per banned word hit
@@ -164,10 +169,10 @@ export function scoreCorporateText(
 
   let rawScore = Math.max(0, phraseScore - penaltyScore);
 
-  // Length check: minimum 15 words, otherwise capped at 40
+  // Length check: minimum words required, otherwise capped at 25
   const cappedByLength = wordCount < minWords;
   if (cappedByLength) {
-    rawScore = Math.min(40, rawScore);
+    rawScore = Math.min(25, rawScore);
   }
 
   const phrasesNeededMet = phrasesFound.length >= minPhrases;

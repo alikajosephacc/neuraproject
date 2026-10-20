@@ -21,7 +21,7 @@ import { ClickSpark } from '../components/ClickSpark';
 interface BossBattleScreenProps {
   boss: BossExercise;
   targetPhrases: string[];
-  onFinishBoss: (earnedXp: number) => void;
+  onFinishBoss: (earnedXp: number, advanceToNextUnit?: boolean) => void;
   onExit: () => void;
 }
 
@@ -67,7 +67,7 @@ export const BossBattleScreen: React.FC<BossBattleScreenProps> = ({
       boss.bannedWords,
       boss.minPhrases,
       boss.passScore,
-      15
+      8
     );
   }, [inputText, targetPhrases, boss]);
 
@@ -140,13 +140,24 @@ export const BossBattleScreen: React.FC<BossBattleScreenProps> = ({
             </div>
           </div>
 
-          <button
-            onClick={() => onFinishBoss(earnedXp)}
-            className="w-full py-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 active:translate-y-0.5 border-b-4 border-emerald-800 text-white font-black text-base rounded-2xl shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2"
-          >
-            <span>Claim Glory & Return to Path</span>
-            <ArrowRight size={20} />
-          </button>
+          <div className="flex flex-col sm:flex-row items-center gap-3 w-full">
+            {boss.unitId < 4 && (
+              <button
+                onClick={() => onFinishBoss(earnedXp, true)}
+                className="w-full sm:flex-1 py-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 active:translate-y-0.5 border-b-4 border-emerald-800 text-white font-black text-base rounded-2xl shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2"
+              >
+                <span>Advance to Unit {boss.unitId + 1}</span>
+                <ArrowRight size={20} />
+              </button>
+            )}
+
+            <button
+              onClick={() => onFinishBoss(earnedXp, false)}
+              className="w-full sm:w-auto px-5 py-4 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 font-bold text-sm text-slate-700 dark:text-slate-300 transition-colors cursor-pointer shrink-0"
+            >
+              Career Path
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -243,7 +254,7 @@ export const BossBattleScreen: React.FC<BossBattleScreenProps> = ({
               {boss.hint}
             </p>
             <p className="text-[11px] text-amber-800/80 dark:text-amber-300/80 pt-1 border-t border-amber-200 dark:border-amber-800">
-              💡 <strong>Pro Tip:</strong> Click any phrase from the Arsenal below to automatically drop it into your answer. Use at least <strong>{boss.minPhrases} corporate phrases</strong> and write <strong>15+ words</strong> to power the Jargon Meter past 60!
+              💡 <strong>Pro Tip:</strong> Click any phrase from the Arsenal below to automatically drop it into your answer. Use at least <strong>{boss.minPhrases} corporate phrase</strong> and write <strong>8+ words</strong> to power the Jargon Meter past {boss.passScore}!
             </p>
           </div>
         )}
@@ -315,7 +326,7 @@ export const BossBattleScreen: React.FC<BossBattleScreenProps> = ({
                   : 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300'
               }`}
             >
-              <span>Length (Min 15):</span>
+              <span>Length (Min {meterResult.minWords}):</span>
               <span className="font-black">{meterResult.wordCount} words</span>
             </div>
 
@@ -456,11 +467,11 @@ export const BossBattleScreen: React.FC<BossBattleScreenProps> = ({
             <AlertTriangle size={16} />
             <span>
               {meterResult.cappedByLength
-                ? 'Score capped at 40: write at least 15 words!'
+                ? `Write at least ${meterResult.minWords} words to qualify!`
                 : meterResult.bannedWordsHit.length > 0
                 ? 'Remove banned plain words to qualify!'
                 : !meterResult.phrasesNeededMet
-                ? `Include at least ${boss.minPhrases} corporate phrases!`
+                ? `Include at least ${boss.minPhrases} corporate phrase!`
                 : `Need ${boss.passScore} points to pass.`}
             </span>
           </div>

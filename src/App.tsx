@@ -188,9 +188,23 @@ export const App: React.FC = () => {
   };
 
   // Handle finishing boss battle
-  const handleFinishBoss = (earnedXp: number) => {
+  const handleFinishBoss = (earnedXp: number, advanceToNextUnit = false) => {
     const bossId = `boss-unit-${activeUnitId}`;
     store.completeLesson(bossId, earnedXp);
+
+    if (advanceToNextUnit && activeUnitId < units.length) {
+      const nextUnitId = activeUnitId + 1;
+      const nextUnit = units.find((u) => u.id === nextUnitId);
+      if (nextUnit && nextUnit.lessons.length > 0) {
+        setActiveUnitId(nextUnitId);
+        setActiveLessonIndex(1);
+        setActiveExercises(nextUnit.lessons[0].exercises);
+        setIsPIPLesson(false);
+        setView('lesson');
+        return;
+      }
+    }
+
     setView('path');
   };
 
@@ -222,6 +236,7 @@ export const App: React.FC = () => {
 
         {view === 'lesson' && (
           <LessonScreen
+            key={`lesson-${activeUnitId}-${activeLessonIndex}-${isPIPLesson ? 'pip' : 'norm'}`}
             lessonTitle={
               isPIPLesson ? 'Mandatory Morale Calibration (PIP)' : `Lesson ${activeLessonIndex}`
             }
@@ -238,6 +253,7 @@ export const App: React.FC = () => {
 
         {view === 'boss' && (
           <BossBattleScreen
+            key={`boss-${activeUnitId}`}
             boss={currentUnit.boss}
             targetPhrases={currentUnit.lessons.flatMap((l) =>
               l.exercises

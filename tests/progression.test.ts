@@ -62,4 +62,28 @@ describe('Game Progression & Lesson Completion', () => {
     const allLessonsDone = unit1.lessons.every((l) => snap.completedLessons.includes(l.id));
     expect(allLessonsDone).toBe(true);
   });
+
+  it('unlocks Unit 2 Lesson 1 when Unit 1 Boss is cleared', () => {
+    const units = unitsData as Unit[];
+    const unit1 = units[0];
+    const unit2 = units[1];
+
+    // Complete unit 1 boss
+    store.completeLesson(unit1.boss.id, 80);
+    const snap = store.getSnapshot();
+
+    const isUnit2Lesson1Unlocked =
+      snap.completedLessons.includes(unit1.boss.id) ||
+      snap.completedLessons.includes(unit1.lessons[unit1.lessons.length - 1].id);
+
+    expect(isUnit2Lesson1Unlocked).toBe(true);
+    expect(unit2.lessons[0].id).toBe('unit-2-lesson-1');
+  });
+
+  it('allows passing jargon meter with 35+ points and 1 corporate phrase', () => {
+    const units = unitsData as Unit[];
+    const boss1 = units[0].boss;
+    expect(boss1.passScore).toBe(35);
+    expect(boss1.minPhrases).toBe(1);
+  });
 });

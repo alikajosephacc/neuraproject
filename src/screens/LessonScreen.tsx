@@ -110,7 +110,7 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
 }) => {
   // Queue of remaining exercises (re-queues on mistake)
   const [queue, setQueue] = useState<Exercise[]>(() => [...initialExercises]);
-  const [totalInitial] = useState(initialExercises.length);
+  const totalInitial = initialExercises.length;
   const [completedCount, setCompletedCount] = useState(0);
   const [mistakes, setMistakes] = useState(0);
 
@@ -155,6 +155,24 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
   const [isCompleted, setIsCompleted] = useState(false);
   const [mushroomQuoteIndex, setMushroomQuoteIndex] = useState(0);
   const textInputRef = useRef<HTMLInputElement>(null);
+
+  // Reset entire lesson state when advancing to a different lesson or unit
+  useEffect(() => {
+    setQueue([...initialExercises]);
+    setCompletedCount(0);
+    setMistakes(0);
+    setIsCompleted(false);
+    setFeedback(null);
+    setAttempts(0);
+    setSelectedTiles([]);
+    setAvailableTiles([]);
+    setLockedTileCount(0);
+    setTypedInput('');
+    setLockedIdeas([]);
+    setSelectedOption(null);
+    setSelectedLeft(null);
+    setMatchedPairs([]);
+  }, [lessonIndex, unitId, isPIPLesson, initialExercises]);
 
   // Initialize state when current question changes
   useEffect(() => {
@@ -565,7 +583,7 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
                 }}
                 className="w-full py-4 bg-emerald-600 hover:bg-emerald-500 active:translate-y-0.5 border-b-4 border-emerald-800 text-white font-black text-base rounded-2xl shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2"
               >
-                <span>Next Stage</span>
+                <span>Next Level</span>
                 <ArrowRight size={20} />
               </button>
             </ClickSpark>

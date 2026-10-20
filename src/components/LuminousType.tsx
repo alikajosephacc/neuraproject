@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { Keyboard, RotateCcw, Zap } from 'lucide-react';
 import { sound } from '../lib/sound';
 
@@ -14,6 +14,7 @@ const DEFAULT_CORPORATE_QUOTES = [
   "leverage high altitude synergies for Q4 deliverables",
   "move fast and break things without notifying compliance",
 ];
+const TEST_DURATION_SECONDS = 30;
 
 /**
  * LuminousType
@@ -25,10 +26,21 @@ export const LuminousType: React.FC<LuminousTypeProps> = ({
   className = '',
 }) => {
   const [quoteIndex, setQuoteIndex] = useState(0);
-  const targetText = phrases[quoteIndex % phrases.length];
-
+  // A long repeating prompt lets the user keep typing for the whole timed run.
+  const promptPhrases = Array.from({ length: 100 }, (_, index) => phrases[(quoteIndex + index) % phrases.length]);
+  let promptOffset = 0;
+  const promptLines = promptPhrases.map((phrase, index) => {
+    const text = phrase + (index < promptPhrases.length - 1 ? ' ' : '');
+    const line = { text, start: promptOffset };
+    promptOffset += text.length;
+    return line;
+  });
+  const targetText = promptLines.map((line) => line.text).join('');
   const [typedInput, setTypedInput] = useState('');
+  const foundActivePhraseIndex = promptLines.findIndex((line) => typedInput.length < line.start + line.text.length);
+  const activePhraseIndex = foundActivePhraseIndex === -1 ? promptLines.length - 1 : foundActivePhraseIndex;
   const [startTime, setStartTime] = useState<number | null>(null);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [wpm, setWpm] = useState<number>(0);
   const [accuracy, setAccuracy] = useState<number>(100);
   const [isFinished, setIsFinished] = useState<boolean>(false);
@@ -36,11 +48,26 @@ export const LuminousType: React.FC<LuminousTypeProps> = ({
 
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const startTimeRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (startTime === null || isFinished) return;
+    const updateTimer = () => {
+      const elapsed = Math.floor((Date.now() - startTime) / 1000);
+      setElapsedSeconds(Math.min(elapsed, TEST_DURATION_SECONDS));
+      if (elapsed >= TEST_DURATION_SECONDS) setIsFinished(true);
+    };
+    updateTimer();
+    const interval = window.setInterval(updateTimer, 100);
+    return () => window.clearInterval(interval);
+  }, [startTime, isFinished]);
 
   // Reset state when quote index changes
   const handleReset = useCallback(() => {
     setTypedInput('');
     setStartTime(null);
+    startTimeRef.current = null;
+    setElapsedSeconds(0);
     setWpm(0);
     setAccuracy(100);
     setIsFinished(false);
@@ -58,8 +85,10 @@ export const LuminousType: React.FC<LuminousTypeProps> = ({
     const val = e.target.value;
     if (isFinished) return;
 
-    if (!startTime) {
-      setStartTime(Date.now());
+    if (startTimeRef.current === null) {
+      const now = Date.now();
+      startTimeRef.current = now;
+      setStartTime(now);
     }
 
     setTypedInput(val);
@@ -73,22 +102,15 @@ export const LuminousType: React.FC<LuminousTypeProps> = ({
     setAccuracy(acc);
 
     // Calculate WPM
-    if (startTime) {
-      const elapsedMinutes = (Date.now() - startTime) / 60000;
-      if (elapsedMinutes > 0.01) {
-        const words = val.trim().length / 5;
-        setWpm(Math.round(words / elapsedMinutes));
-      }
+    const startedAt = startTimeRef.current;
+    if (startedAt !== null) {
+      const elapsedMinutes = Math.max((Date.now() - startedAt) / 60000, 1 / 60);
+      const words = val.trim().length / 5;
+      setWpm(Math.round(words / elapsedMinutes));
     }
-
-    // Play click sound on keystroke
-    sound.playClick();
 
     // Check completion
-    if (val === targetText) {
-      setIsFinished(true);
-      sound.playCorrect();
-    }
+    if (val.length >= targetText.length) setIsFinished(true);
   };
 
   // Mouse tracker for ambient luminous highlight
@@ -142,6 +164,14 @@ export const LuminousType: React.FC<LuminousTypeProps> = ({
         {/* Real-time stats */}
         <div className="flex items-center gap-3 font-bold">
           <div className="flex items-center gap-1">
+            <span className="text-slate-400">TIME:</span>
+            <span className="text-slate-700 dark:text-slate-200">{String(Math.floor((TEST_DURATION_SECONDS - elapsedSeconds) / 60)).padStart(2, '0')}:{String((TEST_DURATION_SECONDS - elapsedSeconds) % 60).padStart(2, '0')}</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <span className="text-slate-400">WORDS:</span>
+            <span className="text-slate-700 dark:text-slate-200">{typedInput.trim() ? typedInput.trim().split(/\s+/).filter((word) => word.length > 0).length : 0}</span>
+          </div>
+          <div className="flex items-center gap-1">
             <span className="text-slate-400">WPM:</span>
             <span className="text-amber-600 dark:text-emerald-400 text-sm font-black">
               {wpm}
@@ -179,36 +209,38 @@ export const LuminousType: React.FC<LuminousTypeProps> = ({
       />
 
       {/* Glyph Stage */}
-      <div className="relative z-10 font-mono text-base sm:text-lg md:text-xl tracking-wide leading-relaxed py-3 min-h-[70px] flex flex-wrap items-center">
-        {targetText.split('').map((char, index) => {
-          let state: 'correct' | 'wrong' | 'current' | 'pending' = 'pending';
-          if (index < typedInput.length) {
-            state = typedInput[index] === char ? 'correct' : 'wrong';
-          } else if (index === typedInput.length) {
-            state = 'current';
-          }
+      <div className="relative z-10 py-3 min-h-[112px] max-h-[180px] overflow-hidden flex flex-col justify-end gap-1">
+        {promptLines.slice(Math.max(0, activePhraseIndex - 2), activePhraseIndex + 1).map((line) => (
+          <div key={line.start} className="font-mono text-base sm:text-lg md:text-xl tracking-wide leading-relaxed break-words">
+            {line.text.split('').map((char, charIndex) => {
+              const index = line.start + charIndex;
+              let state: 'correct' | 'wrong' | 'current' | 'pending' = 'pending';
+              if (index < typedInput.length) {
+                state = typedInput[index] === char ? 'correct' : 'wrong';
+              } else if (index === typedInput.length) {
+                state = 'current';
+              }
 
-          let charColorClass = 'text-slate-400/60 dark:text-slate-600';
-          if (state === 'correct') {
-            charColorClass = 'text-slate-900 dark:text-slate-100 font-bold';
-          } else if (state === 'wrong') {
-            charColorClass = 'text-rose-500 font-black bg-rose-100 dark:bg-rose-950/60 rounded-xs px-0.5';
-          } else if (state === 'current') {
-            charColorClass = 'text-slate-700 dark:text-slate-300';
-          }
+              let charColorClass = 'text-slate-400/60 dark:text-slate-600';
+              if (state === 'correct') {
+                charColorClass = 'text-slate-900 dark:text-slate-100 font-bold';
+              } else if (state === 'wrong') {
+                charColorClass = 'text-rose-500 font-black bg-rose-100 dark:bg-rose-950/60 rounded-xs px-0.5';
+              } else if (state === 'current') {
+                charColorClass = 'text-slate-700 dark:text-slate-300';
+              }
 
-          return (
-            <span
-              key={index}
-              className={`relative inline-block transition-colors duration-75 ${charColorClass}`}
-            >
-              {state === 'current' && (
-                <span className="absolute -left-0.5 top-1 bottom-1 w-0.5 rounded-full bg-amber-500 dark:bg-emerald-400 animate-pulse shadow-sm" />
-              )}
-              {char === ' ' ? '\u00A0' : char}
-            </span>
-          );
-        })}
+              return (
+                <span key={index} className={`relative inline-block transition-colors duration-75 ${charColorClass}`}>
+                  {state === 'current' && (
+                    <span className="absolute -left-0.5 top-1 bottom-1 w-0.5 rounded-full bg-amber-500 dark:bg-emerald-400 animate-pulse shadow-sm" />
+                  )}
+                  {char === ' ' ? '\u00A0' : char}
+                </span>
+              );
+            })}
+          </div>
+        ))}
       </div>
 
       {/* Completion Banner */}
@@ -216,7 +248,7 @@ export const LuminousType: React.FC<LuminousTypeProps> = ({
         <div className="relative z-10 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-mono animate-pop-in">
           <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-bold">
             <Zap size={14} className="fill-emerald-500" />
-            <span>Corporate Phrase Shipped! {wpm} WPM @ {accuracy}% Accuracy.</span>
+            <span>Time’s up! {typedInput.trim() ? typedInput.trim().split(/\s+/).filter((word) => word.length > 0).length : 0} words · {wpm} WPM @ {accuracy}% accuracy.</span>
           </div>
 
           <button
@@ -225,8 +257,8 @@ export const LuminousType: React.FC<LuminousTypeProps> = ({
               handleNextQuote();
             }}
             className="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-bold text-[11px] transition-colors cursor-pointer"
-          >
-            Next Phrase →
+            >
+            Try Again ↺
           </button>
         </div>
       )}

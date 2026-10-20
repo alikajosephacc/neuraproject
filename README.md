@@ -7,7 +7,7 @@
 [![Zero Backend](https://img.shields.io/badge/backend-100%25%20client--side-purple)](#architecture)
 
 ---
-
+deployed website: https://neuraproject-flame.vercel.app/
 ## 1. What is Circle Back?
 
 **Circle Back** reimagines the gamified language-learning format of Duolingo to teach people how to survive, decode, and speak the dialect of modern enterprise: **Corporate Speak**.

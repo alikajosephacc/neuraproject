@@ -120,5 +120,35 @@ describe('Answer Checker (Idea Matcher & Word Bank)', () => {
       expect(res.isPartial).toBe(false);
       expect(res.lockedIndices.length).toBe(0);
     });
+
+    it('sets isClose and closeMessage on alternative or partial word bank match', () => {
+      const altTiles = ['stop', 'talking', 'about', 'this', 'now'];
+      const res = checkWordBankAnswerAdvanced(altTiles, acceptedSequences, satiricalAlternatives, model);
+      expect(res.passed).toBe(true);
+      expect(res.isClose).toBe(true);
+      expect(res.closeMessage).toContain('Close!');
+    });
+  });
+
+  describe('Reworded Answers & Close Messages', () => {
+    const ideas = [
+      ['bad', 'terrible', 'failed', 'poor', 'incompetent', 'weak'],
+      ['performance', 'work', 'deliverable', 'job', 'skills'],
+    ];
+    const labels = ['Incompetence', 'Work performance'];
+    const alts = ['you failed at this', 'you did a terrible job'];
+    const model = 'You are bad at this';
+
+    it('accepts reworded sentence with same meaning and flags as close', () => {
+      const res = checkTypedAnswer('you did a terrible job on this deliverable', ideas, 1, labels, alts, model);
+      expect(res.passed).toBe(true);
+      expect(res.isClose).toBe(true);
+      expect(res.closeMessage).toContain('Close!');
+    });
+
+    it('accepts semantic keyword overlap even if phrased differently', () => {
+      const res = checkTypedAnswer('your performance was terrible and weak', ideas, 1, labels, alts, model);
+      expect(res.passed).toBe(true);
+    });
   });
 });

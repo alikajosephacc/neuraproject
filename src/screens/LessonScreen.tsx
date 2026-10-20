@@ -140,8 +140,12 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
     ideaResult?: IdeaCheckResult;
     why?: string;
     isSatiricalBonus?: boolean;
+    isClose?: boolean;
+    closeMessage?: string;
+    isRevealed?: boolean;
   } | null>(null);
 
+  const [attempts, setAttempts] = useState(0);
   const [isCompleted, setIsCompleted] = useState(false);
   const [mushroomQuoteIndex, setMushroomQuoteIndex] = useState(0);
   const textInputRef = useRef<HTMLInputElement>(null);
@@ -153,6 +157,7 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
     setLockedTileCount(0);
     setLockedIdeas([]);
     setPartialNotice(null);
+    setAttempts(0);
 
     if (currentExercise.type === 'translate') {
       const tr = currentExercise as TranslateExercise;
@@ -258,11 +263,16 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
 
     let passed = false;
     let isPartialMatch = false;
+    let isClose = false;
+    let closeMessage = '';
     let model = '';
     let snark = '';
     let why = '';
     let ideaResult: IdeaCheckResult | undefined;
     let isSatiricalBonus = false;
+
+    const currentAttempt = attempts + 1;
+    setAttempts(currentAttempt);
 
     if (currentExercise.type === 'translate') {
       const tr = currentExercise as TranslateExercise;
@@ -282,10 +292,13 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
 
         if (wbResult.passed) {
           passed = true;
+          isClose = !!wbResult.isClose;
+          closeMessage = wbResult.closeMessage || '';
           setLockedTileCount(selectedTiles.length);
         } else if (wbResult.isPartial) {
-          // PARTIAL MATCH: Lock correct prefix tiles! Allow correcting the rest!
           isPartialMatch = true;
+          isClose = !!wbResult.isClose;
+          closeMessage = wbResult.closeMessage || '';
           const newLockedCount = wbResult.longestPrefixLength;
           setLockedTileCount(newLockedCount);
 
@@ -295,11 +308,16 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
           setSelectedTiles(selectedTiles.slice(0, newLockedCount));
 
           const lockedWords = selectedTiles.slice(0, newLockedCount).join(' ');
-          setPartialNotice(
-            `🔒 Part of your translation is correct! We locked "${lockedWords}". Now pick the remaining words to finish!`
-          );
-          sound.playCorrect();
-          return; // Do not fail or deduct morale!
+
+          // If reached 3+ tries, do not keep locking over and over: reveal answer!
+          if (currentAttempt < 3) {
+            setPartialNotice(
+              closeMessage ||
+                `🔒 Part of your translation is correct! We locked "${lockedWords}". Pick the remaining words to finish! (Attempt ${currentAttempt}/3)`
+            );
+            sound.playCorrect();
+            return; // Allow incremental correction
+          }
         }
       } else {
         // Typed Mode
@@ -309,29 +327,41 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
           tr.ideas,
           tr.needed,
           tr.ideaLabels,
-          tr.acceptedAlternatives
+          tr.acceptedAlternatives,
+          tr.model
         );
 
         if (ideaResult.passed) {
           passed = true;
           isSatiricalBonus = !!ideaResult.isSatiricalBonus;
+          isClose = !!ideaResult.isClose;
+          closeMessage = ideaResult.closeMessage || '';
         } else if (ideaResult.isPartial) {
-          // PARTIAL MATCH: Lock matched ideas!
           isPartialMatch = true;
+          isClose = !!ideaResult.isClose;
+          closeMessage = ideaResult.closeMessage || '';
           setLockedIdeas(ideaResult.matchedIdeas);
-          setPartialNotice(
-            `🔒 Part 1 recognized: [${ideaResult.matchedIdeas.join(', ')}]. Now add what they actually plan to do (e.g. ${ideaResult.missedIdeas.join(' or ')}) to complete the translation!`
-          );
-          sound.playCorrect();
-          return; // Do not fail or deduct morale!
+
+          // If reached 3+ tries, do not keep locking over and over: reveal answer!
+          if (currentAttempt < 3) {
+            setPartialNotice(
+              closeMessage ||
+                `🔒 Recognized: [${ideaResult.matchedIdeas.join(', ')}]. Now add the missing idea: ${ideaResult.missedIdeas.join(' or ')} (Attempt ${currentAttempt}/3)`
+            );
+            sound.playCorrect();
+            return; // Allow incremental correction
+          }
         }
       }
     } else if (currentExercise.type === 'match') {
       const m = currentExercise as MatchExercise;
-      if (matchedPairs.length !== m.pairs.length) return;
-      passed = true;
-      model = 'All corporate euphemisms successfully mapped.';
-      snark = 'Notice how much shorter the plain translations are than the jargon!';
+      if (matchedPairs.length !== m.pairs.length) {
+        passed = false;
+      } else {
+        passed = true;
+        model = 'All corporate euphemisms successfully mapped.';
+        snark = 'Notice how much shorter the plain translations are than the jargon!';
+      }
     } else if (currentExercise.type === 'context') {
       if (selectedOption === null) return;
       const ctx = currentExercise as ContextExercise;
@@ -340,12 +370,50 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
       why = ctx.why;
     }
 
+    // CHECK IF 3-4 TRIES REACHED AND NOT PASSED: REVEAL CORRECT ANSWER AND EXPLANATION!
+    if (!passed && currentAttempt >= 3) {
+      sound.playWrong();
+      setMistakes((prev) => prev + 1);
+      if (!isPIPLesson) {
+        store.deductMorale();
+      }
+      setPartialNotice(null);
+
+      // Automatically fill the correct answer into the interactive view so user sees it clearly
+      if (currentExercise.type === 'translate') {
+        const tr = currentExercise as TranslateExercise;
+        if (tr.mode === 'wordbank') {
+          const correctTiles = tr.accepted?.[0] || tr.model.split(/\s+/).filter(Boolean);
+          setSelectedTiles(correctTiles);
+          setAvailableTiles([]);
+          setLockedTileCount(correctTiles.length);
+        } else {
+          setTypedInput(tr.model);
+        }
+      } else if (currentExercise.type === 'context') {
+        setSelectedOption((currentExercise as ContextExercise).answer);
+      } else if (currentExercise.type === 'match') {
+        setMatchedPairs(Array.from({ length: (currentExercise as MatchExercise).pairs.length }, (_, i) => i));
+      }
+
+      setFeedback({
+        show: true,
+        passed: false,
+        isRevealed: true,
+        model,
+        snark,
+        why,
+        ideaResult,
+      });
+      return;
+    }
+
     if (passed) {
       sound.playCorrect();
+      setPartialNotice(null);
     } else if (!isPartialMatch) {
       sound.playWrong();
       setMistakes((prev) => prev + 1);
-      // Cost 1 morale point (unless PIP lesson where morale loss is exempted)
       if (!isPIPLesson) {
         store.deductMorale();
       }
@@ -354,6 +422,8 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
     setFeedback({
       show: true,
       passed,
+      isClose,
+      closeMessage,
       model,
       snark,
       ideaResult,
@@ -366,8 +436,9 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
   const handleContinue = () => {
     sound.playClick();
     const wasPassed = feedback?.passed;
+    const wasRevealed = feedback?.isRevealed;
 
-    if (wasPassed) {
+    if (wasPassed || wasRevealed) {
       setCompletedCount((prev) => prev + 1);
       const remaining = queue.slice(1);
       if (remaining.length === 0) {
@@ -554,8 +625,8 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
 
             {/* Partial Match Locking Banner */}
             {partialNotice && (
-              <div className="p-3.5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/70 border-2 border-emerald-400 dark:border-emerald-700 text-emerald-900 dark:text-emerald-200 text-xs font-bold flex items-start gap-2.5 animate-pop-in font-mono">
-                <Lock size={18} className="text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+              <div className="p-3.5 rounded-2xl bg-amber-50 dark:bg-amber-950/70 border-2 border-amber-400 dark:border-amber-600 text-amber-950 dark:text-amber-100 text-xs font-bold flex items-start gap-2.5 animate-pop-in">
+                <span className="text-base shrink-0 mt-0.5">🟡</span>
                 <div className="flex-1 leading-relaxed font-sans">
                   {partialNotice}
                 </div>
@@ -833,7 +904,11 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
       {feedback?.show && (
         <div
           className={`fixed inset-x-0 bottom-0 z-40 p-5 sm:p-6 shadow-2xl transition-all border-t-4 animate-pop-in ${
-            feedback.passed
+            feedback.isRevealed
+              ? 'bg-sky-50 dark:bg-slate-900 border-sky-500 text-sky-950 dark:text-sky-100'
+              : feedback.isClose
+              ? 'bg-amber-50 dark:bg-slate-900 border-amber-400 text-amber-950 dark:text-amber-100'
+              : feedback.passed
               ? 'bg-emerald-50 dark:bg-slate-900 border-emerald-500 text-emerald-950 dark:text-emerald-100'
               : 'bg-rose-50 dark:bg-slate-900 border-rose-500 text-rose-950 dark:text-rose-100'
           }`}
@@ -841,7 +916,33 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
           <div className="max-w-3xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="space-y-2 flex-1">
               <div className="flex items-center gap-2">
-                {feedback.passed ? (
+                {feedback.isRevealed ? (
+                  <>
+                    <Lightbulb size={24} className="text-sky-600 dark:text-sky-400 shrink-0" />
+                    <div>
+                      <h3 className="text-lg font-black text-sky-800 dark:text-sky-300">
+                        💡 Answer & Explanation Revealed
+                      </h3>
+                      <p className="text-xs text-sky-700 dark:text-sky-400 font-medium">
+                        3 attempts reached — here is the correct translation and explanation so you can learn and move forward!
+                      </p>
+                    </div>
+                  </>
+                ) : feedback.isClose ? (
+                  <>
+                    <span className="text-2xl shrink-0">🟡</span>
+                    <div>
+                      <h3 className="text-lg font-black text-amber-800 dark:text-amber-300">
+                        Close! Meaning Approved.
+                      </h3>
+                      {feedback.closeMessage && (
+                        <p className="text-xs text-amber-700 dark:text-amber-400 font-semibold">
+                          {feedback.closeMessage}
+                        </p>
+                      )}
+                    </div>
+                  </>
+                ) : feedback.passed ? (
                   <>
                     <CheckCircle2 size={24} className="text-emerald-600 dark:text-emerald-400 shrink-0" />
                     <h3 className="text-lg font-black text-emerald-800 dark:text-emerald-300">
@@ -854,7 +955,7 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
                   <>
                     <AlertCircle size={24} className="text-rose-600 dark:text-rose-400 shrink-0" />
                     <h3 className="text-lg font-black text-rose-800 dark:text-rose-300">
-                      Needs Alignment! Question re-queued.
+                      Needs Alignment! (Attempt {attempts}/3)
                     </h3>
                   </>
                 )}
@@ -896,16 +997,33 @@ export const LessonScreen: React.FC<LessonScreenProps> = ({
               )}
             </div>
 
-            <ClickSpark sparkColor={feedback.passed ? "#10b981" : "#ef4444"} sparkRadius={36} sparkCount={12} className="w-full sm:w-auto">
+            <ClickSpark
+              sparkColor={
+                feedback.isRevealed
+                  ? '#0284c7'
+                  : feedback.isClose
+                  ? '#f59e0b'
+                  : feedback.passed
+                  ? '#10b981'
+                  : '#ef4444'
+              }
+              sparkRadius={36}
+              sparkCount={12}
+              className="w-full sm:w-auto"
+            >
               <button
                 onClick={handleContinue}
                 className={`w-full sm:w-auto px-8 py-3.5 text-white font-black text-sm rounded-2xl shadow-md border-b-4 active:translate-y-0.5 transition-all cursor-pointer flex items-center justify-center gap-2 shrink-0 ${
-                  feedback.passed
+                  feedback.isRevealed
+                    ? 'bg-sky-600 hover:bg-sky-500 border-sky-800'
+                    : feedback.isClose
+                    ? 'bg-amber-600 hover:bg-amber-500 border-amber-800'
+                    : feedback.passed
                     ? 'bg-emerald-600 hover:bg-emerald-500 border-emerald-800'
                     : 'bg-rose-600 hover:bg-rose-500 border-rose-800'
                 }`}
               >
-                <span>Continue</span>
+                <span>{feedback.isRevealed ? 'Understood, Move Forward' : 'Continue'}</span>
                 <ArrowRight size={18} />
               </button>
             </ClickSpark>

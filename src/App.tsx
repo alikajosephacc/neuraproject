@@ -159,7 +159,7 @@ export const App: React.FC = () => {
   const currentUnit = units.find((u) => u.id === activeUnitId) || units[0];
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200">
+    <div className="min-h-screen bg-[#fbf7ee] dark:bg-slate-950 text-[#323437] dark:text-slate-100 flex flex-col font-sans transition-colors duration-200">
       {/* Hardware Dynamic Island Telemetry Header */}
       <DynamicIsland
         progress={progress}

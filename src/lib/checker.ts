@@ -18,6 +18,8 @@ export interface IdeaCheckResult {
   lockedIdeas: string[];
   normalizedUserAnswer: string;
   isSatiricalBonus?: boolean;
+  isClose?: boolean;
+  closeMessage?: string;
 }
 
 export interface WordBankCheckResult {
@@ -29,6 +31,8 @@ export interface WordBankCheckResult {
   matchedTargetSequence: string[];
   remainingWordsNeeded: string[];
   matchedSentence?: string;
+  isClose?: boolean;
+  closeMessage?: string;
 }
 
 /**
@@ -75,31 +79,55 @@ export function containsSynonym(text: string, synonym: string): boolean {
 }
 
 /**
- * Checks a typed answer against required idea groups and multiple alternative answers.
+ * Checks a typed answer against required idea groups, multiple alternative answers, and semantic meaning.
  *
  * @param userAnswer The raw string typed by the player
  * @param ideas Array of idea groups (each inner array is a list of acceptable synonyms)
  * @param needed Minimum number of idea groups that must match
  * @param ideaLabels Optional readable descriptions for each idea group
  * @param acceptedAlternatives Optional list of full alternative satirical or plain phrases
+ * @param modelAnswer Optional standard plain English translation for close/exact comparison
  */
 export function checkTypedAnswer(
   userAnswer: string,
   ideas: string[][] = [],
   needed = 1,
   ideaLabels: string[] = [],
-  acceptedAlternatives: string[] = []
+  acceptedAlternatives: string[] = [],
+  modelAnswer = ''
 ): IdeaCheckResult {
   const normAnswer = normalizeText(userAnswer);
+  const normModel = normalizeText(modelAnswer);
 
-  // 1. Direct alternative match check (allows full satirical expressions)
+  // 1. Direct exact match with model answer
+  if (normModel && normAnswer === normModel) {
+    return {
+      passed: true,
+      isPartial: false,
+      matchedCount: needed,
+      needed,
+      matchedIdeaIndices: ideas.map((_, i) => i),
+      missedIdeaIndices: [],
+      matchedIdeas: ideaLabels.length > 0 ? ideaLabels : ['Direct Accuracy'],
+      missedIdeas: [],
+      lockedIdeas: ideaLabels,
+      normalizedUserAnswer: normAnswer,
+      isClose: false,
+    };
+  }
+
+  // 2. Direct alternative match check (allows full satirical & reworded expressions)
   if (acceptedAlternatives && acceptedAlternatives.length > 0) {
-    const matchesAlternative = acceptedAlternatives.some((alt) => {
+    const matchedAlt = acceptedAlternatives.find((alt) => {
       const normAlt = normalizeText(alt);
-      return normAnswer.includes(normAlt) || normAlt.includes(normAnswer);
+      return (
+        normAnswer === normAlt ||
+        normAnswer.includes(normAlt) ||
+        normAlt.includes(normAnswer)
+      );
     });
 
-    if (matchesAlternative && normAnswer.split(/\s+/).length >= 2) {
+    if (matchedAlt && normAnswer.split(/\s+/).length >= 2) {
       return {
         passed: true,
         isPartial: false,
@@ -112,11 +140,15 @@ export function checkTypedAnswer(
         lockedIdeas: ideaLabels,
         normalizedUserAnswer: normAnswer,
         isSatiricalBonus: true,
+        isClose: true,
+        closeMessage: normModel
+          ? `🟡 Close! Valid alternative translation accepted. Leadership also phrases this as: "${modelAnswer}"`
+          : `🟡 Close! Valid reworded translation approved.`,
       };
     }
   }
 
-  // 2. Idea Matcher evaluation
+  // 3. Idea Matcher evaluation (semantic concept groups)
   const matchedIdeaIndices: number[] = [];
   const missedIdeaIndices: number[] = [];
   const matchedIdeas: string[] = [];
@@ -136,13 +168,44 @@ export function checkTypedAnswer(
   });
 
   const matchedCount = matchedIdeaIndices.length;
-  const passed = matchedCount >= needed;
-  const isPartial = matchedCount > 0 && !passed;
+  let passed = matchedCount >= needed;
+  let isPartial = matchedCount > 0 && !passed;
+
+  // 4. Semantic Meaning-Overlap Fallback (Accept reworded answers that mean the same thing)
+  if (!passed && normModel) {
+    const stopWords = new Set([
+      'the', 'a', 'an', 'is', 'are', 'was', 'were', 'to', 'of', 'in', 'for',
+      'on', 'with', 'at', 'by', 'from', 'or', 'and', 'be', 'it', 'this', 'that', 'your', 'our', 'their', 'they'
+    ]);
+    const modelKeywords = normModel.split(/\s+/).filter((w) => !stopWords.has(w) && w.length > 2);
+    const userWords = normAnswer.split(/\s+/).filter((w) => !stopWords.has(w) && w.length > 2);
+
+    if (modelKeywords.length > 0) {
+      const matchCount = modelKeywords.filter((kw) =>
+        userWords.some((uw) => containsSynonym(uw, kw) || containsSynonym(kw, uw))
+      ).length;
+      const ratio = matchCount / modelKeywords.length;
+
+      if (ratio >= 0.55 && userWords.length >= 2) {
+        passed = true;
+        isPartial = false;
+      } else if (ratio >= 0.35 || matchedCount > 0) {
+        isPartial = true;
+      }
+    }
+  }
+
+  const isClose = passed && normAnswer !== normModel;
+  const closeMessage = isClose
+    ? `🟡 Close! Your reworded answer captures the exact meaning. Standard translation: "${modelAnswer || normModel}"`
+    : isPartial
+    ? `🟡 Close! You have grasped the core concept. Refine slightly to complete.`
+    : undefined;
 
   return {
     passed,
     isPartial,
-    matchedCount,
+    matchedCount: passed ? Math.max(matchedCount, needed) : matchedCount,
     needed,
     matchedIdeaIndices,
     missedIdeaIndices,
@@ -150,6 +213,8 @@ export function checkTypedAnswer(
     missedIdeas,
     lockedIdeas: matchedIdeas,
     normalizedUserAnswer: normAnswer,
+    isClose,
+    closeMessage,
   };
 }
 
@@ -204,6 +269,8 @@ export function checkWordBankAnswerAdvanced(
   for (const seq of candidateSequences) {
     const normSeq = seq.map((w) => normalizeText(w));
     if (normSeq.join(' ') === joinedSelected) {
+      const isExactModel = modelAnswer && normalizeText(modelAnswer) === joinedSelected;
+      const isClose = !isExactModel && !!modelAnswer;
       return {
         passed: true,
         isPartial: false,
@@ -213,6 +280,10 @@ export function checkWordBankAnswerAdvanced(
         matchedTargetSequence: seq,
         remainingWordsNeeded: [],
         matchedSentence: seq.join(' '),
+        isClose,
+        closeMessage: isClose
+          ? `🟡 Close! Valid alternative translation approved. Standard corporate phrasing: "${modelAnswer}"`
+          : undefined,
       };
     }
   }
@@ -252,6 +323,10 @@ export function checkWordBankAnswerAdvanced(
 
   const remainingWordsNeeded = bestTargetSeq.slice(bestPrefixLength);
   const isPartial = bestPrefixLength > 0 && bestPrefixLength < bestTargetSeq.length;
+  const isClose = bestPrefixLength >= Math.floor(bestTargetSeq.length * 0.5);
+  const closeMessage = isClose
+    ? `🟡 Close! You locked the first ${bestPrefixLength} words. Complete the remaining words to finish.`
+    : undefined;
 
   return {
     passed: false,
@@ -261,6 +336,8 @@ export function checkWordBankAnswerAdvanced(
     longestPrefixLength: bestPrefixLength,
     matchedTargetSequence: bestTargetSeq,
     remainingWordsNeeded,
+    isClose,
+    closeMessage,
   };
 }
 

@@ -7,6 +7,7 @@ import { Leaderboard } from '../components/Leaderboard';
 import { SpotlightCard } from '../components/SpotlightCard';
 import { BorderBeam } from '../components/BorderBeam';
 import { ClickSpark } from '../components/ClickSpark';
+import { LuminousType } from '../components/LuminousType';
 import { getRankForXp, getNextRank } from '../lib/ranks';
 import { store } from '../lib/store';
 import { sound } from '../lib/sound';
@@ -42,20 +43,28 @@ export const PathScreen: React.FC<PathScreenProps> = ({
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-      {/* Left Column: Learning Path Units */}
-      <main className="lg:col-span-7 space-y-12">
-        {units.map((unit) => {
-          const unitCompletedLessons = unit.lessons.filter((l) =>
-            progress.completedLessons.includes(l.id)
-          ).length;
-          const isBossCompleted = progress.completedLessons.includes(unit.boss.id);
+    <div className={`transition-colors duration-300 ${!progress.darkMode ? 'bg-[#fbf7ee] text-[#323437]' : ''}`}>
+      <div className="max-w-5xl mx-auto px-4 py-6 space-y-6">
+        {/* Monkeytype Luminous Type Hero Widget (Interactive Speed-Typing Telemetry) */}
+        <LuminousType
+          isDayShift={!progress.darkMode}
+          goldenAccent="#e2b714"
+        />
 
-          return (
-            <section
-              key={unit.id}
-              className="bg-white dark:bg-slate-900 rounded-3xl border-2 border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden transition-colors"
-            >
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* Left Column: Learning Path Units */}
+          <main className="lg:col-span-7 space-y-12">
+            {units.map((unit) => {
+              const unitCompletedLessons = unit.lessons.filter((l) =>
+                progress.completedLessons.includes(l.id)
+              ).length;
+              const isBossCompleted = progress.completedLessons.includes(unit.boss.id);
+
+              return (
+                <section
+                  key={unit.id}
+                  className="bg-[#fffdfa] dark:bg-slate-900 rounded-3xl border-2 border-[#e8dfc8] dark:border-slate-800 shadow-sm overflow-hidden transition-colors"
+                >
               {/* Unit Banner Header */}
               <div
                 className="p-6 text-white relative overflow-hidden"
@@ -296,6 +305,8 @@ export const PathScreen: React.FC<PathScreenProps> = ({
         <Leaderboard playerXp={progress.xp} />
       </aside>
     </div>
+  </div>
+</div>
   );
 };
 
